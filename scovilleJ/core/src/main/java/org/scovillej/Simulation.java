@@ -20,4 +20,6 @@ public interface Simulation {
    boolean finishedCurrentTick();
 
    void executeUpToTick(long tick);
+
+   long getTotalTicks();
 }

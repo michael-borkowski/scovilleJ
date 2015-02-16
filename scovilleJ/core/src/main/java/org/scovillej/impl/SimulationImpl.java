@@ -14,13 +14,13 @@ public class SimulationImpl implements Simulation {
 
    private final List<String> phases;
    private final Map<Long, List<SimulationEvent>> tickToEvents;
-   private final long tickCount;
+   private final long totalTicks;
 
    private long currentTick = -1;
    private boolean done = false;
 
-   public SimulationImpl(List<String> phases, Collection<SimulationEvent> collection, long tickCount) {
-      this.tickCount = tickCount;
+   public SimulationImpl(List<String> phases, Collection<SimulationEvent> collection, long totalTicks) {
+      this.totalTicks = totalTicks;
       this.phases = phases;
 
       this.tickToEvents = new HashMap<>();
@@ -39,7 +39,7 @@ public class SimulationImpl implements Simulation {
       if (done)
          throw new IllegalStateException("can't re-execute tick");
 
-      while (currentTick < tickCount) {
+      while (currentTick < totalTicks) {
          executeTick();
          currentTick++;
       }
@@ -52,7 +52,7 @@ public class SimulationImpl implements Simulation {
          throw new IllegalStateException("not initialized");
       if (done)
          throw new IllegalStateException("can't re-execute tick");
-      if (tick >= tickCount)
+      if (tick >= totalTicks)
          throw new IllegalArgumentException("tick > tickCount");
 
       while (currentTick < tick) {
@@ -133,7 +133,7 @@ public class SimulationImpl implements Simulation {
       if (!done)
          throw new IllegalStateException("can't skip tick");
 
-      if (currentTick + 1 < tickCount) {
+      if (currentTick + 1 < totalTicks) {
          currentTick++;
          done = false;
       } else if (strict)
@@ -143,5 +143,18 @@ public class SimulationImpl implements Simulation {
    @Override
    public boolean finishedCurrentTick() {
       return done;
+   }
+
+   @Override
+   public long getTotalTicks() {
+      return totalTicks;
+   }
+
+   public Map<Long, List<SimulationEvent>> test__getMap() {
+      return tickToEvents;
+   }
+
+   public List<String> test__getPhases() {
+      return phases;
    }
 }

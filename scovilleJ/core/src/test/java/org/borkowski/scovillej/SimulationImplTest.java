@@ -64,6 +64,10 @@ public class SimulationImplTest {
 
       sut = new SimulationImpl(phaseNames, tick_evt.values(), totalTicks);
    }
+   
+   public void testTotalTicks() {
+      assertEquals(totalTicks, sut.getTotalTicks());
+   }
 
    private SimulationEvent mockEvent(final long tick) {
       SimulationEvent event = spy(new SimulationEvent() {

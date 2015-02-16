@@ -15,7 +15,7 @@ public class SimulationBuilder {
       phases.add(Simulation.TICK_PHASE);
    }
 
-   public SimulationBuilder totalTicks(Long tickCount) {
+   public SimulationBuilder totalTicks(long tickCount) {
       this.tickCount = tickCount;
       return this;
    }
