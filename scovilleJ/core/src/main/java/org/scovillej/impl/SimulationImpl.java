@@ -6,6 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.scovillej.profile.Series;
+import org.scovillej.profile.SeriesProvider;
+import org.scovillej.profile.SeriesResult;
 import org.scovillej.simulation.Simulation;
 import org.scovillej.simulation.SimulationContext;
 import org.scovillej.simulation.SimulationEvent;
@@ -15,11 +18,13 @@ public class SimulationImpl implements Simulation {
    private final List<String> phases;
    private final Map<Long, List<SimulationEvent>> tickToEvents;
    private final long totalTicks;
+   private final Map<String, SeriesProvider<?>> series;
 
    private long currentTick = -1;
    private boolean done = false;
 
-   public SimulationImpl(List<String> phases, Collection<SimulationEvent> collection, long totalTicks) {
+   public SimulationImpl(Map<String, SeriesProvider<?>> series, List<String> phases, Collection<SimulationEvent> collection, long totalTicks) {
+      this.series = series;
       this.totalTicks = totalTicks;
       this.phases = phases;
 
@@ -30,6 +35,9 @@ public class SimulationImpl implements Simulation {
             tickToEvents.put(event.getScheduledTick(), list = new LinkedList<SimulationEvent>());
          list.add(event);
       }
+
+      for (SeriesProvider<?> provider : series.values())
+         provider.initialize(this, totalTicks);
    }
 
    @Override
@@ -37,7 +45,7 @@ public class SimulationImpl implements Simulation {
       if (currentTick == -1)
          throw new IllegalStateException("not initialized");
       if (done)
-         throw new IllegalStateException("can't re-execute tick");
+         increaseTick();
 
       while (currentTick < totalTicks) {
          executeTick();
@@ -51,9 +59,11 @@ public class SimulationImpl implements Simulation {
       if (currentTick == -1)
          throw new IllegalStateException("not initialized");
       if (done)
-         throw new IllegalStateException("can't re-execute tick");
+         increaseTick();
       if (tick >= totalTicks)
-         throw new IllegalArgumentException("tick > tickCount");
+         throw new IllegalArgumentException("tick >= tickCount");
+      if (tick <= currentTick)
+         throw new IllegalArgumentException("tick <= tickCount");
 
       while (currentTick < tick) {
          executeTick();
@@ -77,6 +87,12 @@ public class SimulationImpl implements Simulation {
                   @Override
                   public long getCurrentTick() {
                      return currentTick;
+                  }
+
+                  @SuppressWarnings("unchecked")
+                  @Override
+                  public <T extends Number> Series<T> getSeries(String symbol) {
+                     return (Series<T>) series.get(symbol);
                   }
                });
       done = true;
@@ -148,6 +164,12 @@ public class SimulationImpl implements Simulation {
    @Override
    public long getTotalTicks() {
       return totalTicks;
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public <T extends Number> SeriesResult<T> getSeries(String symbol) {
+      return (SeriesResult<T>) series.get(symbol);
    }
 
    public Map<Long, List<SimulationEvent>> test__getMap() {

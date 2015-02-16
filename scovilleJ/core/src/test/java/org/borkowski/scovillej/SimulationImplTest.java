@@ -21,7 +21,10 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.scovillej.impl.DoubleSeriesImpl;
 import org.scovillej.impl.SimulationImpl;
+import org.scovillej.profile.SeriesProvider;
+import org.scovillej.profile.SeriesResult;
 import org.scovillej.simulation.Simulation;
 import org.scovillej.simulation.SimulationContext;
 import org.scovillej.simulation.SimulationEvent;
@@ -35,6 +38,8 @@ public class SimulationImplTest {
    String[] phases = { "a", "b", "tick", "c" };
    int[] yesTicks = { 0, 1, 2, 5, 10, 100, 314, 271, 420, 980, 990, 995, 998, 999 };
    int[] noTicks = { -2, -1, 1000, 1001, 1010, 1100 };
+
+   SeriesProvider<Double> sa, sb;
 
    SimulationMember member;
    Map<Integer, SimulationEvent> tick_evt = new HashMap<>();
@@ -62,9 +67,13 @@ public class SimulationImplTest {
       for (int tick : noTicks)
          tick_evt.put(tick, mockEvent(tick));
 
-      sut = new SimulationImpl(phaseNames, tick_evt.values(), totalTicks);
+      Map<String, SeriesProvider<?>> series = new HashMap<>();
+      series.put("series-a", sa = new DoubleSeriesImpl());
+      series.put("series-b", sb = new DoubleSeriesImpl());
+
+      sut = new SimulationImpl(series, phaseNames, tick_evt.values(), totalTicks);
    }
-   
+
    public void testTotalTicks() {
       assertEquals(totalTicks, sut.getTotalTicks());
    }
@@ -230,6 +239,41 @@ public class SimulationImplTest {
 
       for (int tick : noTicks)
          verify(tick_evt.get(tick), never()).execute(any(SimulationContext.class));
+   }
+
+   @Test
+   public void testSeriesPresent() {
+      sut.initialize();
+      sut.executeToEnd();
+      SeriesResult<Double> seriesA = sut.getSeries("series-a");
+      SeriesResult<Double> seriesB = sut.getSeries("series-b");
+      assertNotNull(seriesA);
+      assertNotNull(seriesB);
+   }
+
+   @Test
+   public void testSeriesCount() {
+      sut.initialize();
+      sut.executeUpToTick(10);
+      sa.measure(1D);
+      sut.executeUpToTick(11);
+      sa.measure(1D);
+      sb.measure(1D);
+      sut.executeUpToTick(12);
+      sa.measure(1D);
+      sb.measure(1D);
+      sut.executeUpToTick(13);
+      sb.measure(1D);
+      sut.executeUpToTick(14);
+      sb.measure(1D);
+      sut.executeToEnd();
+      SeriesResult<Double> seriesA = sut.getSeries("series-a");
+      SeriesResult<Double> seriesB = sut.getSeries("series-b");
+      assertNotNull(seriesA);
+      assertNotNull(seriesB);
+      
+      assertEquals(3, seriesA.getCount());
+      assertEquals(4, seriesB.getCount());
    }
 
 }

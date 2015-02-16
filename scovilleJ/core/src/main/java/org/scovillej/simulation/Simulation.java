@@ -1,5 +1,7 @@
 package org.scovillej.simulation;
 
+import org.scovillej.profile.SeriesResult;
+
 public interface Simulation {
    public static final String TICK_PHASE = "tick";
 
@@ -22,4 +24,6 @@ public interface Simulation {
    void executeUpToTick(long tick);
 
    long getTotalTicks();
+
+   <T extends Number> SeriesResult<T> getSeries(String symbol);
 }
