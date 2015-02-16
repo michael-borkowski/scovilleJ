@@ -1,5 +1,6 @@
 package org.borkowski.scovillej;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -15,9 +16,11 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,15 +42,20 @@ public class SimulationImplTest {
    int[] yesTicks = { 0, 1, 2, 5, 10, 100, 314, 271, 420, 980, 990, 995, 998, 999 };
    int[] noTicks = { -2, -1, 1000, 1001, 1010, 1100 };
 
+   List<String> serviceResults;
+
    SeriesProvider<Double> sa, sb;
 
    SimulationMember member;
    Map<Integer, SimulationEvent> tick_evt = new HashMap<>();
 
+   private interface A {
+      String x();
+   }
+
    @Before
    public void setUp() {
       member = new SimulationMember() {
-
          @Override
          public String getName() {
             return "unit-test";
@@ -71,7 +79,17 @@ public class SimulationImplTest {
       series.put("series-a", sa = new DoubleSeriesImpl());
       series.put("series-b", sb = new DoubleSeriesImpl());
 
-      sut = new SimulationImpl(series, phaseNames, tick_evt.values(), totalTicks);
+      Set<Object> services = new HashSet<>();
+      services.add(new A() {
+         @Override
+         public String x() {
+            return "x";
+         }
+      });
+
+      serviceResults = new LinkedList<>();
+
+      sut = new SimulationImpl(totalTicks, phaseNames, tick_evt.values(), series, services);
    }
 
    public void testTotalTicks() {
@@ -102,6 +120,11 @@ public class SimulationImplTest {
             assertEquals(phases[phase], context.getCurrentPhase());
 
             phase++;
+
+            A service = context.getService(A.class);
+            if (service != null) {
+               serviceResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase() + "-" + service.x());
+            }
          }
 
       });
@@ -271,9 +294,19 @@ public class SimulationImplTest {
       SeriesResult<Double> seriesB = sut.getSeries("series-b");
       assertNotNull(seriesA);
       assertNotNull(seriesB);
-      
+
       assertEquals(3, seriesA.getCount());
       assertEquals(4, seriesB.getCount());
+   }
+
+   @Test
+   public void testServices() {
+      sut.initialize();
+      sut.executeUpToTick(6);
+
+      String[] expected = { "0-a-x", "0-b-x", "0-tick-x", "0-c-x", "1-a-x", "1-b-x", "1-tick-x", "1-c-x", "2-a-x", "2-b-x", "2-tick-x", "2-c-x", "5-a-x", "5-b-x", "5-tick-x", "5-c-x" };
+
+      assertArrayEquals(expected, serviceResults.toArray(new String[0]));
    }
 
 }

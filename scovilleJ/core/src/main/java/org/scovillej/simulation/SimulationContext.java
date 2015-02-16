@@ -8,4 +8,6 @@ public interface SimulationContext {
    String getCurrentPhase();
 
    <T extends Number> Series<T> getSeries(String symbol);
+
+   <T> T getService(Class<T> clazz);
 }

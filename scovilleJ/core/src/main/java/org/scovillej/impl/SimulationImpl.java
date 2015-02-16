@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.scovillej.profile.Series;
 import org.scovillej.profile.SeriesProvider;
@@ -19,14 +20,16 @@ public class SimulationImpl implements Simulation {
    private final Map<Long, List<SimulationEvent>> tickToEvents;
    private final long totalTicks;
    private final Map<String, SeriesProvider<?>> series;
+   private final Set<Object> services;
 
    private long currentTick = -1;
    private boolean done = false;
 
-   public SimulationImpl(Map<String, SeriesProvider<?>> series, List<String> phases, Collection<SimulationEvent> collection, long totalTicks) {
+   public SimulationImpl(long totalTicks, List<String> phases, Collection<SimulationEvent> collection, Map<String, SeriesProvider<?>> series, Set<Object> services) {
       this.series = series;
       this.totalTicks = totalTicks;
       this.phases = phases;
+      this.services = services;
 
       this.tickToEvents = new HashMap<>();
       for (SimulationEvent event : collection) {
@@ -94,8 +97,21 @@ public class SimulationImpl implements Simulation {
                   public <T extends Number> Series<T> getSeries(String symbol) {
                      return (Series<T>) series.get(symbol);
                   }
+
+                  @Override
+                  public <T> T getService(Class<T> clazz) {
+                     return lookup(clazz);
+                  }
                });
       done = true;
+   }
+
+   @SuppressWarnings("unchecked")
+   private <T> T lookup(Class<T> clazz) {
+      for (Object o : services)
+         if (clazz.isAssignableFrom(o.getClass()))
+            return (T) o;
+      return null;
    }
 
    @Override

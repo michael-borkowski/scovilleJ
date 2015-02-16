@@ -1,9 +1,11 @@
 package org.scovillej;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.scovillej.impl.DoubleSeriesImpl;
 import org.scovillej.impl.FloatSeriesImpl;
@@ -19,6 +21,7 @@ public class SimulationBuilder {
    private final List<String> phases = new LinkedList<>();
    private final List<SimulationMember> members = new LinkedList<>();
    private final Map<String, SeriesProvider<?>> series = new HashMap<>();
+   private final Set<Object> services = new HashSet<>();
 
    private Long tickCount;
 
@@ -62,6 +65,11 @@ public class SimulationBuilder {
       return this;
    }
 
+   public SimulationBuilder service(Object service) {
+      services.add(service);
+      return this;
+   }
+
    public Simulation create() {
       if (tickCount == null)
          throw new IllegalStateException("tick count not set");
@@ -70,6 +78,6 @@ public class SimulationBuilder {
       for (SimulationMember member : members)
          events.addAll(member.generateEvents());
 
-      return new SimulationImpl(series, phases, events, tickCount);
+      return new SimulationImpl(tickCount, phases, events, series, services);
    }
 }
