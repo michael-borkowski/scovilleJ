@@ -6,9 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.scovillej.Simulation;
-import org.scovillej.SimulationContext;
-import org.scovillej.SimulationEvent;
+import org.scovillej.simulation.Simulation;
+import org.scovillej.simulation.SimulationContext;
+import org.scovillej.simulation.SimulationEvent;
 
 public class SimulationImpl implements Simulation {
 

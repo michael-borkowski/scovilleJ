@@ -21,11 +21,11 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.scovillej.Simulation;
-import org.scovillej.SimulationContext;
-import org.scovillej.SimulationEvent;
-import org.scovillej.SimulationMember;
 import org.scovillej.impl.SimulationImpl;
+import org.scovillej.simulation.Simulation;
+import org.scovillej.simulation.SimulationContext;
+import org.scovillej.simulation.SimulationEvent;
+import org.scovillej.simulation.SimulationMember;
 
 public class SimulationImplTest {
 

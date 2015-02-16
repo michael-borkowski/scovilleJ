@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.scovillej.impl.SimulationImpl;
+import org.scovillej.simulation.Simulation;
+import org.scovillej.simulation.SimulationEvent;
+import org.scovillej.simulation.SimulationMember;
 
 public class SimulationBuilder {
    private final List<String> phases = new LinkedList<>();

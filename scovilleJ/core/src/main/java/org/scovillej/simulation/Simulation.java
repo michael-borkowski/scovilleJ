@@ -1,4 +1,4 @@
-package org.scovillej;
+package org.scovillej.simulation;
 
 public interface Simulation {
    public static final String TICK_PHASE = "tick";

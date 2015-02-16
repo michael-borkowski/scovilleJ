@@ -14,6 +14,9 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.scovillej.impl.SimulationImpl;
+import org.scovillej.simulation.SimulationContext;
+import org.scovillej.simulation.SimulationEvent;
+import org.scovillej.simulation.SimulationMember;
 
 public class SimulationBuilderTest {
 

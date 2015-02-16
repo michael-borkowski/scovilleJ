@@ -1,4 +1,4 @@
-package org.scovillej;
+package org.scovillej.simulation;
 
 public interface SimulationContext {
    long getCurrentTick();
