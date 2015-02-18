@@ -23,16 +23,18 @@ public class CommunicationServiceImpl implements CommunicationService, Simulatio
    private final SimulationTickSource t = new SimulationTickSource();
 
    private final Map<String, SimulationServerSocketImpl<?>> serverSockets = new HashMap<>();
-   private final Map<String, Integer> uplink = new HashMap<>();
-   private final Map<String, Integer> downlink = new HashMap<>();
+   private final Map<String, Integer> uplink;
+   private final Map<String, Integer> downlink;
    private final Map<Class<?>, Serializer<?>> serializers = new HashMap<>();
 
    public CommunicationServiceImpl() {
-      this(Simulation.TICK_PHASE);
+      this(Simulation.TICK_PHASE, new HashMap<String, Integer>(), new HashMap<String, Integer>());
    }
 
-   public CommunicationServiceImpl(String phase) {
+   public CommunicationServiceImpl(String phase, Map<String, Integer> uplink, Map<String, Integer> downlink) {
       this.phase = phase;
+      this.uplink = uplink;
+      this.downlink = downlink;
 
       BuiltInSerializers.addTo(serializers);
    }
@@ -105,4 +107,5 @@ public class CommunicationServiceImpl implements CommunicationService, Simulatio
    public TickSource getTickSource() {
       return t;
    }
+
 }
