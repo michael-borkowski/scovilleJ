@@ -58,11 +58,6 @@ public class SimulationImplTest {
    public void setUp() {
       member = spy(new SimulationMember() {
          @Override
-         public String getName() {
-            return "unit-test";
-         }
-
-         @Override
          public Collection<SimulationEvent> generateEvents() {
             return null;
          }

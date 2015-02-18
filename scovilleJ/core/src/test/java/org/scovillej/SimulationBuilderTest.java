@@ -43,11 +43,6 @@ public class SimulationBuilderTest {
    public void testEvents() {
       sut.member(new SimulationMember() {
          @Override
-         public String getName() {
-            return "member-1";
-         }
-
-         @Override
          public Collection<SimulationEvent> generateEvents() {
             final SimulationMember this_ = this;
             List<SimulationEvent> events = new LinkedList<>();
@@ -98,11 +93,6 @@ public class SimulationBuilderTest {
          public void executePhase(SimulationContext context) {}
       });
       sut.member(new SimulationMember() {
-         @Override
-         public String getName() {
-            return "member-2";
-         }
-
          @Override
          public Collection<SimulationEvent> generateEvents() {
             final SimulationMember this_ = this;
@@ -172,19 +162,15 @@ public class SimulationBuilderTest {
 
       lst = map.get(1L).get(Simulation.TICK_PHASE);
       assertEquals(1, lst.size());
-      assertNotNull("member-1", lst.get(0).getMember().getName());
       assertEquals(1, lst.get(0).getScheduledTick());
       lst = map.get(3L).get(Simulation.TICK_PHASE);
       assertEquals(1, lst.size());
-      assertNotNull("member-1", lst.get(0).getMember().getName());
       assertEquals(3, lst.get(0).getScheduledTick());
       lst = map.get(5L).get(Simulation.TICK_PHASE);
       assertEquals(1, lst.size());
-      assertNotNull("member-2", lst.get(0).getMember().getName());
       assertEquals(5, lst.get(0).getScheduledTick());
       lst = map.get(7L).get(Simulation.TICK_PHASE);
       assertEquals(1, lst.size());
-      assertNotNull("member-2", lst.get(0).getMember().getName());
       assertEquals(7, lst.get(0).getScheduledTick());
    }
 

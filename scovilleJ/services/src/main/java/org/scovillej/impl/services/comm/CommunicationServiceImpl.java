@@ -99,11 +99,6 @@ public class CommunicationServiceImpl implements CommunicationService, Simulatio
       return null;
    }
 
-   @Override
-   public String getName() {
-      return "Service: Communication";
-   }
-
    public TickSource getTickSource() {
       return t;
    }
