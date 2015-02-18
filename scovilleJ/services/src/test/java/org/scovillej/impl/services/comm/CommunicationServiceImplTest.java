@@ -133,7 +133,7 @@ public class CommunicationServiceImplTest {
 
       assertEquals(0, socketA.available());
       assertEquals(0, socketB.available());
-      advance(5, socketA, socketB);
+      advance(5);
       assertEquals(0, socketA.available());
       assertEquals(0, socketB.available());
       advance(1);
@@ -163,7 +163,7 @@ public class CommunicationServiceImplTest {
 
       assertEquals(1, socketA.available());
       assertEquals(0, socketB.available());
-      advance(10, socketA, socketB);
+      advance(10);
       assertEquals(1, socketA.available());
       assertEquals(0, socketB.available());
       advance(1);
@@ -215,7 +215,7 @@ public class CommunicationServiceImplTest {
 
       assertEquals(0, socketA.available());
       assertEquals(0, socketB.available());
-      advance(3, socketA, socketB);
+      advance(3);
       assertEquals(0, socketA.available());
       assertEquals(0, socketB.available());
       advance(1);
@@ -245,7 +245,7 @@ public class CommunicationServiceImplTest {
 
       assertEquals(1, socketA.available());
       assertEquals(0, socketB.available());
-      advance(6, socketA, socketB);
+      advance(6);
       assertEquals(1, socketA.available());
       assertEquals(0, socketB.available());
       advance(1);
@@ -297,7 +297,7 @@ public class CommunicationServiceImplTest {
 
       assertEquals(0, socketA.available());
       assertEquals(0, socketB.available());
-      advance(3, socketA, socketB);
+      advance(3);
       assertEquals(0, socketA.available());
       assertEquals(0, socketB.available());
       advance(1);
@@ -316,7 +316,7 @@ public class CommunicationServiceImplTest {
 
       assertEquals(0, socketA.available());
       assertEquals(0, socketB.available());
-      advance(14, socketA, socketB);
+      advance(14);
       assertEquals(0, socketA.available());
       assertEquals(0, socketB.available());
       advance(1);
@@ -333,7 +333,7 @@ public class CommunicationServiceImplTest {
 
       assertEquals(1, socketA.available());
       assertEquals(0, socketB.available());
-      advance(6, socketA, socketB);
+      advance(6);
       assertEquals(1, socketA.available());
       assertEquals(0, socketB.available());
       advance(1);
@@ -344,7 +344,7 @@ public class CommunicationServiceImplTest {
 
       assertEquals(1, socketA.available());
       assertEquals(1, socketB.available());
-      advance(8, socketA, socketB);
+      advance(8);
       assertEquals(1, socketA.available());
       assertEquals(1, socketB.available());
       advance(1);
@@ -365,7 +365,7 @@ public class CommunicationServiceImplTest {
       socketB.close();
    }
 
-   private void advance(int count, SimulationSocket<?>... sockets) throws IOException {
+   private void advance(int count) throws IOException {
       for (int i = 0; i < count; i++) {
          sut.executePhase(new SimulationContext() {
 
