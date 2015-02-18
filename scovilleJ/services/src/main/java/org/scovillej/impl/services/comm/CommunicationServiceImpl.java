@@ -1,6 +1,7 @@
 package org.scovillej.impl.services.comm;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,19 +10,30 @@ import org.scovillej.services.comm.CommunicationService;
 import org.scovillej.services.comm.Serializer;
 import org.scovillej.services.comm.SimulationServerSocket;
 import org.scovillej.services.comm.SimulationSocket;
+import org.scovillej.simulation.Simulation;
+import org.scovillej.simulation.SimulationContext;
+import org.scovillej.simulation.SimulationEvent;
+import org.scovillej.simulation.SimulationMember;
+import org.spicej.impl.SimulationTickSource;
 import org.spicej.ticks.TickSource;
 
-public class CommunicationServiceImpl implements CommunicationService {
+public class CommunicationServiceImpl implements CommunicationService, SimulationMember {
 
-   private final TickSource tickSource;
+   private final String phase;
+   private final SimulationTickSource t = new SimulationTickSource();
 
    private final Map<String, SimulationServerSocketImpl<?>> serverSockets = new HashMap<>();
    private final Map<String, Integer> uplink = new HashMap<>();
    private final Map<String, Integer> downlink = new HashMap<>();
    private final Map<Class<?>, Serializer<?>> serializers = new HashMap<>();
 
-   public CommunicationServiceImpl(TickSource tickSource) {
-      this.tickSource = tickSource;
+   public CommunicationServiceImpl() {
+      this(Simulation.TICK_PHASE);
+   }
+
+   public CommunicationServiceImpl(String phase) {
+      this.phase = phase;
+
       BuiltInSerializers.addTo(serializers);
    }
 
@@ -74,7 +86,23 @@ public class CommunicationServiceImpl implements CommunicationService {
       throw new IllegalArgumentException("serializer for " + clazz + " unknown");
    }
 
+   @Override
+   public void executePhase(SimulationContext context) {
+      if (context.getCurrentPhase().equals(phase))
+         t.advance();
+   }
+
+   @Override
+   public Collection<SimulationEvent> generateEvents() {
+      return null;
+   }
+
+   @Override
+   public String getName() {
+      return "Service: Communication";
+   }
+
    public TickSource getTickSource() {
-      return tickSource;
+      return t;
    }
 }

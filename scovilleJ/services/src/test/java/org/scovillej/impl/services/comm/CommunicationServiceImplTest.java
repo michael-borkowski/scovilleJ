@@ -10,21 +10,19 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.scovillej.impl.services.comm.CommunicationServiceImpl;
-import org.scovillej.services.comm.CommunicationService;
+import org.scovillej.profile.Series;
 import org.scovillej.services.comm.SimulationServerSocket;
 import org.scovillej.services.comm.SimulationSocket;
-import org.spicej.impl.SimulationTickSource;
+import org.scovillej.simulation.Simulation;
+import org.scovillej.simulation.SimulationContext;
 
 public class CommunicationServiceImplTest {
 
-   SimulationTickSource t;
-   CommunicationService sut;
+   CommunicationServiceImpl sut;
 
    @Before
    public void setUp() {
-      t = new SimulationTickSource();
-      sut = new CommunicationServiceImpl(t);
+      sut = new CommunicationServiceImpl();
    }
 
    @Test(expected = IOException.class)
@@ -369,7 +367,28 @@ public class CommunicationServiceImplTest {
 
    private void advance(int count, SimulationSocket<?>... sockets) throws IOException {
       for (int i = 0; i < count; i++) {
-         t.advance();
+         sut.executePhase(new SimulationContext() {
+
+            @Override
+            public <T> T getService(Class<T> clazz) {
+               return null;
+            }
+
+            @Override
+            public <T extends Number> Series<T> getSeries(String symbol) {
+               return null;
+            }
+
+            @Override
+            public long getCurrentTick() {
+               return -1; // not used in client code
+            }
+
+            @Override
+            public String getCurrentPhase() {
+               return Simulation.TICK_PHASE;
+            }
+         });
          for (SimulationSocket<?> socket : sockets)
             socket.available();
       }
