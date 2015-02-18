@@ -22,8 +22,9 @@ public abstract class SimulationSocketImpl<T> implements SimulationSocket<T> {
    private InputStream in;
    private OutputStream out;
 
-   private byte[] nextFrame;
-   private int nextFrameFilled;
+   private boolean blockIsHeader = true;
+   private byte[] nextBlock = new byte[HEADER_LENGTH];
+   private int nextBlockFilled = 0;
 
    private boolean open = false, finished = false;
 
@@ -79,25 +80,18 @@ public abstract class SimulationSocketImpl<T> implements SimulationSocket<T> {
          return;
       }
 
-      while (in.available() > 0) {
-         if (nextFrame == null && in.available() >= HEADER_LENGTH) {
-            byte[] currentHeader = new byte[HEADER_LENGTH];
-            int done = 0;
-            while (done < HEADER_LENGTH)
-               done += in.read(currentHeader, done, HEADER_LENGTH - done);
+      while (nextBlock != null && nextBlockFilled < nextBlock.length && in.available() > 0) {
+         nextBlockFilled += in.read(nextBlock, nextBlockFilled, nextBlock.length - nextBlockFilled);
 
-            int nextFrameLength = ByteBuffer.wrap(currentHeader).getInt();
-            nextFrame = new byte[nextFrameLength];
-            nextFrameFilled = 0;
-         }
-
-         while (nextFrame != null && nextFrameFilled < nextFrame.length && in.available() > 0)
-            nextFrameFilled += in.read(nextFrame, nextFrameFilled, nextFrame.length - nextFrameFilled);
-
-         if (nextFrameFilled == nextFrame.length) {
-            receiveQueue.add(serializer.deserialize(nextFrame));
-            nextFrame = null;
-            nextFrameFilled = 0;
+         if (nextBlock != null && nextBlockFilled == nextBlock.length) {
+            if (blockIsHeader) {
+               nextBlock = new byte[ByteBuffer.wrap(nextBlock).getInt()];
+            } else {
+               receiveQueue.add(serializer.deserialize(nextBlock));
+               nextBlock = new byte[HEADER_LENGTH];
+            }
+            nextBlockFilled = 0;
+            blockIsHeader = !blockIsHeader;
          }
       }
    }
@@ -111,7 +105,7 @@ public abstract class SimulationSocketImpl<T> implements SimulationSocket<T> {
       this.out = out;
       this.otherSide = otherSide;
       this.serializer = serializer;
-      
+
       open = true;
    }
 }
