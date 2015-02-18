@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.scovillej.impl.DoubleSeriesImpl;
-import org.scovillej.impl.FloatSeriesImpl;
-import org.scovillej.impl.IntegerSeriesImpl;
-import org.scovillej.impl.LongSeriesImpl;
 import org.scovillej.impl.SimulationImpl;
+import org.scovillej.impl.series.DoubleSeriesImpl;
+import org.scovillej.impl.series.FloatSeriesImpl;
+import org.scovillej.impl.series.IntegerSeriesImpl;
+import org.scovillej.impl.series.LongSeriesImpl;
 import org.scovillej.profile.SeriesProvider;
 import org.scovillej.simulation.Simulation;
 import org.scovillej.simulation.SimulationEvent;

@@ -1,4 +1,4 @@
-package org.scovillej.impl;
+package org.scovillej.impl.series;
 
 import org.scovillej.profile.Series;
 import org.scovillej.profile.SeriesResult;

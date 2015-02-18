@@ -10,4 +10,12 @@
   <artifactId>core</artifactId>
   <name>${project.friendly-name}: Core</name>
   <description>The core of scovilleJ, the framework for running synchronous simulations</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>at.borkowski.spicej</groupId>
+      <artifactId>core</artifactId>
+      <version>0.0.4-SNAPSHOT</version>
+    </dependency>
+  </dependencies>
 </project>

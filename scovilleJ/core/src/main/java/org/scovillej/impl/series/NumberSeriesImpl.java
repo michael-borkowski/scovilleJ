@@ -1,4 +1,4 @@
-package org.scovillej.impl;
+package org.scovillej.impl.series;
 
 import java.util.HashMap;
 import java.util.Iterator;

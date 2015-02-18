@@ -24,8 +24,8 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.scovillej.impl.DoubleSeriesImpl;
 import org.scovillej.impl.SimulationImpl;
+import org.scovillej.impl.series.DoubleSeriesImpl;
 import org.scovillej.profile.SeriesProvider;
 import org.scovillej.profile.SeriesResult;
 import org.scovillej.simulation.Simulation;
