@@ -1,4 +1,4 @@
-package org.scovillej.impl.comm;
+package org.scovillej.impl.services.comm;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -10,9 +10,10 @@ import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.scovillej.comm.CommunicationService;
-import org.scovillej.comm.SimulationServerSocket;
-import org.scovillej.comm.SimulationSocket;
+import org.scovillej.impl.services.comm.CommunicationServiceImpl;
+import org.scovillej.services.comm.CommunicationService;
+import org.scovillej.services.comm.SimulationServerSocket;
+import org.scovillej.services.comm.SimulationSocket;
 import org.spicej.impl.SimulationTickSource;
 
 public class CommunicationServiceImplTest {

@@ -1,4 +1,4 @@
-package org.scovillej.impl.comm;
+package org.scovillej.impl.services.comm;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,8 +7,8 @@ import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import org.scovillej.comm.Serializer;
-import org.scovillej.comm.SimulationSocket;
+import org.scovillej.services.comm.Serializer;
+import org.scovillej.services.comm.SimulationSocket;
 
 public abstract class SimulationSocketImpl<T> implements SimulationSocket<T> {
 

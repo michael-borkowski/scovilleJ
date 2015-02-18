@@ -1,4 +1,4 @@
-package org.scovillej.comm;
+package org.scovillej.services.comm;
 
 public interface Serializer<T> {
    public byte[] serialize(T object);

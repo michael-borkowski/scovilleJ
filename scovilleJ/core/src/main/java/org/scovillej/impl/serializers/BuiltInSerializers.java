@@ -2,7 +2,7 @@ package org.scovillej.impl.serializers;
 
 import java.util.Map;
 
-import org.scovillej.comm.Serializer;
+import org.scovillej.services.comm.Serializer;
 
 public class BuiltInSerializers {
    private BuiltInSerializers() {}

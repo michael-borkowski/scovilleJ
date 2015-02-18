@@ -1,11 +1,11 @@
-package org.scovillej.impl.comm;
+package org.scovillej.impl.services.comm;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
-import org.scovillej.comm.Serializer;
+import org.scovillej.services.comm.Serializer;
 import org.spicej.bytes.RateLimitInputStream;
 import org.spicej.ticks.TickSource;
 

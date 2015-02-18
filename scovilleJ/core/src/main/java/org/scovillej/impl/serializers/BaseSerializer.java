@@ -1,6 +1,6 @@
 package org.scovillej.impl.serializers;
 
-import org.scovillej.comm.Serializer;
+import org.scovillej.services.comm.Serializer;
 
 public abstract class BaseSerializer<T> implements Serializer<T> {
 

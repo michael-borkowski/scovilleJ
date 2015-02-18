@@ -1,4 +1,4 @@
-package org.scovillej.comm;
+package org.scovillej.services.comm;
 
 import java.io.IOException;
 

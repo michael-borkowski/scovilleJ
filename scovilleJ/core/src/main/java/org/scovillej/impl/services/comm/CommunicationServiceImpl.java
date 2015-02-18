@@ -1,14 +1,14 @@
-package org.scovillej.impl.comm;
+package org.scovillej.impl.services.comm;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.scovillej.comm.CommunicationService;
-import org.scovillej.comm.Serializer;
-import org.scovillej.comm.SimulationServerSocket;
-import org.scovillej.comm.SimulationSocket;
 import org.scovillej.impl.serializers.BuiltInSerializers;
+import org.scovillej.services.comm.CommunicationService;
+import org.scovillej.services.comm.Serializer;
+import org.scovillej.services.comm.SimulationServerSocket;
+import org.scovillej.services.comm.SimulationSocket;
 import org.spicej.ticks.TickSource;
 
 public class CommunicationServiceImpl implements CommunicationService {
