@@ -1,4 +1,4 @@
-package org.scovillej.impl.serializers;
+package org.scovillej.impl.services.comm.serializers;
 
 import java.util.Map;
 

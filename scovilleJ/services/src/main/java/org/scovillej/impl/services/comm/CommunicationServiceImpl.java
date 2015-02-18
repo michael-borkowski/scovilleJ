@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.scovillej.impl.serializers.BuiltInSerializers;
+import org.scovillej.impl.services.comm.serializers.BuiltInSerializers;
 import org.scovillej.services.comm.CommunicationService;
 import org.scovillej.services.comm.Serializer;
 import org.scovillej.services.comm.SimulationServerSocket;
