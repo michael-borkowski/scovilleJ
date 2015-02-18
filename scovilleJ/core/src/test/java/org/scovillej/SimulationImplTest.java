@@ -1,4 +1,4 @@
-package org.borkowski.scovillej;
+package org.scovillej;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
