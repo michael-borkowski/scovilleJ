@@ -43,6 +43,7 @@ public class SimulationImplTest {
    int[] noTicks = { -2, -1, 1000, 1001, 1010, 1100 };
 
    List<String> serviceResults;
+   List<String> memberResults;
 
    SeriesProvider<Double> sa, sb;
 
@@ -55,7 +56,7 @@ public class SimulationImplTest {
 
    @Before
    public void setUp() {
-      member = new SimulationMember() {
+      member = spy(new SimulationMember() {
          @Override
          public String getName() {
             return "unit-test";
@@ -65,15 +66,23 @@ public class SimulationImplTest {
          public Collection<SimulationEvent> generateEvents() {
             return null;
          }
-      };
+
+         @Override
+         public void executePhase(SimulationContext context) {
+            memberResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
+         }
+      });
+
+      List<SimulationMember> members = new LinkedList<>();
+      members.add(member);
 
       List<String> phaseNames = new LinkedList<>();
       for (String phase : phases)
          phaseNames.add(phase);
       for (int tick : yesTicks)
-         tick_evt.put(tick, mockEvent(tick));
+         tick_evt.put(tick, mockEvent(tick, "c"));
       for (int tick : noTicks)
-         tick_evt.put(tick, mockEvent(tick));
+         tick_evt.put(tick, mockEvent(tick, "c"));
 
       Map<String, SeriesProvider<?>> series = new HashMap<>();
       series.put("series-a", sa = new DoubleSeriesImpl());
@@ -88,18 +97,17 @@ public class SimulationImplTest {
       });
 
       serviceResults = new LinkedList<>();
+      memberResults = new LinkedList<>();
 
-      sut = new SimulationImpl(totalTicks, phaseNames, tick_evt.values(), series, services);
+      sut = new SimulationImpl(totalTicks, phaseNames, members, tick_evt.values(), series, services);
    }
 
    public void testTotalTicks() {
       assertEquals(totalTicks, sut.getTotalTicks());
    }
 
-   private SimulationEvent mockEvent(final long tick) {
+   private SimulationEvent mockEvent(final long tick, final String phase) {
       SimulationEvent event = spy(new SimulationEvent() {
-
-         int phase = 0;
 
          @Override
          public SimulationMember getMember() {
@@ -112,14 +120,12 @@ public class SimulationImplTest {
          }
 
          @Override
-         public void execute(SimulationContext context) {
+         public void executePhase(SimulationContext context) {
             assertNotEquals(phases.length, phase);
 
             assertNotNull(context);
             assertEquals(tick, context.getCurrentTick());
-            assertEquals(phases[phase], context.getCurrentPhase());
-
-            phase++;
+            assertEquals(phase, context.getCurrentPhase());
 
             A service = context.getService(A.class);
             if (service != null) {
@@ -127,8 +133,13 @@ public class SimulationImplTest {
             }
          }
 
+         @Override
+         public String getScheduledPhase() {
+            return phase;
+         }
+
       });
-      doCallRealMethod().when(event).execute(any(SimulationContext.class));
+      doCallRealMethod().when(event).executePhase(any(SimulationContext.class));
       return event;
    }
 
@@ -173,10 +184,10 @@ public class SimulationImplTest {
       assertTrue(sut.finishedCurrentTick());
 
       for (int tick : yesTicks)
-         verify(tick_evt.get(tick), times(phases.length)).execute(any(SimulationContext.class));
+         verify(tick_evt.get(tick), times(1)).executePhase(any(SimulationContext.class));
 
       for (int tick : noTicks)
-         verify(tick_evt.get(tick), never()).execute(any(SimulationContext.class));
+         verify(tick_evt.get(tick), never()).executePhase(any(SimulationContext.class));
    }
 
    @Test
@@ -204,10 +215,10 @@ public class SimulationImplTest {
       assertTrue(sut.finishedCurrentTick());
 
       for (int tick : yesTicks)
-         verify(tick_evt.get(tick), times(phases.length)).execute(any(SimulationContext.class));
+         verify(tick_evt.get(tick), times(1)).executePhase(any(SimulationContext.class));
 
       for (int tick : noTicks)
-         verify(tick_evt.get(tick), never()).execute(any(SimulationContext.class));
+         verify(tick_evt.get(tick), never()).executePhase(any(SimulationContext.class));
    }
 
    @Test
@@ -236,12 +247,12 @@ public class SimulationImplTest {
 
       for (int tick : yesTicks)
          if (tick < part)
-            verify(tick_evt.get(tick), times(phases.length)).execute(any(SimulationContext.class));
+            verify(tick_evt.get(tick), times(1)).executePhase(any(SimulationContext.class));
          else
-            verify(tick_evt.get(tick), never()).execute(any(SimulationContext.class));
+            verify(tick_evt.get(tick), never()).executePhase(any(SimulationContext.class));
 
       for (int tick : noTicks)
-         verify(tick_evt.get(tick), never()).execute(any(SimulationContext.class));
+         verify(tick_evt.get(tick), never()).executePhase(any(SimulationContext.class));
    }
 
    @Test
@@ -256,12 +267,12 @@ public class SimulationImplTest {
 
       for (int tick : yesTicks)
          if (tick < part)
-            verify(tick_evt.get(tick), times(phases.length)).execute(any(SimulationContext.class));
+            verify(tick_evt.get(tick), times(1)).executePhase(any(SimulationContext.class));
          else
-            verify(tick_evt.get(tick), never()).execute(any(SimulationContext.class));
+            verify(tick_evt.get(tick), never()).executePhase(any(SimulationContext.class));
 
       for (int tick : noTicks)
-         verify(tick_evt.get(tick), never()).execute(any(SimulationContext.class));
+         verify(tick_evt.get(tick), never()).executePhase(any(SimulationContext.class));
    }
 
    @Test
@@ -304,9 +315,22 @@ public class SimulationImplTest {
       sut.initialize();
       sut.executeUpToTick(6);
 
-      String[] expected = { "0-a-x", "0-b-x", "0-tick-x", "0-c-x", "1-a-x", "1-b-x", "1-tick-x", "1-c-x", "2-a-x", "2-b-x", "2-tick-x", "2-c-x", "5-a-x", "5-b-x", "5-tick-x", "5-c-x" };
+      String[] expected = { "0-c-x", "1-c-x", "2-c-x", "5-c-x" };
 
       assertArrayEquals(expected, serviceResults.toArray(new String[0]));
+   }
+
+   @Test
+   public void testMember() {
+      sut.initialize();
+      sut.executeUpToTick(6);
+
+      List<String> expectedList = new LinkedList<>();
+      for (int i = 0; i < 6; i++)
+         for (String s : phases)
+            expectedList.add(i + "-" + s);
+
+      assertArrayEquals(expectedList.toArray(new String[0]), memberResults.toArray(new String[0]));
    }
 
 }

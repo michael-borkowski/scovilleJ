@@ -14,6 +14,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.scovillej.impl.SimulationImpl;
+import org.scovillej.simulation.Simulation;
 import org.scovillej.simulation.SimulationContext;
 import org.scovillej.simulation.SimulationEvent;
 import org.scovillej.simulation.SimulationMember;
@@ -63,7 +64,12 @@ public class SimulationBuilderTest {
                }
 
                @Override
-               public void execute(SimulationContext context) {}
+               public void executePhase(SimulationContext context) {}
+
+               @Override
+               public String getScheduledPhase() {
+                  return Simulation.TICK_PHASE;
+               }
             });
             events.add(new SimulationEvent() {
 
@@ -78,10 +84,18 @@ public class SimulationBuilderTest {
                }
 
                @Override
-               public void execute(SimulationContext context) {}
+               public void executePhase(SimulationContext context) {}
+
+               @Override
+               public String getScheduledPhase() {
+                  return Simulation.TICK_PHASE;
+               }
             });
             return events;
          }
+
+         @Override
+         public void executePhase(SimulationContext context) {}
       });
       sut.member(new SimulationMember() {
          @Override
@@ -106,7 +120,12 @@ public class SimulationBuilderTest {
                }
 
                @Override
-               public void execute(SimulationContext context) {}
+               public void executePhase(SimulationContext context) {}
+
+               @Override
+               public String getScheduledPhase() {
+                  return Simulation.TICK_PHASE;
+               }
             });
             events.add(new SimulationEvent() {
 
@@ -121,15 +140,23 @@ public class SimulationBuilderTest {
                }
 
                @Override
-               public void execute(SimulationContext context) {}
+               public void executePhase(SimulationContext context) {}
+
+               @Override
+               public String getScheduledPhase() {
+                  return Simulation.TICK_PHASE;
+               }
             });
             return events;
          }
+
+         @Override
+         public void executePhase(SimulationContext context) {}
       });
 
       sut.totalTicks(10);
       SimulationImpl sim = (SimulationImpl) sut.create();
-      Map<Long, List<SimulationEvent>> map = sim.test__getMap();
+      Map<Long, Map<String, List<SimulationEvent>>> map = sim.test__getMap();
 
       assertNull(map.get(0L));
       assertNotNull(map.get(1L));
@@ -143,19 +170,19 @@ public class SimulationBuilderTest {
 
       List<SimulationEvent> lst;
 
-      lst = map.get(1L);
+      lst = map.get(1L).get(Simulation.TICK_PHASE);
       assertEquals(1, lst.size());
       assertNotNull("member-1", lst.get(0).getMember().getName());
       assertEquals(1, lst.get(0).getScheduledTick());
-      lst = map.get(3L);
+      lst = map.get(3L).get(Simulation.TICK_PHASE);
       assertEquals(1, lst.size());
       assertNotNull("member-1", lst.get(0).getMember().getName());
       assertEquals(3, lst.get(0).getScheduledTick());
-      lst = map.get(5L);
+      lst = map.get(5L).get(Simulation.TICK_PHASE);
       assertEquals(1, lst.size());
       assertNotNull("member-2", lst.get(0).getMember().getName());
       assertEquals(5, lst.get(0).getScheduledTick());
-      lst = map.get(7L);
+      lst = map.get(7L).get(Simulation.TICK_PHASE);
       assertEquals(1, lst.size());
       assertNotNull("member-2", lst.get(0).getMember().getName());
       assertEquals(7, lst.get(0).getScheduledTick());

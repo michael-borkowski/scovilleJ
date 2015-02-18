@@ -1,9 +1,9 @@
 package org.scovillej.simulation;
 
-public interface SimulationEvent {
+public interface SimulationEvent extends PhaseHandler {
    SimulationMember getMember();
-   
+
    long getScheduledTick();
 
-   void execute(SimulationContext context);
+   String getScheduledPhase();
 }

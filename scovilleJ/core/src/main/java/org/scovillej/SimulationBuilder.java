@@ -1,5 +1,6 @@
 package org.scovillej;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -74,10 +75,13 @@ public class SimulationBuilder {
       if (tickCount == null)
          throw new IllegalStateException("tick count not set");
 
+      Collection<SimulationEvent> tmp;
+
       List<SimulationEvent> events = new LinkedList<>();
       for (SimulationMember member : members)
-         events.addAll(member.generateEvents());
+         if ((tmp = member.generateEvents()) != null)
+            events.addAll(tmp);
 
-      return new SimulationImpl(tickCount, phases, events, series, services);
+      return new SimulationImpl(tickCount, phases, members, events, series, services);
    }
 }

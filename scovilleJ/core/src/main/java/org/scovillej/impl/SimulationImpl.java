@@ -10,32 +10,40 @@ import java.util.Set;
 import org.scovillej.profile.Series;
 import org.scovillej.profile.SeriesProvider;
 import org.scovillej.profile.SeriesResult;
+import org.scovillej.simulation.PhaseHandler;
 import org.scovillej.simulation.Simulation;
 import org.scovillej.simulation.SimulationContext;
 import org.scovillej.simulation.SimulationEvent;
+import org.scovillej.simulation.SimulationMember;
 
 public class SimulationImpl implements Simulation {
 
-   private final List<String> phases;
-   private final Map<Long, List<SimulationEvent>> tickToEvents;
    private final long totalTicks;
+   private final List<String> phases;
+   private final Collection<SimulationMember> members;
+   private final Map<Long, Map<String, List<SimulationEvent>>> phaseToEvents;
    private final Map<String, SeriesProvider<?>> series;
    private final Set<Object> services;
 
    private long currentTick = -1;
    private boolean done = false;
 
-   public SimulationImpl(long totalTicks, List<String> phases, Collection<SimulationEvent> collection, Map<String, SeriesProvider<?>> series, Set<Object> services) {
-      this.series = series;
+   public SimulationImpl(long totalTicks, List<String> phases, List<SimulationMember> members, Collection<SimulationEvent> events, Map<String, SeriesProvider<?>> series, Set<Object> services) {
       this.totalTicks = totalTicks;
       this.phases = phases;
+      this.members = members;
+      this.series = series;
       this.services = services;
 
-      this.tickToEvents = new HashMap<>();
-      for (SimulationEvent event : collection) {
+      this.phaseToEvents = new HashMap<>();
+      for (SimulationEvent event : events) {
+         Map<String, List<SimulationEvent>> map;
+         if ((map = phaseToEvents.get(event.getScheduledTick())) == null)
+            phaseToEvents.put(event.getScheduledTick(), map = new HashMap<>());
+
          List<SimulationEvent> list;
-         if ((list = tickToEvents.get(event.getScheduledTick())) == null)
-            tickToEvents.put(event.getScheduledTick(), list = new LinkedList<SimulationEvent>());
+         if ((list = map.get(event.getScheduledPhase())) == null)
+            map.put(event.getScheduledPhase(), list = new LinkedList<SimulationEvent>());
          list.add(event);
       }
 
@@ -76,34 +84,49 @@ public class SimulationImpl implements Simulation {
    }
 
    private void executeTick() {
-      for (final String phase : phases)
-         if (!tickToEvents.containsKey(currentTick))
-            continue;
-         else
-            for (SimulationEvent event : tickToEvents.get(currentTick))
-               event.execute(new SimulationContext() {
-                  @Override
-                  public String getCurrentPhase() {
-                     return phase;
-                  }
+      for (final String currentPhase : phases) {
+         if (phaseToEvents.containsKey(currentTick) && phaseToEvents.get(currentTick).containsKey(currentPhase))
+            handleEventPhase(currentPhase, phaseToEvents.get(currentTick).get(currentPhase));
 
-                  @Override
-                  public long getCurrentTick() {
-                     return currentTick;
-                  }
+         handleMemberPhase(currentPhase, members);
+      }
 
-                  @SuppressWarnings("unchecked")
-                  @Override
-                  public <T extends Number> Series<T> getSeries(String symbol) {
-                     return (Series<T>) series.get(symbol);
-                  }
-
-                  @Override
-                  public <T> T getService(Class<T> clazz) {
-                     return lookup(clazz);
-                  }
-               });
       done = true;
+   }
+
+   private void handleEventPhase(String currentPhase, Collection<SimulationEvent> events) {
+      for (SimulationEvent event : events)
+         handlePhase(currentPhase, event);
+   }
+
+   private void handleMemberPhase(String currentPhase, Collection<SimulationMember> members) {
+      for (SimulationMember member : members)
+         handlePhase(currentPhase, member);
+   }
+
+   private void handlePhase(final String currentPhase, PhaseHandler handler) {
+      handler.executePhase(new SimulationContext() {
+         @Override
+         public String getCurrentPhase() {
+            return currentPhase;
+         }
+
+         @Override
+         public long getCurrentTick() {
+            return currentTick;
+         }
+
+         @SuppressWarnings("unchecked")
+         @Override
+         public <T extends Number> Series<T> getSeries(String symbol) {
+            return (Series<T>) series.get(symbol);
+         }
+
+         @Override
+         public <T> T getService(Class<T> clazz) {
+            return lookup(clazz);
+         }
+      });
    }
 
    @SuppressWarnings("unchecked")
@@ -188,8 +211,8 @@ public class SimulationImpl implements Simulation {
       return (SeriesResult<T>) series.get(symbol);
    }
 
-   public Map<Long, List<SimulationEvent>> test__getMap() {
-      return tickToEvents;
+   public Map<Long, Map<String, List<SimulationEvent>>> test__getMap() {
+      return phaseToEvents;
    }
 
    public List<String> test__getPhases() {
