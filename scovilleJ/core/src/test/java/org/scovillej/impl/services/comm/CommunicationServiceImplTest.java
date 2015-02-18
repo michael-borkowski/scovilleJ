@@ -104,6 +104,9 @@ public class CommunicationServiceImplTest {
 
       assertEquals(0, socketA.available());
       assertEquals(0, socketB.available());
+
+      socketA.close();
+      socketB.close();
    }
 
    @Test
@@ -183,6 +186,9 @@ public class CommunicationServiceImplTest {
 
       assertEquals(0, socketA.available());
       assertEquals(0, socketB.available());
+
+      socketA.close();
+      socketB.close();
    }
 
    @Test
@@ -262,6 +268,9 @@ public class CommunicationServiceImplTest {
 
       assertEquals(0, socketA.available());
       assertEquals(0, socketB.available());
+
+      socketA.close();
+      socketB.close();
    }
 
    @Test
@@ -353,6 +362,9 @@ public class CommunicationServiceImplTest {
 
       assertEquals(0, socketA.available());
       assertEquals(0, socketB.available());
+
+      socketA.close();
+      socketB.close();
    }
 
    private void advance(int count, SimulationSocket<?>... sockets) throws IOException {
