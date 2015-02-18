@@ -389,8 +389,6 @@ public class CommunicationServiceImplTest {
                return Simulation.TICK_PHASE;
             }
          });
-         for (SimulationSocket<?> socket : sockets)
-            socket.available();
       }
    }
 

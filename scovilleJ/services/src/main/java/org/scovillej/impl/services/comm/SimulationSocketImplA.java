@@ -18,9 +18,9 @@ public class SimulationSocketImplA<T> extends SimulationSocketImpl<T> {
       PipedInputStream downlink_in = new PipedInputStream();
       PipedOutputStream downlink_out = new PipedOutputStream(downlink_in);
 
-      setIO(rate(t, uplink, uplink_in), downlink_out, clientSide, serializer);
+      setIO(t, rate(t, uplink, uplink_in), downlink_out, clientSide, serializer);
 
-      clientSide.setIO(rate(t, downlink, downlink_in), uplink_out, this, serializer);
+      clientSide.setIO(t, rate(t, downlink, downlink_in), uplink_out, this, serializer);
    }
 
    private static InputStream rate(TickSource t, Integer rate, InputStream in) {

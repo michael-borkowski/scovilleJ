@@ -9,9 +9,10 @@ import java.util.Queue;
 
 import org.scovillej.services.comm.Serializer;
 import org.scovillej.services.comm.SimulationSocket;
+import org.spicej.ticks.TickListener;
+import org.spicej.ticks.TickSource;
 
 public abstract class SimulationSocketImpl<T> implements SimulationSocket<T> {
-
    private static final int HEADER_LENGTH = 4;
 
    private SimulationSocketImpl<T> otherSide;
@@ -100,12 +101,28 @@ public abstract class SimulationSocketImpl<T> implements SimulationSocket<T> {
       return ByteBuffer.allocate(HEADER_LENGTH).putInt(serialized.length).array();
    }
 
-   protected void setIO(InputStream in, OutputStream out, SimulationSocketImpl<T> otherSide, Serializer<T> serializer) {
+   protected void setIO(TickSource t, InputStream in, OutputStream out, SimulationSocketImpl<T> otherSide, Serializer<T> serializer) {
       this.in = in;
       this.out = out;
       this.otherSide = otherSide;
       this.serializer = serializer;
 
       open = true;
+
+      t.addListener(new AvailableUpdater());
    }
+
+   private class AvailableUpdater implements TickListener {
+
+      @Override
+      public void tick(long tick) {
+         try {
+            readRemaining();
+         } catch (IOException e) {
+            throw new RuntimeException(e);
+         }
+      }
+
+   }
+
 }
