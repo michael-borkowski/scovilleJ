@@ -2,11 +2,11 @@ package at.borkowski.scovillej.impl.services.comm;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 
 import at.borkowski.scovillej.services.comm.Serializer;
-import at.borkowski.spicej.bytes.RateLimitInputStream;
+import at.borkowski.spicej.streams.RateLimitInputStream;
+import at.borkowski.spicej.streams.util.PipedInputStream;
+import at.borkowski.spicej.streams.util.PipedOutputStream;
 import at.borkowski.spicej.ticks.TickSource;
 
 public class SimulationSocketImplA<T> extends SimulationSocketImpl<T> {
