@@ -43,7 +43,7 @@ public class SimulationServerSocketImpl<T> implements SimulationServerSocket<T> 
       if (clientSide == null)
          return null;
 
-      return new SimulationSocketImplA<>(owner.getTickSource(), uplink, downlink, clientSide, serializer);
+      return new SimulationSocketImplA<>(owner.getTickSource(), uplink, downlink, clientSide, serializer, owner.getBufferSize());
    }
 
    @Override

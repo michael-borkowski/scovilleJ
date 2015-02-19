@@ -2,7 +2,9 @@ package org.scovillej.services.comm;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Formatter;
 
+import org.junit.Test;
 import org.scovillej.SimulationBuilder;
 import org.scovillej.simulation.Simulation;
 import org.scovillej.simulation.SimulationContext;
@@ -10,11 +12,11 @@ import org.scovillej.simulation.SimulationEvent;
 import org.scovillej.simulation.SimulationMember;
 
 public class CommIntegrationTest {
-
+   @Test
    public void test() {
       SimulationBuilder builder = new SimulationBuilder();
-      builder.totalTicks(1000);
-      builder.service(new CommunicationBuilder().communicationPhase("comm").createProvider());
+      builder.totalTicks(1000000);
+      builder.service(new CommunicationBuilder().communicationPhase("comm").limit("myserver", 4).bufferSize(1024 * 1024).createProvider());
       builder.member(new Server());
       builder.member(new Client());
       builder.phase(Simulation.TICK_PHASE);
@@ -40,6 +42,11 @@ public class CommIntegrationTest {
 
          this.context = context;
          ensureInit();
+         try {
+            tick();
+         } catch (Exception e) {
+            throw new RuntimeException(e);
+         }
       }
 
       private void ensureInit() {
@@ -48,6 +55,7 @@ public class CommIntegrationTest {
          comm = context.getService(CommunicationService.class);
          try {
             init();
+            init = true;
          } catch (Exception e) {
             throw new RuntimeException(e);
          }
@@ -101,7 +109,8 @@ public class CommIntegrationTest {
 
    private class Client extends Member {
 
-      int rx = 0;
+      int rx = -1;
+      long t0;
       byte[][] files = new byte[4][];
       SimulationSocket<byte[]> clientSocket;
 
@@ -110,6 +119,7 @@ public class CommIntegrationTest {
          clientSocket = comm.beginConnect("myserver", byte[].class);
       }
 
+      @SuppressWarnings("resource")
       @Override
       protected void tick() throws IOException {
          if (!clientSocket.established())
@@ -120,11 +130,19 @@ public class CommIntegrationTest {
             return;
          }
 
-         clientSocket.write(new byte[] { 0 });
+         if (rx == -1) {
+            clientSocket.write(new byte[] { (byte) (rx = 0) });
+            t0 = context.getCurrentTick();
+         }
+
          while (clientSocket.available() > 0) {
             files[rx] = clientSocket.read();
-            System.out.println("Received " + rx + " at " + context.getCurrentTick());
-            clientSocket.write(new byte[] { (byte) rx });
+            int len = files[rx].length;
+            t0 = context.getCurrentTick() - t0;
+            double rate = (double) len / t0;
+            System.out.println("Received " + rx + " (" + files[rx].length + " B, " + new Formatter().format("%.2f", rate) + " B/s) at " + context.getCurrentTick());
+            if (rx + 1 < files.length)
+               clientSocket.write(new byte[] { (byte) ++rx });
          }
       }
    }

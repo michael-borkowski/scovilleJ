@@ -11,11 +11,11 @@ import org.spicej.ticks.TickSource;
 
 public class SimulationSocketImplA<T> extends SimulationSocketImpl<T> {
 
-   public SimulationSocketImplA(TickSource t, Integer uplink, Integer downlink, SimulationSocketImplB<T> clientSide, Serializer<T> serializer) throws IOException {
-      PipedInputStream uplink_in = new PipedInputStream();
+   public SimulationSocketImplA(TickSource t, Integer uplink, Integer downlink, SimulationSocketImplB<T> clientSide, Serializer<T> serializer, int bufferSize) throws IOException {
+      PipedInputStream uplink_in = new PipedInputStream(bufferSize);
       PipedOutputStream uplink_out = new PipedOutputStream(uplink_in);
 
-      PipedInputStream downlink_in = new PipedInputStream();
+      PipedInputStream downlink_in = new PipedInputStream(bufferSize);
       PipedOutputStream downlink_out = new PipedOutputStream(downlink_in);
 
       setIO(t, rate(t, uplink, uplink_in), downlink_out, clientSide, serializer);
@@ -26,7 +26,9 @@ public class SimulationSocketImplA<T> extends SimulationSocketImpl<T> {
    private static InputStream rate(TickSource t, Integer rate, InputStream in) {
       if (rate == null)
          return in;
-      else
-         return new RateLimitInputStream(in, t, rate, 1);
+
+      RateLimitInputStream is = new RateLimitInputStream(in, t, rate, 1);
+      is.setNonBlocking(true);
+      return is;
    }
 }

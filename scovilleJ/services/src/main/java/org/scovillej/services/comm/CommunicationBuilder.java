@@ -12,7 +12,10 @@ import org.scovillej.simulation.Simulation;
 import org.scovillej.simulation.SimulationMember;
 
 public class CommunicationBuilder {
+   public static final int DEFAULT_BUFFER_SIZE = 1024 * 1024;
+   
    private String phase = Simulation.TICK_PHASE;
+   private int bufferSize = CommunicationBuilder.DEFAULT_BUFFER_SIZE;
    private Map<String, Integer> uplink = new HashMap<>();
    private Map<String, Integer> downlink = new HashMap<>();
 
@@ -37,6 +40,13 @@ public class CommunicationBuilder {
       return limit(socketName, rate, rate);
    }
 
+   public CommunicationBuilder bufferSize(int bufferSize) {
+      checkUncreated();
+
+      this.bufferSize = bufferSize;
+      return this;
+   }
+
    private void checkUncreated() {
       if (instance != null)
          throw new IllegalStateException("instance already created");
@@ -45,7 +55,7 @@ public class CommunicationBuilder {
    private void createIfNecessary() {
       if (instance != null)
          return;
-      final CommunicationServiceImpl serviceInstance = new CommunicationServiceImpl(phase, uplink, downlink);
+      final CommunicationServiceImpl serviceInstance = new CommunicationServiceImpl(phase, uplink, downlink, bufferSize);
       instance = new ServiceProvider<CommunicationService>() {
 
          @Override

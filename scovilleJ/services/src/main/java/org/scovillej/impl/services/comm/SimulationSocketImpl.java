@@ -117,7 +117,8 @@ public abstract class SimulationSocketImpl<T> implements SimulationSocket<T> {
       @Override
       public void tick(long tick) {
          try {
-            readRemaining();
+            if (open && !finished)
+               readRemaining();
          } catch (IOException e) {
             throw new RuntimeException(e);
          }

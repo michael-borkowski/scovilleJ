@@ -19,6 +19,8 @@ import org.spicej.ticks.TickSource;
 
 public class CommunicationServiceImpl implements CommunicationService, SimulationMember {
 
+   public static final int DEFAULT_BUFFER_SIZE = 1024 * 1024;
+
    private final String phase;
    private final SimulationTickSource t = new SimulationTickSource();
 
@@ -27,15 +29,17 @@ public class CommunicationServiceImpl implements CommunicationService, Simulatio
    private final Map<String, Integer> uplink;
    private final Map<String, Integer> downlink;
    private final Map<Class<?>, Serializer<?>> serializers = new HashMap<>();
+   private final int bufferSize;
 
    public CommunicationServiceImpl() {
-      this(Simulation.TICK_PHASE, new HashMap<String, Integer>(), new HashMap<String, Integer>());
+      this(Simulation.TICK_PHASE, new HashMap<String, Integer>(), new HashMap<String, Integer>(), DEFAULT_BUFFER_SIZE);
    }
 
-   public CommunicationServiceImpl(String phase, Map<String, Integer> uplink, Map<String, Integer> downlink) {
+   public CommunicationServiceImpl(String phase, Map<String, Integer> uplink, Map<String, Integer> downlink, int bufferSize) {
       this.phase = phase;
       this.uplink = uplink;
       this.downlink = downlink;
+      this.bufferSize = bufferSize;
 
       BuiltInSerializers.addTo(serializers);
    }
@@ -105,6 +109,10 @@ public class CommunicationServiceImpl implements CommunicationService, Simulatio
 
    public TickSource getTickSource() {
       return t;
+   }
+
+   public int getBufferSize() {
+      return bufferSize;
    }
 
 }
