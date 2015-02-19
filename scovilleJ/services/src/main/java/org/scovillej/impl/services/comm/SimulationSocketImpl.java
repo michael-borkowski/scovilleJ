@@ -9,8 +9,9 @@ import java.util.Queue;
 
 import org.scovillej.services.comm.Serializer;
 import org.scovillej.services.comm.SimulationSocket;
-import org.spicej.ticks.TickListener;
-import org.spicej.ticks.TickSource;
+
+import at.borkowski.spicej.ticks.TickListener;
+import at.borkowski.spicej.ticks.TickSource;
 
 public abstract class SimulationSocketImpl<T> implements SimulationSocket<T> {
    private static final int HEADER_LENGTH = 4;

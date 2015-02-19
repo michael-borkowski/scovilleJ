@@ -6,8 +6,9 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 
 import org.scovillej.services.comm.Serializer;
-import org.spicej.bytes.RateLimitInputStream;
-import org.spicej.ticks.TickSource;
+
+import at.borkowski.spicej.bytes.RateLimitInputStream;
+import at.borkowski.spicej.ticks.TickSource;
 
 public class SimulationSocketImplA<T> extends SimulationSocketImpl<T> {
 

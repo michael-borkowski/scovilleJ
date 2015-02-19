@@ -14,8 +14,9 @@ import org.scovillej.simulation.Simulation;
 import org.scovillej.simulation.SimulationContext;
 import org.scovillej.simulation.SimulationEvent;
 import org.scovillej.simulation.SimulationMember;
-import org.spicej.impl.SimulationTickSource;
-import org.spicej.ticks.TickSource;
+
+import at.borkowski.spicej.impl.SimulationTickSource;
+import at.borkowski.spicej.ticks.TickSource;
 
 public class CommunicationServiceImpl implements CommunicationService, SimulationMember {
 
