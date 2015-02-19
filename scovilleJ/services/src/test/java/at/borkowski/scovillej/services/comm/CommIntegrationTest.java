@@ -145,7 +145,7 @@ public class CommIntegrationTest {
             int len = files[rx].length;
             t0 = context.getCurrentTick() - t0;
             double rate = (double) len / t0;
-            System.out.println("Received " + rx + " (" + files[rx].length + " B, " + new Formatter().format("%.2f", rate) + " B/s) at " + context.getCurrentTick());
+            System.out.println("Received " + rx + " (" + files[rx].length + " B, " + new Formatter().format("%.2f", rate) + " B/t) at " + context.getCurrentTick());
             if (rx + 1 < files.length)
                clientSocket.write(new byte[] { (byte) ++rx });
          }
