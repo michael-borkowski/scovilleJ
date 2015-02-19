@@ -17,8 +17,9 @@ import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
 import at.borkowski.scovillej.simulation.SimulationMember;
 
+// TODO document this?
+// TODO check coverage
 public class SimulationImpl implements Simulation {
-
    private final long totalTicks;
    private final List<String> phases;
    private final Collection<SimulationMember> members = new LinkedList<>();

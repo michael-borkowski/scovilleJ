@@ -2,6 +2,7 @@ package at.borkowski.scovillej.profile;
 
 import java.util.Map;
 
+//TODO document this
 public interface SeriesResult<T extends Number> {
    Map<Long, T> getAll();
 

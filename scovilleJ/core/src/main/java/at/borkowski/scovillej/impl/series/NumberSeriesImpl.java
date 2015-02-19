@@ -10,6 +10,7 @@ import java.util.TreeSet;
 import at.borkowski.scovillej.profile.SeriesProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 
+//TODO document this
 public abstract class NumberSeriesImpl<T extends Number> extends SeriesImpl<T> implements SeriesProvider<T> {
    private Simulation sim;
    private long totalTicks;

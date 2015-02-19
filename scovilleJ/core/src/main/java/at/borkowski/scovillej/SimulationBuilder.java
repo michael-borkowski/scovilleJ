@@ -19,6 +19,7 @@ import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationEvent;
 import at.borkowski.scovillej.simulation.SimulationMember;
 
+// TODO document this?
 public class SimulationBuilder {
    private final List<String> phases = new LinkedList<>();
    private final List<SimulationMember> members = new LinkedList<>();

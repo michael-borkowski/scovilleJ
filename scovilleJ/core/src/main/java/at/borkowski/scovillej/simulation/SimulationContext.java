@@ -2,6 +2,7 @@ package at.borkowski.scovillej.simulation;
 
 import at.borkowski.scovillej.profile.Series;
 
+//TODO document this
 public interface SimulationContext {
    long getCurrentTick();
 

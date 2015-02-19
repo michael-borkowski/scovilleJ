@@ -3,6 +3,7 @@ package at.borkowski.scovillej.impl.series;
 import java.util.Comparator;
 import java.util.TreeSet;
 
+// TODO document this
 public class DoubleSeriesImpl extends NumberSeriesImpl<Double> {
 
    @Override
