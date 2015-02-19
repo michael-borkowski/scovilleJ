@@ -2,7 +2,7 @@ package at.borkowski.scovillej.simulation;
 
 import java.util.Collection;
 
-//TODO document this
+// TODO document this
 public interface ServiceProvider<T> {
    public Collection<SimulationMember> getMembers();
 

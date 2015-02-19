@@ -1,6 +1,6 @@
 package at.borkowski.scovillej.profile;
 
-//TODO document this
+// TODO document this
 public interface Series<T extends Number> {
    void measure(T value);
 }

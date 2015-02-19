@@ -7,6 +7,6 @@ public interface SimulationServerSocket<T> extends Closeable {
    int available();
 
    SimulationSocket<T> accept() throws IOException;
-   
+
    void close();
 }

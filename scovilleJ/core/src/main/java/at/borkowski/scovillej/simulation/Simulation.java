@@ -2,7 +2,7 @@ package at.borkowski.scovillej.simulation;
 
 import at.borkowski.scovillej.profile.SeriesResult;
 
-//TODO document this
+// TODO document this
 public interface Simulation {
    public static final String TICK_PHASE = "tick";
 

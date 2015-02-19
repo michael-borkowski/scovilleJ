@@ -8,6 +8,6 @@ public interface CommunicationService {
    <T> SimulationSocket<T> beginConnect(String name, Class<T> clazz) throws IOException;
 
    void setRates(String name, Integer uplink, Integer downlink);
-   
+
    <T> void addSerializer(Class<T> clazz, Serializer<T> serializer);
 }

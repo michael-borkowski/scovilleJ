@@ -13,7 +13,7 @@ import at.borkowski.scovillej.simulation.SimulationMember;
 
 public class CommunicationBuilder {
    public static final int DEFAULT_BUFFER_SIZE = 1024 * 1024;
-   
+
    private String phase = Simulation.TICK_PHASE;
    private int bufferSize = CommunicationBuilder.DEFAULT_BUFFER_SIZE;
    private Map<String, Integer> uplink = new HashMap<>();

@@ -1,6 +1,5 @@
 package at.borkowski.scovillej.impl.services.comm.serializers;
 
-
 public class ByteArraySerializer extends BaseSerializer<byte[]> {
 
    public static String CHARSET = "UTF-8";

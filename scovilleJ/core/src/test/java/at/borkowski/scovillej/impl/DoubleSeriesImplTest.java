@@ -140,27 +140,27 @@ public class DoubleSeriesImplTest {
       assertEquals(23.74975D, averaged.get(50L), EPSILON);
       assertEquals(100, sut.getAveraged(10).size());
    }
-   
+
    public void testMedians() {
       tick = 0;
       assertFalse(sut.hasExactMedian());
-      
+
       tick++;
       sut.measure(1D);
       assertTrue(sut.hasExactMedian());
-      
+
       tick++;
       sut.measure(1D);
       assertFalse(sut.hasExactMedian());
-      
+
       tick++;
       sut.measure(1D);
       assertTrue(sut.hasExactMedian());
-      
+
       tick++;
       sut.measure(1D);
       assertFalse(sut.hasExactMedian());
-      
+
       tick++;
       sut.measure(1D);
       assertTrue(sut.hasExactMedian());
