@@ -23,6 +23,7 @@ public class CommunicationServiceImpl implements CommunicationService, Simulatio
    private final SimulationTickSource t = new SimulationTickSource();
 
    private final Map<String, SimulationServerSocketImpl<?>> serverSockets = new HashMap<>();
+   private final Map<String, Class<?>> clazzes = new HashMap<>();
    private final Map<String, Integer> uplink;
    private final Map<String, Integer> downlink;
    private final Map<Class<?>, Serializer<?>> serializers = new HashMap<>();
@@ -40,11 +41,13 @@ public class CommunicationServiceImpl implements CommunicationService, Simulatio
    }
 
    @Override
-   public <T> SimulationSocket<T> beginConnect(String name) throws IOException {
+   public <T> SimulationSocket<T> beginConnect(String name, Class<T> clazz) throws IOException {
       @SuppressWarnings("unchecked")
       SimulationServerSocketImpl<T> serverSocket = (SimulationServerSocketImpl<T>) serverSockets.get(name);
       if (!serverSockets.containsKey(name))
          throw new IOException("name \"" + name + "\" not an open server socket");
+      if (!clazzes.get(name).equals(clazz))
+         throw new IOException("name \"" + name + "\" is of an uncompatible type (" + clazzes.get(name) + " != " + clazz + ")");
       SimulationSocketImplB<T> socket = new SimulationSocketImplB<T>();
 
       serverSocket.addWaiting(socket);
@@ -58,6 +61,7 @@ public class CommunicationServiceImpl implements CommunicationService, Simulatio
 
       SimulationServerSocketImpl<T> serverSocket = new SimulationServerSocketImpl<T>(this, name, uplink.get(name), downlink.get(name), getSerializer(clazz));
       serverSockets.put(name, serverSocket);
+      clazzes.put(name, clazz);
       return serverSocket;
    }
 

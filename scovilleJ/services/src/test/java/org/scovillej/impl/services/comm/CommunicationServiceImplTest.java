@@ -27,7 +27,13 @@ public class CommunicationServiceImplTest {
 
    @Test(expected = IOException.class)
    public void testNonExistingName() throws IOException {
-      sut.beginConnect("non-existing");
+      sut.beginConnect("non-existing", Void.class);
+   }
+
+   @Test(expected = IOException.class)
+   public void testIncompatibleType() throws IOException {
+      sut.createServerSocket("incompatible", String.class);
+      sut.beginConnect("incompatible", byte[].class);
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -53,7 +59,7 @@ public class CommunicationServiceImplTest {
       assertEquals(0, serverSocket.available());
       assertNull(serverSocket.accept());
 
-      SimulationSocket<String> socketA = sut.beginConnect("accepter");
+      SimulationSocket<String> socketA = sut.beginConnect("accepter", String.class);
       assertFalse(socketA.established());
       assertEquals(1, serverSocket.available());
 
@@ -115,7 +121,7 @@ public class CommunicationServiceImplTest {
       assertEquals(0, serverSocket.available());
       assertNull(serverSocket.accept());
 
-      SimulationSocket<String> socketA = sut.beginConnect("accepter");
+      SimulationSocket<String> socketA = sut.beginConnect("accepter", String.class);
       assertFalse(socketA.established());
       assertEquals(1, serverSocket.available());
 
@@ -197,7 +203,7 @@ public class CommunicationServiceImplTest {
       assertEquals(0, serverSocket.available());
       assertNull(serverSocket.accept());
 
-      SimulationSocket<String> socketB = sut.beginConnect("accepter");
+      SimulationSocket<String> socketB = sut.beginConnect("accepter", String.class);
       assertFalse(socketB.established());
       assertEquals(1, serverSocket.available());
 
@@ -279,7 +285,7 @@ public class CommunicationServiceImplTest {
       assertEquals(0, serverSocket.available());
       assertNull(serverSocket.accept());
 
-      SimulationSocket<String> socketB = sut.beginConnect("accepter");
+      SimulationSocket<String> socketB = sut.beginConnect("accepter", String.class);
       assertFalse(socketB.established());
       assertEquals(1, serverSocket.available());
 

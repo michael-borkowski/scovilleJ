@@ -28,6 +28,7 @@ import org.scovillej.impl.SimulationImpl;
 import org.scovillej.impl.series.DoubleSeriesImpl;
 import org.scovillej.profile.SeriesProvider;
 import org.scovillej.profile.SeriesResult;
+import org.scovillej.simulation.ServiceProvider;
 import org.scovillej.simulation.Simulation;
 import org.scovillej.simulation.SimulationContext;
 import org.scovillej.simulation.SimulationEvent;
@@ -42,7 +43,8 @@ public class SimulationImplTest {
    int[] yesTicks = { 0, 1, 2, 5, 10, 100, 314, 271, 420, 980, 990, 995, 998, 999 };
    int[] noTicks = { -2, -1, 1000, 1001, 1010, 1100 };
 
-   List<String> serviceResults;
+   List<String> serviceCallResults;
+   List<String> serviceMemberResults;
    List<String> memberResults;
 
    SeriesProvider<Double> sa, sb;
@@ -83,15 +85,44 @@ public class SimulationImplTest {
       series.put("series-a", sa = new DoubleSeriesImpl());
       series.put("series-b", sb = new DoubleSeriesImpl());
 
-      Set<Object> services = new HashSet<>();
-      services.add(new A() {
+      Set<ServiceProvider<?>> services = new HashSet<>();
+      services.add(new ServiceProvider<A>() {
          @Override
-         public String x() {
-            return "x";
+         public Collection<SimulationMember> getMembers() {
+            List<SimulationMember> list = new LinkedList<>();
+            list.add(new SimulationMember() {
+
+               @Override
+               public void executePhase(SimulationContext context) {
+                  serviceMemberResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
+               }
+
+               @Override
+               public Collection<SimulationEvent> generateEvents() {
+                  return null;
+               }
+            });
+            return list;
+         }
+
+         @Override
+         public A getService() {
+            return new A() {
+               @Override
+               public String x() {
+                  return "x";
+               }
+            };
+         }
+
+         @Override
+         public Class<A> getServiceClass() {
+            return A.class;
          }
       });
 
-      serviceResults = new LinkedList<>();
+      serviceCallResults = new LinkedList<>();
+      serviceMemberResults = new LinkedList<>();
       memberResults = new LinkedList<>();
 
       sut = new SimulationImpl(totalTicks, phaseNames, members, tick_evt.values(), series, services);
@@ -124,7 +155,7 @@ public class SimulationImplTest {
 
             A service = context.getService(A.class);
             if (service != null) {
-               serviceResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase() + "-" + service.x());
+               serviceCallResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase() + "-" + service.x());
             }
          }
 
@@ -312,11 +343,11 @@ public class SimulationImplTest {
 
       String[] expected = { "0-c-x", "1-c-x", "2-c-x", "5-c-x" };
 
-      assertArrayEquals(expected, serviceResults.toArray(new String[0]));
+      assertArrayEquals(expected, serviceCallResults.toArray(new String[0]));
    }
 
    @Test
-   public void testMember() {
+   public void testMembers() {
       sut.initialize();
       sut.executeUpToTick(6);
 
@@ -326,6 +357,19 @@ public class SimulationImplTest {
             expectedList.add(i + "-" + s);
 
       assertArrayEquals(expectedList.toArray(new String[0]), memberResults.toArray(new String[0]));
+   }
+
+   @Test
+   public void testServiceMembers() {
+      sut.initialize();
+      sut.executeUpToTick(6);
+
+      List<String> expectedList = new LinkedList<>();
+      for (int i = 0; i < 6; i++)
+         for (String s : phases)
+            expectedList.add(i + "-" + s);
+
+      assertArrayEquals(expectedList.toArray(new String[0]), serviceMemberResults.toArray(new String[0]));
    }
 
 }

@@ -11,6 +11,7 @@ import org.scovillej.profile.Series;
 import org.scovillej.profile.SeriesProvider;
 import org.scovillej.profile.SeriesResult;
 import org.scovillej.simulation.PhaseHandler;
+import org.scovillej.simulation.ServiceProvider;
 import org.scovillej.simulation.Simulation;
 import org.scovillej.simulation.SimulationContext;
 import org.scovillej.simulation.SimulationEvent;
@@ -20,20 +21,21 @@ public class SimulationImpl implements Simulation {
 
    private final long totalTicks;
    private final List<String> phases;
-   private final Collection<SimulationMember> members;
+   private final Collection<SimulationMember> members = new LinkedList<>();
    private final Map<Long, Map<String, List<SimulationEvent>>> phaseToEvents;
    private final Map<String, SeriesProvider<?>> series;
-   private final Set<Object> services;
+   private final Set<ServiceProvider<?>> services;
 
    private long currentTick = -1;
    private boolean done = false;
 
-   public SimulationImpl(long totalTicks, List<String> phases, List<SimulationMember> members, Collection<SimulationEvent> events, Map<String, SeriesProvider<?>> series, Set<Object> services) {
+   public SimulationImpl(long totalTicks, List<String> phases, List<SimulationMember> members, Collection<SimulationEvent> events, Map<String, SeriesProvider<?>> series, Set<ServiceProvider<?>> services) {
       this.totalTicks = totalTicks;
       this.phases = phases;
-      this.members = members;
       this.series = series;
       this.services = services;
+
+      this.members.addAll(members);
 
       this.phaseToEvents = new HashMap<>();
       for (SimulationEvent event : events) {
@@ -49,6 +51,9 @@ public class SimulationImpl implements Simulation {
 
       for (SeriesProvider<?> provider : series.values())
          provider.initialize(this, totalTicks);
+
+      for (ServiceProvider<?> service : services)
+         this.members.addAll(service.getMembers());
    }
 
    @Override
@@ -131,9 +136,9 @@ public class SimulationImpl implements Simulation {
 
    @SuppressWarnings("unchecked")
    private <T> T lookup(Class<T> clazz) {
-      for (Object o : services)
-         if (clazz.isAssignableFrom(o.getClass()))
-            return (T) o;
+      for (ServiceProvider<?> o : services)
+         if (clazz.isAssignableFrom(o.getServiceClass()))
+            return (T) o.getService();
       return null;
    }
 

@@ -14,6 +14,7 @@ import org.scovillej.impl.series.FloatSeriesImpl;
 import org.scovillej.impl.series.IntegerSeriesImpl;
 import org.scovillej.impl.series.LongSeriesImpl;
 import org.scovillej.profile.SeriesProvider;
+import org.scovillej.simulation.ServiceProvider;
 import org.scovillej.simulation.Simulation;
 import org.scovillej.simulation.SimulationEvent;
 import org.scovillej.simulation.SimulationMember;
@@ -22,7 +23,7 @@ public class SimulationBuilder {
    private final List<String> phases = new LinkedList<>();
    private final List<SimulationMember> members = new LinkedList<>();
    private final Map<String, SeriesProvider<?>> series = new HashMap<>();
-   private final Set<Object> services = new HashSet<>();
+   private final Set<ServiceProvider<?>> services = new HashSet<>();
 
    private Long tickCount;
 
@@ -66,7 +67,7 @@ public class SimulationBuilder {
       return this;
    }
 
-   public SimulationBuilder service(Object service) {
+   public SimulationBuilder service(ServiceProvider<?> service) {
       services.add(service);
       return this;
    }
