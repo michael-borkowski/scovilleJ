@@ -1,5 +1,7 @@
 # scovilleJ
 
+[![Build Status](https://travis-ci.org/michael-borkowski/scovilleJ.svg?branch=master)](https://travis-ci.org/michael-borkowski/scovilleJ)
+
 scovilleJ is a framework for running synchronous simulations in Java.
 
 Its goal is providing a verastile framework. The architecture is as follows:
