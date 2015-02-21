@@ -6,7 +6,7 @@ import java.util.TreeSet;
 /**
  * A series of {@link Double} measures.
  */
-public class DoubleSeriesImpl extends NumberSeriesImpl<Double> {
+public class DoubleSeriesImpl extends SeriesImpl<Double> {
 
    @Override
    protected TreeSet<Double> createValueTreeSet() {

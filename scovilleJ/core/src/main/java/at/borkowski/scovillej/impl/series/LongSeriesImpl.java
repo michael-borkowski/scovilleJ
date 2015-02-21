@@ -6,7 +6,7 @@ import java.util.TreeSet;
 /**
  * A series of {@link Long} measures.
  */
-public class LongSeriesImpl extends NumberSeriesImpl<Long> {
+public class LongSeriesImpl extends SeriesImpl<Long> {
 
    @Override
    protected TreeSet<Long> createValueTreeSet() {

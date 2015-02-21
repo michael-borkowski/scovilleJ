@@ -6,7 +6,7 @@ import java.util.TreeSet;
 /**
  * A series of {@link Float} measures.
  */
-public class FloatSeriesImpl extends NumberSeriesImpl<Float> {
+public class FloatSeriesImpl extends SeriesImpl<Float> {
 
    @Override
    protected TreeSet<Float> createValueTreeSet() {

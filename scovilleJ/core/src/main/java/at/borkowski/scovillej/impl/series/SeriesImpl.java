@@ -16,8 +16,7 @@ import at.borkowski.scovillej.simulation.Simulation;
  * @param <T>
  *           The type of numbers measured
  */
-// TODO: rename to SeriesImpl, after removing SeriesImpl
-public abstract class NumberSeriesImpl<T extends Number> implements SeriesProvider<T> {
+public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> {
    private Simulation sim;
    private long totalTicks;
 
