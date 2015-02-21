@@ -1,15 +1,11 @@
 package at.borkowski.scovillej.services.comm;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import at.borkowski.scovillej.impl.services.comm.CommunicationServiceImpl;
 import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
-import at.borkowski.scovillej.simulation.SimulationMember;
 
 public class CommunicationBuilder {
    public static final int DEFAULT_BUFFER_SIZE = 1024 * 1024;
@@ -55,26 +51,7 @@ public class CommunicationBuilder {
    private void createIfNecessary() {
       if (instance != null)
          return;
-      final CommunicationServiceImpl serviceInstance = new CommunicationServiceImpl(phase, uplink, downlink, bufferSize);
-      instance = new ServiceProvider<CommunicationService>() {
-
-         @Override
-         public Class<CommunicationService> getServiceClass() {
-            return CommunicationService.class;
-         }
-
-         @Override
-         public CommunicationService getService() {
-            return serviceInstance;
-         }
-
-         @Override
-         public Collection<SimulationMember> getRequiredMembers() {
-            List<SimulationMember> ret = new LinkedList<>();
-            ret.add(serviceInstance);
-            return ret;
-         }
-      };
+      instance = new CommunicationServiceImpl(phase, uplink, downlink, bufferSize);
    }
 
    public ServiceProvider<?> createProvider() {

@@ -51,6 +51,7 @@ public class SimulationImpl implements Simulation {
     * @param services
     *           a list of services to be provided
     */
+   // TODO: build events in constructor
    public SimulationImpl(long totalTicks, List<String> phases, List<SimulationMember> members, Collection<SimulationEvent> events, Map<String, SeriesProvider<?>> series, Set<ServiceProvider<?>> services) {
       this.totalTicks = totalTicks;
       this.phases = phases;
@@ -58,6 +59,7 @@ public class SimulationImpl implements Simulation {
       this.services = services;
 
       this.members.addAll(members);
+      this.members.addAll(services);
 
       this.phaseToEvents = new HashMap<>();
       for (SimulationEvent event : events) {
@@ -73,9 +75,6 @@ public class SimulationImpl implements Simulation {
 
       for (SeriesProvider<?> provider : series.values())
          provider.initialize(this, totalTicks);
-
-      for (ServiceProvider<?> service : services)
-         this.members.addAll(service.getRequiredMembers());
 
       for (SimulationMember member : this.members)
          if (member.getPhaseHandlers() != null)

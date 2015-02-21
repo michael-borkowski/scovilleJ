@@ -101,29 +101,22 @@ public class SimulationImplTest {
 
       Set<ServiceProvider<?>> services = new HashSet<>();
       services.add(new ServiceProvider<A>() {
+
          @Override
-         public Collection<SimulationMember> getRequiredMembers() {
-            List<SimulationMember> list = new LinkedList<>();
-            list.add(new SimulationMember() {
-
+         public Collection<PhaseHandler> getPhaseHandlers() {
+            List<PhaseHandler> list = new LinkedList<>();
+            list.add(new PhaseHandler() {
                @Override
-               public Collection<PhaseHandler> getPhaseHandlers() {
-                  List<PhaseHandler> list = new LinkedList<>();
-                  list.add(new PhaseHandler() {
-                     @Override
-                     public void executePhase(SimulationContext context) {
-                        serviceMemberResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
-                     }
-                  });
-                  return list;
-               }
-
-               @Override
-               public Collection<SimulationEvent> generateEvents() {
-                  return null;
+               public void executePhase(SimulationContext context) {
+                  serviceMemberResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
                }
             });
             return list;
+         }
+
+         @Override
+         public Collection<SimulationEvent> generateEvents() {
+            return null;
          }
 
          @Override

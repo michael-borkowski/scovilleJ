@@ -13,14 +13,14 @@ import at.borkowski.scovillej.services.comm.Serializer;
 import at.borkowski.scovillej.services.comm.SimulationServerSocket;
 import at.borkowski.scovillej.services.comm.SimulationSocket;
 import at.borkowski.scovillej.simulation.PhaseHandler;
+import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
-import at.borkowski.scovillej.simulation.SimulationMember;
 import at.borkowski.spicej.impl.SimulationTickSource;
 import at.borkowski.spicej.ticks.TickSource;
 
-public class CommunicationServiceImpl implements CommunicationService, SimulationMember {
+public class CommunicationServiceImpl implements CommunicationService, ServiceProvider<CommunicationService> {
 
    public static final int DEFAULT_BUFFER_SIZE = 1024 * 1024;
 
@@ -115,6 +115,16 @@ public class CommunicationServiceImpl implements CommunicationService, Simulatio
    @Override
    public Collection<SimulationEvent> generateEvents() {
       return null;
+   }
+   
+   @Override
+   public CommunicationService getService() {
+      return this;
+   }
+   
+   @Override
+   public Class<CommunicationService> getServiceClass() {
+      return CommunicationService.class;
    }
 
    public TickSource getTickSource() {
