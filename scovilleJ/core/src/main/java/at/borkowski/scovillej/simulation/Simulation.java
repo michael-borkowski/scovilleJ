@@ -42,13 +42,6 @@ public interface Simulation {
    void executeToEnd();
 
    /**
-    * Initialized the simulation. This method must be called before any other
-    * method.
-    */
-   // TODO: remove this method
-   void initialize();
-
-   /**
     * Executes the current tick. This method may only be called if the
     * simulation has not executed the current tick yet. Otherwise, an
     * {@link IllegalStateException} is thrown.

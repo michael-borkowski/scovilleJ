@@ -30,11 +30,12 @@ public class SimulationImpl implements Simulation {
    private final Map<String, SeriesProvider<?>> series;
    private final Set<ServiceProvider<?>> services;
 
-   private long currentTick = -1;
+   private long currentTick = 0;
    private boolean done = false;
 
    /**
-    * Creates a new simulation.
+    * Creates a new simulation. The returned simulation is standing at tick 0
+    * before processing.
     * 
     * @param totalTicks
     *           the total ticks this simulation must run for
@@ -78,8 +79,6 @@ public class SimulationImpl implements Simulation {
 
    @Override
    public void executeToEnd() {
-      if (currentTick == -1)
-         throw new IllegalStateException("not initialized");
       if (done)
          increaseTick();
 
@@ -92,8 +91,6 @@ public class SimulationImpl implements Simulation {
 
    @Override
    public void executeUpToTick(long tick) {
-      if (currentTick == -1)
-         throw new IllegalStateException("not initialized");
       if (done)
          increaseTick();
       if (tick >= totalTicks)
@@ -163,17 +160,7 @@ public class SimulationImpl implements Simulation {
    }
 
    @Override
-   public void initialize() {
-      if (currentTick != -1)
-         throw new IllegalStateException("already initialized");
-
-      currentTick = 0;
-   }
-
-   @Override
    public void executeCurrentTick() {
-      if (currentTick == -1)
-         throw new IllegalStateException("not initialized");
       if (done)
          throw new IllegalStateException("can't re-execute tick");
       executeTick();
@@ -181,15 +168,11 @@ public class SimulationImpl implements Simulation {
 
    @Override
    public long getCurrentTick() {
-      if (currentTick == -1)
-         throw new IllegalStateException("not initialized");
       return currentTick;
    }
 
    @Override
    public void executeAndIncreaseTick() {
-      if (currentTick == -1)
-         throw new IllegalStateException("not initialized");
       if (done)
          throw new IllegalStateException("can't re-execute tick");
       executeTick();
@@ -208,8 +191,6 @@ public class SimulationImpl implements Simulation {
    }
 
    private void increaseTick(boolean strict) {
-      if (currentTick == -1)
-         throw new IllegalStateException("not initialized");
       if (!done)
          throw new IllegalStateException("can't skip tick");
 

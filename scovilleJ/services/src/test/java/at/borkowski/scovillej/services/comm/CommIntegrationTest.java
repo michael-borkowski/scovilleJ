@@ -28,7 +28,6 @@ public class CommIntegrationTest {
       builder.phase("comm");
 
       Simulation simulation = builder.create();
-      simulation.initialize();
 
       simulation.executeToEnd();
    }

@@ -6,7 +6,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.never;
@@ -171,37 +170,7 @@ public class SimulationImplTest {
    }
 
    @Test
-   public void testExceptionOnUninitialized() {
-      try {
-         sut.executeCurrentTick();
-         fail();
-      } catch (IllegalStateException expected) {}
-      try {
-         sut.increaseTick();
-         fail();
-      } catch (IllegalStateException expected) {}
-      try {
-         sut.executeCurrentTick();
-         fail();
-      } catch (IllegalStateException expected) {}
-      try {
-         sut.executeToEnd();
-         fail();
-      } catch (IllegalStateException expected) {}
-      try {
-         sut.executeUpToTick(1);
-         fail();
-      } catch (IllegalStateException expected) {}
-      try {
-         sut.getCurrentTick();
-         fail();
-      } catch (IllegalStateException expected) {}
-   }
-
-   @Test
    public void testFullExecution() {
-      sut.initialize();
-
       assertEquals(0, sut.getCurrentTick());
       assertFalse(sut.executedCurrentTick());
 
@@ -219,7 +188,6 @@ public class SimulationImplTest {
 
    @Test
    public void testFullExecution_executeStrict() {
-      sut.initialize();
       assertEquals(0, sut.getCurrentTick());
       assertFalse(sut.executedCurrentTick());
 
@@ -252,7 +220,6 @@ public class SimulationImplTest {
    public void testPartialExecution_execute() {
       int part = 200;
 
-      sut.initialize();
       assertEquals(0, sut.getCurrentTick());
       assertFalse(sut.executedCurrentTick());
 
@@ -286,7 +253,6 @@ public class SimulationImplTest {
    public void testPartialExecution_executeAndIncrease() {
       int part = 200;
 
-      sut.initialize();
       for (int i = 0; i < part; i++)
          sut.executeAndIncreaseTick();
       assertEquals(part, sut.getCurrentTick());
@@ -304,7 +270,6 @@ public class SimulationImplTest {
 
    @Test
    public void testSeriesPresent() {
-      sut.initialize();
       sut.executeToEnd();
       SeriesResult<Double> seriesA = sut.getSeries("series-a");
       SeriesResult<Double> seriesB = sut.getSeries("series-b");
@@ -314,7 +279,6 @@ public class SimulationImplTest {
 
    @Test
    public void testSeriesCount() {
-      sut.initialize();
       sut.executeUpToTick(10);
       sa.measure(1D);
       sut.executeUpToTick(11);
@@ -339,7 +303,6 @@ public class SimulationImplTest {
 
    @Test
    public void testServices() {
-      sut.initialize();
       sut.executeUpToTick(6);
 
       String[] expected = { "0-c-x", "1-c-x", "2-c-x", "5-c-x" };
@@ -349,7 +312,6 @@ public class SimulationImplTest {
 
    @Test
    public void testMembers() {
-      sut.initialize();
       sut.executeUpToTick(6);
 
       List<String> expectedList = new LinkedList<>();
@@ -362,7 +324,6 @@ public class SimulationImplTest {
 
    @Test
    public void testServiceMembers() {
-      sut.initialize();
       sut.executeUpToTick(6);
 
       List<String> expectedList = new LinkedList<>();
