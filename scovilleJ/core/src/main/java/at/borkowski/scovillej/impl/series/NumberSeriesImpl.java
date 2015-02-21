@@ -7,11 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import at.borkowski.scovillej.profile.SeriesProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 
 // TODO document this
-public abstract class NumberSeriesImpl<T extends Number> extends SeriesImpl<T> implements SeriesProvider<T> {
+public abstract class NumberSeriesImpl<T extends Number> extends SeriesImpl<T> {
    private Simulation sim;
    private long totalTicks;
 
