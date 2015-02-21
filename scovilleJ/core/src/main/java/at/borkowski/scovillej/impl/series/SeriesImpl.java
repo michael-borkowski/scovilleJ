@@ -18,22 +18,21 @@ import at.borkowski.scovillej.simulation.Simulation;
  * @param <T>
  *           The type of numbers measured
  */
-// TODO make fields final
 public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> {
    private Simulation sim;
 
-   private final Comparator<T> comparator;
    private final Class<T> clazz;
-
-   private Map<Long, T> map;
-
-   private TreeSet<T> values;
+   private final Map<Long, T> map = new HashMap<>();
+   private final TreeSet<T> values;
+   
    private Double sum = 0D;
    private long count = 0;
 
    public SeriesImpl(Comparator<T> comparator, Class<T> clazz) {
-      this.comparator = comparator;
       this.clazz = clazz;
+
+      // idea stolen from http://stackoverflow.com/a/14002206
+      values = new TreeSet<>(comparator);
    }
 
    @Override
@@ -44,10 +43,6 @@ public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> 
    @Override
    public void initialize(Simulation sim) {
       this.sim = sim;
-      map = new HashMap<>();
-
-      // idea stolen from http://stackoverflow.com/a/14002206
-      values = new TreeSet<>(comparator);
    }
 
    @Override
