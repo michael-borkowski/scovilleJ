@@ -1,10 +1,9 @@
 package at.borkowski.scovillej.services.comm;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Formatter;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.junit.Test;
 
@@ -40,13 +39,10 @@ public class CommIntegrationTest {
 
       @Override
       public Collection<PhaseHandler> getPhaseHandlers() {
-         List<PhaseHandler> list = new LinkedList<>();
-         list.add(new PhaseHandler() {
+         return Arrays.asList(new PhaseHandler() {
             @Override
             public Collection<String> getPhaseSubcription() {
-               List<String> ret = new LinkedList<>();
-               ret.add(Simulation.TICK_PHASE);
-               return ret;
+               return Arrays.asList(Simulation.TICK_PHASE);
             }
             
             @Override
@@ -60,7 +56,6 @@ public class CommIntegrationTest {
                }
             }
          });
-         return list;
       }
 
       private void ensureInit() {

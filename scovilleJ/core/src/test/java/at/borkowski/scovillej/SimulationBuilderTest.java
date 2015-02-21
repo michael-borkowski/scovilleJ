@@ -94,7 +94,7 @@ public class SimulationBuilderTest {
 
          @Override
          public Collection<PhaseHandler> getPhaseHandlers() {
-            return new LinkedList<PhaseHandler>();
+            return null;
          }
       });
       sut.member(new SimulationMember() {
@@ -147,7 +147,7 @@ public class SimulationBuilderTest {
 
          @Override
          public Collection<PhaseHandler> getPhaseHandlers() {
-            return new LinkedList<PhaseHandler>();
+            return null;
          }
       });
 

@@ -83,8 +83,7 @@ public class SimulationImpl implements Simulation {
                   for (String phase : handler.getPhaseSubcription())
                      phaseToHandlers.get(phase).add(handler);
                else
-                  for (String phase : phases)
-                     phaseToHandlers.get(phase).add(handler);
+                  phaseToHandlers.get(Simulation.TICK_PHASE).add(handler);
    }
 
    @Override

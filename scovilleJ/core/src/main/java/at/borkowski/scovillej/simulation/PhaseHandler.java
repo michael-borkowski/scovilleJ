@@ -10,10 +10,11 @@ public interface PhaseHandler {
    /**
     * Returns an array of phases this handler needs to process. This class'
     * {@link #executePhase(SimulationContext)} will be called only for these
-    * phases. If this method returns null, it is called for all phases.
+    * phases. If this method returns null, it is called only for the default
+    * "tick" phase (see {@link Simulation#TICK_PHASE}).
     * 
-    * @return the phases reuqired for this phase handler, or null if all phases
-    *         are required
+    * @return the phases reuqired for this phase handler, or null if only the
+    *         "tick" phase is required.
     */
    Collection<String> getPhaseSubcription();
 

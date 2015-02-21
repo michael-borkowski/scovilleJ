@@ -121,9 +121,7 @@ public class SimulationImplTest {
       };
       members.add(eventProvider);
 
-      List<String> phaseNames = new LinkedList<>();
-      for (String phase : phases)
-         phaseNames.add(phase);
+      List<String> phaseNames = Arrays.asList(phases);
 
       Map<String, SeriesProvider<?>> series = new HashMap<>();
       series.put("series-a", sa = new DoubleSeriesImpl());
@@ -134,8 +132,7 @@ public class SimulationImplTest {
 
          @Override
          public Collection<PhaseHandler> getPhaseHandlers() {
-            List<PhaseHandler> list = new LinkedList<>();
-            list.add(new PhaseHandler() {
+            return Arrays.asList(new PhaseHandler() {
                @Override
                public Collection<String> getPhaseSubcription() {
                   return null;
@@ -146,7 +143,6 @@ public class SimulationImplTest {
                   serviceMemberResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
                }
             });
-            return list;
          }
 
          @Override

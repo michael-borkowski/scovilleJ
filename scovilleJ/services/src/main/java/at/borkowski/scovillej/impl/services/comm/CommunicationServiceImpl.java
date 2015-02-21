@@ -1,10 +1,9 @@
 package at.borkowski.scovillej.impl.services.comm;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import at.borkowski.scovillej.impl.services.comm.serializers.BuiltInSerializers;
@@ -101,13 +100,10 @@ public class CommunicationServiceImpl implements CommunicationService, ServicePr
 
    @Override
    public Collection<PhaseHandler> getPhaseHandlers() {
-      List<PhaseHandler> list = new LinkedList<>();
-      list.add(new PhaseHandler() {
+      return Arrays.asList(new PhaseHandler() {
          @Override
          public Collection<String> getPhaseSubcription() {
-            List<String> list = new LinkedList<>();
-            list.add(phase);
-            return list;
+            return Arrays.asList(phase);
          }
 
          @Override
@@ -115,7 +111,6 @@ public class CommunicationServiceImpl implements CommunicationService, ServicePr
             t.advance();
          }
       });
-      return list;
    }
 
    @Override
