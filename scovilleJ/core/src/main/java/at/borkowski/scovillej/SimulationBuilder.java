@@ -1,6 +1,5 @@
 package at.borkowski.scovillej;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -16,7 +15,6 @@ import at.borkowski.scovillej.impl.series.LongSeriesImpl;
 import at.borkowski.scovillej.profile.SeriesProvider;
 import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
-import at.borkowski.scovillej.simulation.SimulationEvent;
 import at.borkowski.scovillej.simulation.SimulationMember;
 
 /**
@@ -148,14 +146,6 @@ public class SimulationBuilder {
    public Simulation create() {
       if (tickCount == null)
          throw new IllegalStateException("tick count not set");
-
-      Collection<SimulationEvent> tmp;
-
-      List<SimulationEvent> events = new LinkedList<>();
-      for (SimulationMember member : members)
-         if ((tmp = member.generateEvents()) != null)
-            events.addAll(tmp);
-
-      return new SimulationImpl(tickCount, phases, members, events, series, services);
+      return new SimulationImpl(tickCount, phases, members, series, services);
    }
 }

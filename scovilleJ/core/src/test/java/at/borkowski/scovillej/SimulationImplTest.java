@@ -51,7 +51,7 @@ public class SimulationImplTest {
    SeriesProvider<Double> sa, sb;
 
    SimulationMember member;
-   Map<Integer, SimulationEvent> tick_evt = new HashMap<>();
+   Map<Long, SimulationEvent> tick_evt = new HashMap<>();
 
    private interface A {
       String x();
@@ -87,13 +87,32 @@ public class SimulationImplTest {
       List<SimulationMember> members = new LinkedList<>();
       members.add(member);
 
+      List<SimulationEvent> events = new LinkedList<>();
+      for (int tick : yesTicks)
+         events.add(mockEvent(tick, "c"));
+      for (int tick : noTicks)
+         events.add(mockEvent(tick, "c"));
+
+      for (SimulationEvent event : events)
+         tick_evt.put(event.getScheduledTick(), event);
+
+      SimulationMember eventProvider = new SimulationMember() {
+
+         @Override
+         public Collection<PhaseHandler> getPhaseHandlers() {
+            return null;
+         }
+
+         @Override
+         public Collection<SimulationEvent> generateEvents() {
+            return events;
+         }
+      };
+      members.add(eventProvider);
+
       List<String> phaseNames = new LinkedList<>();
       for (String phase : phases)
          phaseNames.add(phase);
-      for (int tick : yesTicks)
-         tick_evt.put(tick, mockEvent(tick, "c"));
-      for (int tick : noTicks)
-         tick_evt.put(tick, mockEvent(tick, "c"));
 
       Map<String, SeriesProvider<?>> series = new HashMap<>();
       series.put("series-a", sa = new DoubleSeriesImpl());
@@ -140,7 +159,7 @@ public class SimulationImplTest {
       memberResults1 = new LinkedList<>();
       memberResults2 = new LinkedList<>();
 
-      sut = new SimulationImpl(totalTicks, phaseNames, members, tick_evt.values(), series, services);
+      sut = new SimulationImpl(totalTicks, phaseNames, members, series, services);
    }
 
    public void testTotalTicks() {
@@ -195,10 +214,10 @@ public class SimulationImplTest {
       assertTrue(sut.executedCurrentTick());
 
       for (int tick : yesTicks)
-         verify(tick_evt.get(tick), times(1)).executePhase(any(SimulationContext.class));
+         verify(tick_evt.get((long) tick), times(1)).executePhase(any(SimulationContext.class));
 
       for (int tick : noTicks)
-         verify(tick_evt.get(tick), never()).executePhase(any(SimulationContext.class));
+         verify(tick_evt.get((long) tick), never()).executePhase(any(SimulationContext.class));
    }
 
    @Test
@@ -225,10 +244,10 @@ public class SimulationImplTest {
       assertTrue(sut.executedCurrentTick());
 
       for (int tick : yesTicks)
-         verify(tick_evt.get(tick), times(1)).executePhase(any(SimulationContext.class));
+         verify(tick_evt.get((long) tick), times(1)).executePhase(any(SimulationContext.class));
 
       for (int tick : noTicks)
-         verify(tick_evt.get(tick), never()).executePhase(any(SimulationContext.class));
+         verify(tick_evt.get((long) tick), never()).executePhase(any(SimulationContext.class));
    }
 
    @Test
@@ -256,12 +275,12 @@ public class SimulationImplTest {
 
       for (int tick : yesTicks)
          if (tick < part)
-            verify(tick_evt.get(tick), times(1)).executePhase(any(SimulationContext.class));
+            verify(tick_evt.get((long) tick), times(1)).executePhase(any(SimulationContext.class));
          else
-            verify(tick_evt.get(tick), never()).executePhase(any(SimulationContext.class));
+            verify(tick_evt.get((long) tick), never()).executePhase(any(SimulationContext.class));
 
       for (int tick : noTicks)
-         verify(tick_evt.get(tick), never()).executePhase(any(SimulationContext.class));
+         verify(tick_evt.get((long) tick), never()).executePhase(any(SimulationContext.class));
    }
 
    @Test
@@ -275,12 +294,12 @@ public class SimulationImplTest {
 
       for (int tick : yesTicks)
          if (tick < part)
-            verify(tick_evt.get(tick), times(1)).executePhase(any(SimulationContext.class));
+            verify(tick_evt.get((long) tick), times(1)).executePhase(any(SimulationContext.class));
          else
-            verify(tick_evt.get(tick), never()).executePhase(any(SimulationContext.class));
+            verify(tick_evt.get((long) tick), never()).executePhase(any(SimulationContext.class));
 
       for (int tick : noTicks)
-         verify(tick_evt.get(tick), never()).executePhase(any(SimulationContext.class));
+         verify(tick_evt.get((long) tick), never()).executePhase(any(SimulationContext.class));
    }
 
    @Test

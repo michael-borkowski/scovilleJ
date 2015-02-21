@@ -44,15 +44,12 @@ public class SimulationImpl implements Simulation {
     *           a list of phases to be used
     * @param members
     *           a list of members to be serviced
-    * @param events
-    *           a list of events to be processed
     * @param series
     *           a list of series to be recorded
     * @param services
     *           a list of services to be provided
     */
-   // TODO: build events in constructor
-   public SimulationImpl(long totalTicks, List<String> phases, List<SimulationMember> members, Collection<SimulationEvent> events, Map<String, SeriesProvider<?>> series, Set<ServiceProvider<?>> services) {
+   public SimulationImpl(long totalTicks, List<String> phases, List<SimulationMember> members, Map<String, SeriesProvider<?>> series, Set<ServiceProvider<?>> services) {
       this.totalTicks = totalTicks;
       this.phases = phases;
       this.series = series;
@@ -62,15 +59,21 @@ public class SimulationImpl implements Simulation {
       this.members.addAll(services);
 
       this.phaseToEvents = new HashMap<>();
-      for (SimulationEvent event : events) {
-         Map<String, List<SimulationEvent>> map;
-         if ((map = phaseToEvents.get(event.getScheduledTick())) == null)
-            phaseToEvents.put(event.getScheduledTick(), map = new HashMap<>());
 
-         List<SimulationEvent> list;
-         if ((list = map.get(event.getScheduledPhase())) == null)
-            map.put(event.getScheduledPhase(), list = new LinkedList<SimulationEvent>());
-         list.add(event);
+      Collection<SimulationEvent> memberEvents;
+      for (SimulationMember member : members) {
+         if ((memberEvents = member.generateEvents()) != null) {
+            for (SimulationEvent event : memberEvents) {
+               Map<String, List<SimulationEvent>> map;
+               if ((map = phaseToEvents.get(event.getScheduledTick())) == null)
+                  phaseToEvents.put(event.getScheduledTick(), map = new HashMap<>());
+
+               List<SimulationEvent> list;
+               if ((list = map.get(event.getScheduledPhase())) == null)
+                  map.put(event.getScheduledPhase(), list = new LinkedList<SimulationEvent>());
+               list.add(event);
+            }
+         }
       }
 
       for (SeriesProvider<?> provider : series.values())
