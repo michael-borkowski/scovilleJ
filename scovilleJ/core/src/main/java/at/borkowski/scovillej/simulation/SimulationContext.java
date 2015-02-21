@@ -33,10 +33,11 @@ public interface SimulationContext {
     * 
     * @param symbol
     *           the symbol (name of series) to record
+    * @param clazz
+    *           the runtime class object for <code>T</code>
     * @return the series objects
     */
-   // TODO: add class
-   <T extends Number> Series<T> getSeries(String symbol);
+   <T extends Number> Series<T> getSeries(String symbol, Class<T> clazz);
 
    /**
     * Returns a series object for a given class. If the series is not provided

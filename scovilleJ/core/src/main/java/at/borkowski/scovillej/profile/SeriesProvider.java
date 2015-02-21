@@ -20,4 +20,11 @@ public interface SeriesProvider<T extends Number> extends Series<T>, SeriesResul
     *           will be removed
     */
    void initialize(Simulation simulation, long totalTicks);
+
+   /**
+    * Returns the runtime class type for <code>T</code>
+    * 
+    * @return the class object for <code>T</code>
+    */
+   Class<T> getValueClass();
 }

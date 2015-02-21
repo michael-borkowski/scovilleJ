@@ -147,7 +147,11 @@ public class SimulationImpl implements Simulation {
 
          @SuppressWarnings("unchecked")
          @Override
-         public <T extends Number> Series<T> getSeries(String symbol) {
+         public <T extends Number> Series<T> getSeries(String symbol, Class<T> clazz) {
+            if (series.get(symbol) == null)
+               return null;
+            if (!series.get(symbol).getValueClass().equals(clazz))
+               return null;
             return (Series<T>) series.get(symbol);
          }
 

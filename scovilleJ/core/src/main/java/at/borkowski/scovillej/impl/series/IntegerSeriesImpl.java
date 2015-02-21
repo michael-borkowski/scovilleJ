@@ -1,20 +1,18 @@
 package at.borkowski.scovillej.impl.series;
 
 import java.util.Comparator;
-import java.util.TreeSet;
 
 /**
  * A series of {@link Integer} measures.
  */
 public class IntegerSeriesImpl extends SeriesImpl<Integer> {
 
-   @Override
-   protected TreeSet<Integer> createValueTreeSet() {
-      return new TreeSet<>(new Comparator<Integer>() {
+   public IntegerSeriesImpl() {
+      super(new Comparator<Integer>() {
          public int compare(Integer o1, Integer o2) {
             return o1.intValue() > o2.intValue() ? 1 : -1;
          }
-      });
+      }, Integer.class);
    }
 
    @Override

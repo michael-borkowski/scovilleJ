@@ -386,7 +386,7 @@ public class CommunicationServiceImplTest {
                }
 
                @Override
-               public <T extends Number> Series<T> getSeries(String symbol) {
+               public <T extends Number> Series<T> getSeries(String symbol, Class<T> clazz) {
                   return null;
                }
 

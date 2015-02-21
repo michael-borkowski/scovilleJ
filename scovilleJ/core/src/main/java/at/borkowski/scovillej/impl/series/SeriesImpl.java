@@ -1,5 +1,6 @@
 package at.borkowski.scovillej.impl.series;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -16,15 +17,29 @@ import at.borkowski.scovillej.simulation.Simulation;
  * @param <T>
  *           The type of numbers measured
  */
+// TODO make fields final
 public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> {
    private Simulation sim;
    private long totalTicks;
+   
+   private final Comparator<T> comparator;
+   private final Class<T> clazz;
 
    private Map<Long, T> map;
 
    private TreeSet<T> values;
    private Double sum = 0D;
    private long count = 0;
+   
+   public SeriesImpl(Comparator<T> comparator, Class<T> clazz) {
+      this.comparator = comparator;
+      this.clazz = clazz;
+   }
+   
+   @Override
+   public Class<T> getValueClass() {
+      return clazz;
+   }
 
    // TODO remove totalTicks
    @Override
@@ -34,7 +49,7 @@ public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> 
       map = new HashMap<>();
 
       // idea stolen from http://stackoverflow.com/a/14002206
-      values = createValueTreeSet();
+      values = new TreeSet<>(comparator);
    }
 
    @Override
@@ -62,15 +77,6 @@ public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> 
       }
       return result;
    }
-
-   /**
-    * Abstract method which must be implemented by sub-classes. The method must
-    * create a {@link TreeSet} of Type <code>T</code>.
-    * 
-    * @return a TreeSet of type T
-    */
-   // TODO: cange to createComparator<T>
-   protected abstract TreeSet<T> createValueTreeSet();
 
    /**
     * Abstract method which must be implemented by sub-classes. The method must
