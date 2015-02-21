@@ -3,7 +3,9 @@ package at.borkowski.scovillej.impl.series;
 import java.util.Comparator;
 import java.util.TreeSet;
 
-// TODO document this
+/**
+ * A series of {@link Double} measures.
+ */
 public class DoubleSeriesImpl extends NumberSeriesImpl<Double> {
 
    @Override

@@ -9,7 +9,13 @@ import java.util.TreeSet;
 
 import at.borkowski.scovillej.simulation.Simulation;
 
-// TODO document this
+/**
+ * A base class for implementing a series of numbers.
+ *
+ * @param <T>
+ *           The type of numbers measured
+ */
+// TODO: rename to SeriesImpl, after removing SeriesImpl
 public abstract class NumberSeriesImpl<T extends Number> extends SeriesImpl<T> {
    private Simulation sim;
    private long totalTicks;
@@ -20,6 +26,7 @@ public abstract class NumberSeriesImpl<T extends Number> extends SeriesImpl<T> {
    private Double sum = 0D;
    private long count = 0;
 
+   // TODO remove totalTicks
    @Override
    public void initialize(Simulation sim, long totalTicks) {
       this.sim = sim;
@@ -56,11 +63,37 @@ public abstract class NumberSeriesImpl<T extends Number> extends SeriesImpl<T> {
       return result;
    }
 
+   /**
+    * Abstract method which must be implemented by sub-classes. The method must
+    * create a {@link TreeSet} of Type <code>T</code>.
+    * 
+    * @return a TreeSet of type T
+    */
+   // TODO: cange to createComparator<T>
    protected abstract TreeSet<T> createValueTreeSet();
 
+   /**
+    * Abstract method which must be implemented by sub-classes. The method must
+    * calculate the median, with two values given.
+    * 
+    * If this method is called, it is guaranteed that there are two median
+    * candidates and the implementation is reponsible of calculating the actial
+    * median.
+    * 
+    * Note that in general, mean-like calculation should be performed.
+    * 
+    * @param a
+    *           the first (left) median candidate
+    * @param b
+    *           the second (right) median candidate
+    * @param exact
+    *           will be removed
+    * @return the median
+    */
+   // TODO: call only if !exact && a != b, remove exact
    protected abstract T calcNativeMedian(T a, T b, boolean exact);
 
-   protected double avg(List<T> values) {
+   private double avg(List<T> values) {
       double sum = 0;
       for (T t : values)
          sum += t.doubleValue();

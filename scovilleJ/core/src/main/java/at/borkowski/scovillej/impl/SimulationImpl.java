@@ -17,8 +17,11 @@ import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
 import at.borkowski.scovillej.simulation.SimulationMember;
 
-// TODO document this?
+/**
+ * An implementation for {@link Simulation}.
+ */
 // TODO check coverage
+// TODO check whether processing for the last tick is correct
 public class SimulationImpl implements Simulation {
    private final long totalTicks;
    private final List<String> phases;
@@ -30,6 +33,22 @@ public class SimulationImpl implements Simulation {
    private long currentTick = -1;
    private boolean done = false;
 
+   /**
+    * Creates a new simulation.
+    * 
+    * @param totalTicks
+    *           the total ticks this simulation must run for
+    * @param phases
+    *           a list of phases to be used
+    * @param members
+    *           a list of members to be serviced
+    * @param events
+    *           a list of events to be processed
+    * @param series
+    *           a list of series to be recorded
+    * @param services
+    *           a list of services to be provided
+    */
    public SimulationImpl(long totalTicks, List<String> phases, List<SimulationMember> members, Collection<SimulationEvent> events, Map<String, SeriesProvider<?>> series, Set<ServiceProvider<?>> services) {
       this.totalTicks = totalTicks;
       this.phases = phases;
@@ -217,10 +236,21 @@ public class SimulationImpl implements Simulation {
       return (SeriesResult<T>) series.get(symbol);
    }
 
+   /**
+    * Testability method only.
+    * 
+    * @return the internal events map
+    */
+   // TODO rename to getEventsMap
    public Map<Long, Map<String, List<SimulationEvent>>> test__getMap() {
       return phaseToEvents;
    }
 
+   /**
+    * Testability method only.
+    * 
+    * @return the phases list
+    */
    public List<String> test__getPhases() {
       return phases;
    }
