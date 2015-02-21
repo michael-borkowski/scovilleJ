@@ -233,8 +233,7 @@ public class SimulationImpl implements Simulation {
     * 
     * @return the internal events map
     */
-   // TODO rename to getEventsMap
-   public Map<Long, Map<String, List<SimulationEvent>>> test__getMap() {
+   public Map<Long, Map<String, List<SimulationEvent>>> test__getEventsMap() {
       return phaseToEvents;
    }
 

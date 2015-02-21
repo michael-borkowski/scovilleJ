@@ -153,7 +153,7 @@ public class SimulationBuilderTest {
 
       sut.totalTicks(10);
       SimulationImpl sim = (SimulationImpl) sut.create();
-      Map<Long, Map<String, List<SimulationEvent>>> map = sim.test__getMap();
+      Map<Long, Map<String, List<SimulationEvent>>> map = sim.test__getEventsMap();
 
       assertNull(map.get(0L));
       assertNotNull(map.get(1L));
