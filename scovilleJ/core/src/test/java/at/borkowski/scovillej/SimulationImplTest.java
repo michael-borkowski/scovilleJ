@@ -46,8 +46,8 @@ public class SimulationImplTest {
    int[] noTicks = { -2, -1, 1000, 1001, 1010, 1100 };
 
    List<String> serviceCallResults;
-   List<String> serviceMemberResults;
-   List<String> memberResults1, memberResults2;
+   List<String> serviceMemberResults_tick, serviceMemberResults_all;
+   List<String> memberResults_all, memberResults_tick;
 
    SeriesProvider<Double> sa, sb;
 
@@ -72,12 +72,12 @@ public class SimulationImplTest {
             list.add(new PhaseHandler() {
                @Override
                public Collection<String> getPhaseSubcription() {
-                  return null;
+                  return Arrays.asList(phases);
                }
 
                @Override
                public void executePhase(SimulationContext context) {
-                  memberResults1.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
+                  memberResults_all.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
                }
             });
             list.add(new PhaseHandler() {
@@ -88,7 +88,7 @@ public class SimulationImplTest {
 
                @Override
                public void executePhase(SimulationContext context) {
-                  memberResults2.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
+                  memberResults_tick.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
                }
             });
             return list;
@@ -129,7 +129,6 @@ public class SimulationImplTest {
 
       Set<ServiceProvider<?>> services = new HashSet<>();
       services.add(new ServiceProvider<A>() {
-
          @Override
          public Collection<PhaseHandler> getPhaseHandlers() {
             return Arrays.asList(new PhaseHandler() {
@@ -137,10 +136,18 @@ public class SimulationImplTest {
                public Collection<String> getPhaseSubcription() {
                   return null;
                }
-
                @Override
                public void executePhase(SimulationContext context) {
-                  serviceMemberResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
+                  serviceMemberResults_tick.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
+               }
+            }, new PhaseHandler() {
+               @Override
+               public Collection<String> getPhaseSubcription() {
+                  return Arrays.asList(phases);
+               }
+               @Override
+               public void executePhase(SimulationContext context) {
+                  serviceMemberResults_all.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
                }
             });
          }
@@ -167,9 +174,10 @@ public class SimulationImplTest {
       });
 
       serviceCallResults = new LinkedList<>();
-      serviceMemberResults = new LinkedList<>();
-      memberResults1 = new LinkedList<>();
-      memberResults2 = new LinkedList<>();
+      serviceMemberResults_tick = new LinkedList<>();
+      serviceMemberResults_all = new LinkedList<>();
+      memberResults_all = new LinkedList<>();
+      memberResults_tick = new LinkedList<>();
 
       sut = new SimulationImpl(totalTicks, phaseNames, members, series, services);
    }
@@ -360,25 +368,32 @@ public class SimulationImplTest {
    public void testMembers() {
       sut.executeUpToTick(6);
 
-      List<String> expectedList = new LinkedList<>();
+      List<String> expectedList_all = new LinkedList<>();
       for (int i = 0; i < 6; i++)
          for (String s : phases)
-            expectedList.add(i + "-" + s);
+            expectedList_all.add(i + "-" + s);
+      List<String> expectedList_tick = new LinkedList<>();
+      for (int i = 0; i < 6; i++)
+         expectedList_tick.add(i + "-" + Simulation.TICK_PHASE);
 
-      assertArrayEquals(expectedList.toArray(new String[0]), memberResults1.toArray(new String[0]));
-      assertArrayEquals(expectedList.toArray(new String[0]), memberResults2.toArray(new String[0]));
+      assertArrayEquals(expectedList_all.toArray(new String[0]), memberResults_all.toArray(new String[0]));
+      assertArrayEquals(expectedList_tick.toArray(new String[0]), memberResults_tick.toArray(new String[0]));
    }
 
    @Test
    public void testServiceMembers() {
       sut.executeUpToTick(6);
 
-      List<String> expectedList = new LinkedList<>();
+      List<String> expectedList_tick = new LinkedList<>();
+      for (int i = 0; i < 6; i++)
+            expectedList_tick.add(i + "-" + Simulation.TICK_PHASE);
+      List<String> expectedList_all = new LinkedList<>();
       for (int i = 0; i < 6; i++)
          for (String s : phases)
-            expectedList.add(i + "-" + s);
+            expectedList_all.add(i + "-" + s);
 
-      assertArrayEquals(expectedList.toArray(new String[0]), serviceMemberResults.toArray(new String[0]));
+      assertArrayEquals(expectedList_tick.toArray(new String[0]), serviceMemberResults_tick.toArray(new String[0]));
+      assertArrayEquals(expectedList_all.toArray(new String[0]), serviceMemberResults_all.toArray(new String[0]));
    }
 
 }

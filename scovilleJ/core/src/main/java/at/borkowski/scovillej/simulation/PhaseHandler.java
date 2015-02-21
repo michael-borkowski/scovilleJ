@@ -26,6 +26,5 @@ public interface PhaseHandler {
     *           The {@link SimulationContext} representing the current state of
     *           the simulation.
     */
-   // TODO: test this
    void executePhase(SimulationContext context);
 }

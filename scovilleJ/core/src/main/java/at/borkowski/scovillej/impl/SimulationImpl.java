@@ -117,7 +117,7 @@ public class SimulationImpl implements Simulation {
    private void executeTick() {
       for (final String currentPhase : phases) {
          if (tickToEvents.containsKey(currentTick))
-            for (SimulationEvent event : tickToEvents.get(currentPhase))
+            for (SimulationEvent event : tickToEvents.get(currentTick))
                if (event.getPhaseSubcription().contains(currentPhase))
                   handlePhase(currentPhase, event);
 
