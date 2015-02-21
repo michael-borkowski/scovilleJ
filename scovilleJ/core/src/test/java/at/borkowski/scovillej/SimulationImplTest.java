@@ -89,7 +89,7 @@ public class SimulationImplTest {
       Set<ServiceProvider<?>> services = new HashSet<>();
       services.add(new ServiceProvider<A>() {
          @Override
-         public Collection<SimulationMember> getMembers() {
+         public Collection<SimulationMember> getRequiredMembers() {
             List<SimulationMember> list = new LinkedList<>();
             list.add(new SimulationMember() {
 
@@ -203,12 +203,12 @@ public class SimulationImplTest {
       sut.initialize();
 
       assertEquals(0, sut.getCurrentTick());
-      assertFalse(sut.finishedCurrentTick());
+      assertFalse(sut.executedCurrentTick());
 
       sut.executeToEnd();
 
       assertEquals(totalTicks - 1, sut.getCurrentTick());
-      assertTrue(sut.finishedCurrentTick());
+      assertTrue(sut.executedCurrentTick());
 
       for (int tick : yesTicks)
          verify(tick_evt.get(tick), times(1)).executePhase(any(SimulationContext.class));
@@ -221,7 +221,7 @@ public class SimulationImplTest {
    public void testFullExecution_executeStrict() {
       sut.initialize();
       assertEquals(0, sut.getCurrentTick());
-      assertFalse(sut.finishedCurrentTick());
+      assertFalse(sut.executedCurrentTick());
 
       for (int i = 0; i < totalTicks; i++) {
          assertEquals(i, sut.getCurrentTick());
@@ -229,17 +229,17 @@ public class SimulationImplTest {
          sut.executeCurrentTick();
 
          assertEquals(i, sut.getCurrentTick());
-         assertTrue(sut.finishedCurrentTick());
+         assertTrue(sut.executedCurrentTick());
 
          if (i + 1 >= totalTicks)
             break;
          sut.increaseTickStrictly();
 
          assertEquals(i + 1, sut.getCurrentTick());
-         assertFalse(sut.finishedCurrentTick());
+         assertFalse(sut.executedCurrentTick());
       }
       assertEquals(totalTicks - 1, sut.getCurrentTick());
-      assertTrue(sut.finishedCurrentTick());
+      assertTrue(sut.executedCurrentTick());
 
       for (int tick : yesTicks)
          verify(tick_evt.get(tick), times(1)).executePhase(any(SimulationContext.class));
@@ -254,7 +254,7 @@ public class SimulationImplTest {
 
       sut.initialize();
       assertEquals(0, sut.getCurrentTick());
-      assertFalse(sut.finishedCurrentTick());
+      assertFalse(sut.executedCurrentTick());
 
       for (int i = 0; i < part; i++) {
          assertEquals(i, sut.getCurrentTick());
@@ -262,15 +262,15 @@ public class SimulationImplTest {
          sut.executeCurrentTick();
 
          assertEquals(i, sut.getCurrentTick());
-         assertTrue(sut.finishedCurrentTick());
+         assertTrue(sut.executedCurrentTick());
 
          sut.increaseTick();
 
          assertEquals(i + 1, sut.getCurrentTick());
-         assertFalse(sut.finishedCurrentTick());
+         assertFalse(sut.executedCurrentTick());
       }
       assertEquals(part, sut.getCurrentTick());
-      assertFalse(sut.finishedCurrentTick());
+      assertFalse(sut.executedCurrentTick());
 
       for (int tick : yesTicks)
          if (tick < part)
@@ -290,7 +290,7 @@ public class SimulationImplTest {
       for (int i = 0; i < part; i++)
          sut.executeAndIncreaseTick();
       assertEquals(part, sut.getCurrentTick());
-      assertFalse(sut.finishedCurrentTick());
+      assertFalse(sut.executedCurrentTick());
 
       for (int tick : yesTicks)
          if (tick < part)

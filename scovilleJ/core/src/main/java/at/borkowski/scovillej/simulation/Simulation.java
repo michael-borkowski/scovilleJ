@@ -64,8 +64,8 @@ public interface Simulation {
 
    /**
     * Returns the current tick. This tick is either ready for processing (
-    * {@link #finishedCurrentTick()} is false) or has already been processed (
-    * {@link #finishedCurrentTick()} is true).
+    * {@link #executedCurrentTick()} is false) or has already been processed (
+    * {@link #executedCurrentTick()} is true).
     * 
     * @return the current tick
     */
@@ -99,12 +99,11 @@ public interface Simulation {
     * 
     * @return whether the current tick has already been processed
     */
-   // TODO: rename to executedCurrentTick()
-   boolean finishedCurrentTick();
+   boolean executedCurrentTick();
 
    /**
     * Executes the simulation up to the given tick, stopping at this tick in a
-    * non-processed state ({@link #finishedCurrentTick()} is false).
+    * non-processed state ({@link #executedCurrentTick()} is false).
     * 
     * @param tick
     *           the tick to stop before

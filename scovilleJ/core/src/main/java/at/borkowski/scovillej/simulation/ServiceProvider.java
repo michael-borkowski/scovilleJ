@@ -16,8 +16,7 @@ public interface ServiceProvider<T> {
     * 
     * @return a collection of the required simulation members
     */
-   // TODO: rename to getRequiredMembers()
-   public Collection<SimulationMember> getMembers();
+   public Collection<SimulationMember> getRequiredMembers();
 
    /**
     * Returns the class object of <code>T</code> to be used for run-time

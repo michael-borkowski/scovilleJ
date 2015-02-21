@@ -69,7 +69,7 @@ public class CommunicationBuilder {
          }
 
          @Override
-         public Collection<SimulationMember> getMembers() {
+         public Collection<SimulationMember> getRequiredMembers() {
             List<SimulationMember> ret = new LinkedList<>();
             ret.add(serviceInstance);
             return ret;

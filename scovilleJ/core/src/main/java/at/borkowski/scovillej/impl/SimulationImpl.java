@@ -73,7 +73,7 @@ public class SimulationImpl implements Simulation {
          provider.initialize(this, totalTicks);
 
       for (ServiceProvider<?> service : services)
-         this.members.addAll(service.getMembers());
+         this.members.addAll(service.getRequiredMembers());
    }
 
    @Override
@@ -221,7 +221,7 @@ public class SimulationImpl implements Simulation {
    }
 
    @Override
-   public boolean finishedCurrentTick() {
+   public boolean executedCurrentTick() {
       return done;
    }
 
