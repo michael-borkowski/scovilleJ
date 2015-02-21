@@ -16,10 +16,8 @@ public interface SeriesProvider<T extends Number> extends Series<T>, SeriesResul
     * 
     * @param simulation
     *           The simulation this series is to be performed at
-    * @param totalTicks
-    *           will be removed
     */
-   void initialize(Simulation simulation, long totalTicks);
+   void initialize(Simulation simulation);
 
    /**
     * Returns the runtime class type for <code>T</code>

@@ -77,7 +77,7 @@ public class SimulationImpl implements Simulation {
       }
 
       for (SeriesProvider<?> provider : series.values())
-         provider.initialize(this, totalTicks);
+         provider.initialize(this);
 
       for (SimulationMember member : this.members)
          if (member.getPhaseHandlers() != null)

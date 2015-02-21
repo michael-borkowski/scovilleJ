@@ -16,7 +16,7 @@ public class IntegerSeriesImpl extends SeriesImpl<Integer> {
    }
 
    @Override
-   public Integer calcNativeMedian(Integer a, Integer b, boolean exact) {
+   public Integer calcNativeMedian(Integer a, Integer b) {
       return (a + b) / 2;
    }
 }

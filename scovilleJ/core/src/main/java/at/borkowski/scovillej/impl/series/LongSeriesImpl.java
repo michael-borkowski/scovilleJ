@@ -16,7 +16,7 @@ public class LongSeriesImpl extends SeriesImpl<Long> {
    }
 
    @Override
-   public Long calcNativeMedian(Long a, Long b, boolean exact) {
+   public Long calcNativeMedian(Long a, Long b) {
       return (a + b) / 2;
    }
 }

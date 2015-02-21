@@ -27,10 +27,11 @@ public class FloatSeriesImplTest {
    @Before
    public void setUp() {
       Simulation sim = mock(Simulation.class);
+      when(sim.getTotalTicks()).thenReturn((long) 1000);
       when(sim.getCurrentTick()).then(returnCurrentTick());
 
       sut = new FloatSeriesImpl();
-      sut.initialize(sim, 1000);
+      sut.initialize(sim);
    }
 
    private Answer<Long> returnCurrentTick() {
@@ -57,7 +58,7 @@ public class FloatSeriesImplTest {
       assertEquals(4, sut.getCount());
       assertEquals(12.5D, sut.getDoubleMedian(), EPSILON);
       assertEquals(12.5F, sut.getNativeMedian(), EPSILON);
-      assertFalse(sut.hasExactMedian());
+      assertFalse(sut.hasSingleMedian());
       assertEquals(10F, sut.getMin(), EPSILON);
       assertEquals(18F, sut.getMax(), EPSILON);
       assertEquals(2.947456530637898992117295937839622356527012485776648871786480, sut.getStandardDeviation(), EPSILON);
@@ -80,7 +81,7 @@ public class FloatSeriesImplTest {
       assertEquals(5, sut.getCount());
       assertEquals(13D, sut.getDoubleMedian(), EPSILON);
       assertEquals(13F, sut.getNativeMedian(), EPSILON);
-      assertTrue(sut.hasExactMedian());
+      assertTrue(sut.hasSingleMedian());
       assertEquals(10F, sut.getMin(), EPSILON);
       assertEquals(24F, sut.getMax(), EPSILON);
       assertEquals(5.043808085167396612491450333813244919891243650358163750978986D, sut.getStandardDeviation(), EPSILON);
@@ -143,27 +144,27 @@ public class FloatSeriesImplTest {
 
    public void testMedians() {
       tick = 0;
-      assertFalse(sut.hasExactMedian());
+      assertFalse(sut.hasSingleMedian());
 
       tick++;
       sut.measure(1F);
-      assertTrue(sut.hasExactMedian());
+      assertTrue(sut.hasSingleMedian());
 
       tick++;
       sut.measure(1F);
-      assertFalse(sut.hasExactMedian());
+      assertFalse(sut.hasSingleMedian());
 
       tick++;
       sut.measure(1F);
-      assertTrue(sut.hasExactMedian());
+      assertTrue(sut.hasSingleMedian());
 
       tick++;
       sut.measure(1F);
-      assertFalse(sut.hasExactMedian());
+      assertFalse(sut.hasSingleMedian());
 
       tick++;
       sut.measure(1F);
-      assertTrue(sut.hasExactMedian());
+      assertTrue(sut.hasSingleMedian());
    }
 
    @Test
@@ -173,7 +174,7 @@ public class FloatSeriesImplTest {
       assertNull(sut.getAverage());
       assertEquals(0, sut.getCount());
       assertEquals(null, sut.getDoubleMedian());
-      assertFalse(sut.hasExactMedian());
+      assertFalse(sut.hasSingleMedian());
       assertEquals(null, sut.getNativeMedian());
       assertEquals(null, sut.getMax());
       assertEquals(null, sut.getMin());

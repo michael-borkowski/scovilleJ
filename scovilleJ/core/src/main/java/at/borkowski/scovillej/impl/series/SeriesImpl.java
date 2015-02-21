@@ -1,5 +1,6 @@
 package at.borkowski.scovillej.impl.series;
 
+import java.lang.reflect.Array;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,8 +21,7 @@ import at.borkowski.scovillej.simulation.Simulation;
 // TODO make fields final
 public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> {
    private Simulation sim;
-   private long totalTicks;
-   
+
    private final Comparator<T> comparator;
    private final Class<T> clazz;
 
@@ -30,22 +30,20 @@ public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> 
    private TreeSet<T> values;
    private Double sum = 0D;
    private long count = 0;
-   
+
    public SeriesImpl(Comparator<T> comparator, Class<T> clazz) {
       this.comparator = comparator;
       this.clazz = clazz;
    }
-   
+
    @Override
    public Class<T> getValueClass() {
       return clazz;
    }
 
-   // TODO remove totalTicks
    @Override
-   public void initialize(Simulation sim, long totalTicks) {
+   public void initialize(Simulation sim) {
       this.sim = sim;
-      this.totalTicks = totalTicks;
       map = new HashMap<>();
 
       // idea stolen from http://stackoverflow.com/a/14002206
@@ -59,7 +57,7 @@ public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> 
 
    @Override
    public Map<Long, Double> getAveraged(long classWidth) {
-      long classes = (totalTicks + classWidth - 1) / classWidth;
+      long classes = (sim.getTotalTicks() + classWidth - 1) / classWidth;
       Map<Long, Double> result = new HashMap<>();
       for (long c = 0; c < classes; c++) {
          long start = c * classWidth;
@@ -83,7 +81,7 @@ public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> 
     * calculate the median, with two values given.
     * 
     * If this method is called, it is guaranteed that there are two median
-    * candidates and the implementation is reponsible of calculating the actial
+    * candidates and the implementation is responsible of calculating the actual
     * median.
     * 
     * Note that in general, mean-like calculation should be performed.
@@ -92,12 +90,9 @@ public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> 
     *           the first (left) median candidate
     * @param b
     *           the second (right) median candidate
-    * @param exact
-    *           will be removed
     * @return the median
     */
-   // TODO: call only if !exact && a != b, remove exact
-   protected abstract T calcNativeMedian(T a, T b, boolean exact);
+   protected abstract T calcNativeMedian(T a, T b);
 
    private double avg(List<T> values) {
       double sum = 0;
@@ -125,7 +120,7 @@ public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> 
    }
 
    @Override
-   public boolean hasExactMedian() {
+   public boolean hasSingleMedian() {
       return count % 2 == 1;
    }
 
@@ -133,7 +128,7 @@ public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> 
       if (count == 0)
          return null;
 
-      long l = hasExactMedian() ? count / 2 : count / 2 - 1;
+      long l = hasSingleMedian() ? count / 2 : count / 2 - 1;
       Iterator<T> iter = values.iterator();
       for (int i = 0; i < l; i++)
          iter.next();
@@ -191,10 +186,24 @@ public abstract class SeriesImpl<T extends Number> implements SeriesProvider<T> 
    }
 
    @Override
+   public T[] getNativeMedians() {
+      if (count == 0)
+         return null;
+      @SuppressWarnings("unchecked")
+      T[] array = (T[]) Array.newInstance(clazz, hasSingleMedian() ? 1 : 2);
+      array[0] = medianA();
+      if (!hasSingleMedian())
+         array[1] = medianB();
+      return array;
+   }
+
+   @Override
    public T getNativeMedian() {
       if (count == 0)
          return null;
+      else if (hasSingleMedian() || medianA() == medianB())
+         return medianA();
       else
-         return calcNativeMedian(medianA(), medianB(), hasExactMedian());
+         return calcNativeMedian(medianA(), medianB());
    }
 }

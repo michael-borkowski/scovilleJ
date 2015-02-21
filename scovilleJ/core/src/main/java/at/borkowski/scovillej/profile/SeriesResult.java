@@ -73,6 +73,13 @@ public interface SeriesResult<T extends Number> {
    T getMax();
 
    /**
+    * Returns the median candidates of all measured values.
+    * 
+    * @return
+    */
+   T[] getNativeMedians();
+
+   /**
     * Returns the median of all measured values. In contrast to
     * {@link #getDoubleMedian()}, this method returns an exact median if there
     * is one median. If there are two median values, the returned value depends
@@ -81,7 +88,6 @@ public interface SeriesResult<T extends Number> {
     * 
     * @return
     */
-   // TODO: change to an array of median values
    T getNativeMedian();
 
    /**
@@ -90,8 +96,7 @@ public interface SeriesResult<T extends Number> {
     * 
     * @return whether the series has one median
     */
-   // TODO: change to hasSingleMedian()
-   boolean hasExactMedian();
+   boolean hasSingleMedian();
 
    /**
     * Returns the number of measured values.

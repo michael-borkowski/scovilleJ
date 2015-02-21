@@ -16,7 +16,7 @@ public class FloatSeriesImpl extends SeriesImpl<Float> {
    }
 
    @Override
-   public Float calcNativeMedian(Float a, Float b, boolean exact) {
+   public Float calcNativeMedian(Float a, Float b) {
       return (float) (0.5D * (a + b));
    }
 }

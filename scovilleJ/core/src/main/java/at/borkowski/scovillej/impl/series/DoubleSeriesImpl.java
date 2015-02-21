@@ -15,7 +15,7 @@ public class DoubleSeriesImpl extends SeriesImpl<Double> {
    }
 
    @Override
-   protected Double calcNativeMedian(Double a, Double b, boolean exact) {
-      return 0.5D * (medianA() + medianB());
+   protected Double calcNativeMedian(Double a, Double b) {
+      return 0.5D * (a + b);
    }
 }
