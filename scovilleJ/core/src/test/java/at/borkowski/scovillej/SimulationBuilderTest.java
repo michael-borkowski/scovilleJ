@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +15,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import at.borkowski.scovillej.SimulationBuilder;
 import at.borkowski.scovillej.impl.SimulationImpl;
 import at.borkowski.scovillej.simulation.PhaseHandler;
 import at.borkowski.scovillej.simulation.Simulation;
@@ -62,12 +62,12 @@ public class SimulationBuilderTest {
                }
 
                @Override
-               public void executePhase(SimulationContext context) {}
+               public Collection<String> getPhaseSubcription() {
+                  return Arrays.asList(Simulation.TICK_PHASE);
+               }
 
                @Override
-               public String getScheduledPhase() {
-                  return Simulation.TICK_PHASE;
-               }
+               public void executePhase(SimulationContext context) {}
             });
             events.add(new SimulationEvent() {
 
@@ -82,12 +82,12 @@ public class SimulationBuilderTest {
                }
 
                @Override
-               public void executePhase(SimulationContext context) {}
+               public Collection<String> getPhaseSubcription() {
+                  return Arrays.asList(Simulation.TICK_PHASE);
+               }
 
                @Override
-               public String getScheduledPhase() {
-                  return Simulation.TICK_PHASE;
-               }
+               public void executePhase(SimulationContext context) {}
             });
             return events;
          }
@@ -115,12 +115,12 @@ public class SimulationBuilderTest {
                }
 
                @Override
-               public void executePhase(SimulationContext context) {}
+               public Collection<String> getPhaseSubcription() {
+                  return Arrays.asList(Simulation.TICK_PHASE);
+               }
 
                @Override
-               public String getScheduledPhase() {
-                  return Simulation.TICK_PHASE;
-               }
+               public void executePhase(SimulationContext context) {}
             });
             events.add(new SimulationEvent() {
 
@@ -135,12 +135,12 @@ public class SimulationBuilderTest {
                }
 
                @Override
-               public void executePhase(SimulationContext context) {}
+               public Collection<String> getPhaseSubcription() {
+                  return Arrays.asList(Simulation.TICK_PHASE);
+               }
 
                @Override
-               public String getScheduledPhase() {
-                  return Simulation.TICK_PHASE;
-               }
+               public void executePhase(SimulationContext context) {}
             });
             return events;
          }
@@ -153,7 +153,7 @@ public class SimulationBuilderTest {
 
       sut.totalTicks(10);
       SimulationImpl sim = (SimulationImpl) sut.create();
-      Map<Long, Map<String, List<SimulationEvent>>> map = sim.test__getEventsMap();
+      Map<Long, List<SimulationEvent>> map = sim.test__getEventsMap();
 
       assertNull(map.get(0L));
       assertNotNull(map.get(1L));
@@ -167,16 +167,16 @@ public class SimulationBuilderTest {
 
       List<SimulationEvent> lst;
 
-      lst = map.get(1L).get(Simulation.TICK_PHASE);
+      lst = map.get(1L);
       assertEquals(1, lst.size());
       assertEquals(1, lst.get(0).getScheduledTick());
-      lst = map.get(3L).get(Simulation.TICK_PHASE);
+      lst = map.get(3L);
       assertEquals(1, lst.size());
       assertEquals(3, lst.get(0).getScheduledTick());
-      lst = map.get(5L).get(Simulation.TICK_PHASE);
+      lst = map.get(5L);
       assertEquals(1, lst.size());
       assertEquals(5, lst.get(0).getScheduledTick());
-      lst = map.get(7L).get(Simulation.TICK_PHASE);
+      lst = map.get(7L);
       assertEquals(1, lst.size());
       assertEquals(7, lst.get(0).getScheduledTick());
    }

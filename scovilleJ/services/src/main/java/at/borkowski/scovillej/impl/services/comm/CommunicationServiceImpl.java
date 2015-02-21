@@ -104,9 +104,15 @@ public class CommunicationServiceImpl implements CommunicationService, ServicePr
       List<PhaseHandler> list = new LinkedList<>();
       list.add(new PhaseHandler() {
          @Override
+         public Collection<String> getPhaseSubcription() {
+            List<String> list = new LinkedList<>();
+            list.add(phase);
+            return list;
+         }
+
+         @Override
          public void executePhase(SimulationContext context) {
-            if (context.getCurrentPhase().equals(phase))
-               t.advance();
+            t.advance();
          }
       });
       return list;
@@ -116,12 +122,12 @@ public class CommunicationServiceImpl implements CommunicationService, ServicePr
    public Collection<SimulationEvent> generateEvents() {
       return null;
    }
-   
+
    @Override
    public CommunicationService getService() {
       return this;
    }
-   
+
    @Override
    public Class<CommunicationService> getServiceClass() {
       return CommunicationService.class;

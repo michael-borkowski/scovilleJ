@@ -13,6 +13,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -70,11 +71,21 @@ public class SimulationImplTest {
             LinkedList<PhaseHandler> list = new LinkedList<>();
             list.add(new PhaseHandler() {
                @Override
+               public Collection<String> getPhaseSubcription() {
+                  return null;
+               }
+
+               @Override
                public void executePhase(SimulationContext context) {
                   memberResults1.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
                }
             });
             list.add(new PhaseHandler() {
+               @Override
+               public Collection<String> getPhaseSubcription() {
+                  return null;
+               }
+
                @Override
                public void executePhase(SimulationContext context) {
                   memberResults2.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
@@ -125,6 +136,11 @@ public class SimulationImplTest {
          public Collection<PhaseHandler> getPhaseHandlers() {
             List<PhaseHandler> list = new LinkedList<>();
             list.add(new PhaseHandler() {
+               @Override
+               public Collection<String> getPhaseSubcription() {
+                  return null;
+               }
+
                @Override
                public void executePhase(SimulationContext context) {
                   serviceMemberResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
@@ -180,6 +196,11 @@ public class SimulationImplTest {
          }
 
          @Override
+         public Collection<String> getPhaseSubcription() {
+            return Arrays.asList(phase);
+         }
+
+         @Override
          public void executePhase(SimulationContext context) {
             assertNotEquals(phases.length, phase);
 
@@ -191,11 +212,6 @@ public class SimulationImplTest {
             if (service != null) {
                serviceCallResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase() + "-" + service.x());
             }
-         }
-
-         @Override
-         public String getScheduledPhase() {
-            return phase;
          }
 
       });

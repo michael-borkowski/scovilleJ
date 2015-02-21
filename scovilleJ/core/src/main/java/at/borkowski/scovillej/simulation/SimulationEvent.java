@@ -20,11 +20,4 @@ public interface SimulationEvent extends PhaseHandler {
     * @return
     */
    long getScheduledTick();
-
-   /**
-    * Returns the phase of {@link #getScheduledTick()} is scheduled for
-    * 
-    * @return
-    */
-   String getScheduledPhase();
 }

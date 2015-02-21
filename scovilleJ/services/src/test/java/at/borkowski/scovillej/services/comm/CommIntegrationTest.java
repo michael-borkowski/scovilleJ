@@ -43,10 +43,14 @@ public class CommIntegrationTest {
          List<PhaseHandler> list = new LinkedList<>();
          list.add(new PhaseHandler() {
             @Override
+            public Collection<String> getPhaseSubcription() {
+               List<String> ret = new LinkedList<>();
+               ret.add(Simulation.TICK_PHASE);
+               return ret;
+            }
+            
+            @Override
             public void executePhase(SimulationContext context) {
-               if (!context.getCurrentPhase().equals(Simulation.TICK_PHASE))
-                  return;
-
                Member.this.context = context;
                ensureInit();
                try {

@@ -26,8 +26,8 @@ public class SimulationImpl implements Simulation {
    private final long totalTicks;
    private final List<String> phases;
    private final Collection<SimulationMember> members = new LinkedList<>();
-   private final Collection<PhaseHandler> handlers = new LinkedList<>();
-   private final Map<Long, Map<String, List<SimulationEvent>>> phaseToEvents;
+   private final Map<String, List<PhaseHandler>> phaseToHandlers = new HashMap<>();
+   private final Map<Long, List<SimulationEvent>> tickToEvents = new HashMap<>();
    private final Map<String, SeriesProvider<?>> series;
    private final Set<ServiceProvider<?>> services;
 
@@ -58,19 +58,16 @@ public class SimulationImpl implements Simulation {
       this.members.addAll(members);
       this.members.addAll(services);
 
-      this.phaseToEvents = new HashMap<>();
+      for (String phase : phases)
+         phaseToHandlers.put(phase, new LinkedList<>());
 
       Collection<SimulationEvent> memberEvents;
       for (SimulationMember member : members) {
          if ((memberEvents = member.generateEvents()) != null) {
             for (SimulationEvent event : memberEvents) {
-               Map<String, List<SimulationEvent>> map;
-               if ((map = phaseToEvents.get(event.getScheduledTick())) == null)
-                  phaseToEvents.put(event.getScheduledTick(), map = new HashMap<>());
-
                List<SimulationEvent> list;
-               if ((list = map.get(event.getScheduledPhase())) == null)
-                  map.put(event.getScheduledPhase(), list = new LinkedList<SimulationEvent>());
+               if ((list = tickToEvents.get(event.getScheduledTick())) == null)
+                  tickToEvents.put(event.getScheduledTick(), list = new LinkedList<SimulationEvent>());
                list.add(event);
             }
          }
@@ -81,7 +78,13 @@ public class SimulationImpl implements Simulation {
 
       for (SimulationMember member : this.members)
          if (member.getPhaseHandlers() != null)
-            handlers.addAll(member.getPhaseHandlers());
+            for (PhaseHandler handler : member.getPhaseHandlers())
+               if (handler.getPhaseSubcription() != null)
+                  for (String phase : handler.getPhaseSubcription())
+                     phaseToHandlers.get(phase).add(handler);
+               else
+                  for (String phase : phases)
+                     phaseToHandlers.get(phase).add(handler);
    }
 
    @Override
@@ -114,23 +117,16 @@ public class SimulationImpl implements Simulation {
 
    private void executeTick() {
       for (final String currentPhase : phases) {
-         if (phaseToEvents.containsKey(currentTick) && phaseToEvents.get(currentTick).containsKey(currentPhase))
-            handleEventPhase(currentPhase, phaseToEvents.get(currentTick).get(currentPhase));
+         if (tickToEvents.containsKey(currentTick))
+            for (SimulationEvent event : tickToEvents.get(currentPhase))
+               if (event.getPhaseSubcription().contains(currentPhase))
+                  handlePhase(currentPhase, event);
 
-         handleMemberPhase(currentPhase);
+         for (PhaseHandler handler : phaseToHandlers.get(currentPhase))
+            handlePhase(currentPhase, handler);
       }
 
       done = true;
-   }
-
-   private void handleEventPhase(String currentPhase, Collection<SimulationEvent> events) {
-      for (SimulationEvent event : events)
-         handlePhase(currentPhase, event);
-   }
-
-   private void handleMemberPhase(String currentPhase) {
-      for (PhaseHandler handler : handlers)
-         handlePhase(currentPhase, handler);
    }
 
    private void handlePhase(final String currentPhase, PhaseHandler handler) {
@@ -233,8 +229,8 @@ public class SimulationImpl implements Simulation {
     * 
     * @return the internal events map
     */
-   public Map<Long, Map<String, List<SimulationEvent>>> test__getEventsMap() {
-      return phaseToEvents;
+   public Map<Long, List<SimulationEvent>> test__getEventsMap() {
+      return tickToEvents;
    }
 
    /**
