@@ -3,6 +3,8 @@ package at.borkowski.scovillej.impl.services.comm;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import at.borkowski.scovillej.impl.services.comm.serializers.BuiltInSerializers;
@@ -10,6 +12,7 @@ import at.borkowski.scovillej.services.comm.CommunicationService;
 import at.borkowski.scovillej.services.comm.Serializer;
 import at.borkowski.scovillej.services.comm.SimulationServerSocket;
 import at.borkowski.scovillej.services.comm.SimulationSocket;
+import at.borkowski.scovillej.simulation.PhaseHandler;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
@@ -97,9 +100,16 @@ public class CommunicationServiceImpl implements CommunicationService, Simulatio
    }
 
    @Override
-   public void executePhase(SimulationContext context) {
-      if (context.getCurrentPhase().equals(phase))
-         t.advance();
+   public Collection<PhaseHandler> getPhaseHandlers() {
+      List<PhaseHandler> list = new LinkedList<>();
+      list.add(new PhaseHandler() {
+         @Override
+         public void executePhase(SimulationContext context) {
+            if (context.getCurrentPhase().equals(phase))
+               t.advance();
+         }
+      });
+      return list;
    }
 
    @Override

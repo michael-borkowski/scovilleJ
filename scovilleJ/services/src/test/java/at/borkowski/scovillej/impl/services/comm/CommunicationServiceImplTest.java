@@ -7,14 +7,15 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import at.borkowski.scovillej.impl.services.comm.CommunicationServiceImpl;
 import at.borkowski.scovillej.profile.Series;
 import at.borkowski.scovillej.services.comm.SimulationServerSocket;
 import at.borkowski.scovillej.services.comm.SimulationSocket;
+import at.borkowski.scovillej.simulation.PhaseHandler;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 
@@ -374,29 +375,31 @@ public class CommunicationServiceImplTest {
    }
 
    private void advance(int count) throws IOException {
+      Collection<PhaseHandler> handlers = sut.getPhaseHandlers();
       for (int i = 0; i < count; i++) {
-         sut.executePhase(new SimulationContext() {
+         for (PhaseHandler handler : handlers)
+            handler.executePhase(new SimulationContext() {
 
-            @Override
-            public <T> T getService(Class<T> clazz) {
-               return null;
-            }
+               @Override
+               public <T> T getService(Class<T> clazz) {
+                  return null;
+               }
 
-            @Override
-            public <T extends Number> Series<T> getSeries(String symbol) {
-               return null;
-            }
+               @Override
+               public <T extends Number> Series<T> getSeries(String symbol) {
+                  return null;
+               }
 
-            @Override
-            public long getCurrentTick() {
-               return -1; // not used in client code
-            }
+               @Override
+               public long getCurrentTick() {
+                  return -1; // not used in client code
+               }
 
-            @Override
-            public String getCurrentPhase() {
-               return Simulation.TICK_PHASE;
-            }
-         });
+               @Override
+               public String getCurrentPhase() {
+                  return Simulation.TICK_PHASE;
+               }
+            });
       }
    }
 

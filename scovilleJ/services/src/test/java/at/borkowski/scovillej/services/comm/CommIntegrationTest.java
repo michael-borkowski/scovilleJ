@@ -3,14 +3,13 @@ package at.borkowski.scovillej.services.comm;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Formatter;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.Test;
 
 import at.borkowski.scovillej.SimulationBuilder;
-import at.borkowski.scovillej.services.comm.CommunicationBuilder;
-import at.borkowski.scovillej.services.comm.CommunicationService;
-import at.borkowski.scovillej.services.comm.SimulationServerSocket;
-import at.borkowski.scovillej.services.comm.SimulationSocket;
+import at.borkowski.scovillej.simulation.PhaseHandler;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
@@ -40,17 +39,24 @@ public class CommIntegrationTest {
       protected CommunicationService comm;
 
       @Override
-      public void executePhase(SimulationContext context) {
-         if (!context.getCurrentPhase().equals(Simulation.TICK_PHASE))
-            return;
+      public Collection<PhaseHandler> getPhaseHandlers() {
+         List<PhaseHandler> list = new LinkedList<>();
+         list.add(new PhaseHandler() {
+            @Override
+            public void executePhase(SimulationContext context) {
+               if (!context.getCurrentPhase().equals(Simulation.TICK_PHASE))
+                  return;
 
-         this.context = context;
-         ensureInit();
-         try {
-            tick();
-         } catch (Exception e) {
-            throw new RuntimeException(e);
-         }
+               Member.this.context = context;
+               ensureInit();
+               try {
+                  tick();
+               } catch (Exception e) {
+                  throw new RuntimeException(e);
+               }
+            }
+         });
+         return list;
       }
 
       private void ensureInit() {

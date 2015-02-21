@@ -8,6 +8,7 @@ import java.util.Collection;
  * @param <T>
  *           The type of service provided
  */
+// TODO: make it extend member instead of getRequiredMembers?
 public interface ServiceProvider<T> {
    /**
     * Returns a collection of {@link SimulationMember} objects necessary for

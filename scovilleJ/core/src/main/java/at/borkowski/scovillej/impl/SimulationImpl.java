@@ -26,6 +26,7 @@ public class SimulationImpl implements Simulation {
    private final long totalTicks;
    private final List<String> phases;
    private final Collection<SimulationMember> members = new LinkedList<>();
+   private final Collection<PhaseHandler> handlers = new LinkedList<>();
    private final Map<Long, Map<String, List<SimulationEvent>>> phaseToEvents;
    private final Map<String, SeriesProvider<?>> series;
    private final Set<ServiceProvider<?>> services;
@@ -75,6 +76,10 @@ public class SimulationImpl implements Simulation {
 
       for (ServiceProvider<?> service : services)
          this.members.addAll(service.getRequiredMembers());
+
+      for (SimulationMember member : this.members)
+         if (member.getPhaseHandlers() != null)
+            handlers.addAll(member.getPhaseHandlers());
    }
 
    @Override
@@ -110,7 +115,7 @@ public class SimulationImpl implements Simulation {
          if (phaseToEvents.containsKey(currentTick) && phaseToEvents.get(currentTick).containsKey(currentPhase))
             handleEventPhase(currentPhase, phaseToEvents.get(currentTick).get(currentPhase));
 
-         handleMemberPhase(currentPhase, members);
+         handleMemberPhase(currentPhase);
       }
 
       done = true;
@@ -121,9 +126,9 @@ public class SimulationImpl implements Simulation {
          handlePhase(currentPhase, event);
    }
 
-   private void handleMemberPhase(String currentPhase, Collection<SimulationMember> members) {
-      for (SimulationMember member : members)
-         handlePhase(currentPhase, member);
+   private void handleMemberPhase(String currentPhase) {
+      for (PhaseHandler handler : handlers)
+         handlePhase(currentPhase, handler);
    }
 
    private void handlePhase(final String currentPhase, PhaseHandler handler) {

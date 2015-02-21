@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import at.borkowski.scovillej.SimulationBuilder;
 import at.borkowski.scovillej.impl.SimulationImpl;
+import at.borkowski.scovillej.simulation.PhaseHandler;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
@@ -92,7 +93,9 @@ public class SimulationBuilderTest {
          }
 
          @Override
-         public void executePhase(SimulationContext context) {}
+         public Collection<PhaseHandler> getPhaseHandlers() {
+            return new LinkedList<PhaseHandler>();
+         }
       });
       sut.member(new SimulationMember() {
          @Override
@@ -143,7 +146,9 @@ public class SimulationBuilderTest {
          }
 
          @Override
-         public void executePhase(SimulationContext context) {}
+         public Collection<PhaseHandler> getPhaseHandlers() {
+            return new LinkedList<PhaseHandler>();
+         }
       });
 
       sut.totalTicks(10);

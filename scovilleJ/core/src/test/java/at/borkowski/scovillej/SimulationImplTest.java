@@ -28,6 +28,7 @@ import at.borkowski.scovillej.impl.SimulationImpl;
 import at.borkowski.scovillej.impl.series.DoubleSeriesImpl;
 import at.borkowski.scovillej.profile.SeriesProvider;
 import at.borkowski.scovillej.profile.SeriesResult;
+import at.borkowski.scovillej.simulation.PhaseHandler;
 import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
@@ -45,7 +46,7 @@ public class SimulationImplTest {
 
    List<String> serviceCallResults;
    List<String> serviceMemberResults;
-   List<String> memberResults;
+   List<String> memberResults1, memberResults2;
 
    SeriesProvider<Double> sa, sb;
 
@@ -65,8 +66,21 @@ public class SimulationImplTest {
          }
 
          @Override
-         public void executePhase(SimulationContext context) {
-            memberResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
+         public Collection<PhaseHandler> getPhaseHandlers() {
+            LinkedList<PhaseHandler> list = new LinkedList<>();
+            list.add(new PhaseHandler() {
+               @Override
+               public void executePhase(SimulationContext context) {
+                  memberResults1.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
+               }
+            });
+            list.add(new PhaseHandler() {
+               @Override
+               public void executePhase(SimulationContext context) {
+                  memberResults2.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
+               }
+            });
+            return list;
          }
       });
 
@@ -93,8 +107,15 @@ public class SimulationImplTest {
             list.add(new SimulationMember() {
 
                @Override
-               public void executePhase(SimulationContext context) {
-                  serviceMemberResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
+               public Collection<PhaseHandler> getPhaseHandlers() {
+                  List<PhaseHandler> list = new LinkedList<>();
+                  list.add(new PhaseHandler() {
+                     @Override
+                     public void executePhase(SimulationContext context) {
+                        serviceMemberResults.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
+                     }
+                  });
+                  return list;
                }
 
                @Override
@@ -123,7 +144,8 @@ public class SimulationImplTest {
 
       serviceCallResults = new LinkedList<>();
       serviceMemberResults = new LinkedList<>();
-      memberResults = new LinkedList<>();
+      memberResults1 = new LinkedList<>();
+      memberResults2 = new LinkedList<>();
 
       sut = new SimulationImpl(totalTicks, phaseNames, members, tick_evt.values(), series, services);
    }
@@ -319,7 +341,8 @@ public class SimulationImplTest {
          for (String s : phases)
             expectedList.add(i + "-" + s);
 
-      assertArrayEquals(expectedList.toArray(new String[0]), memberResults.toArray(new String[0]));
+      assertArrayEquals(expectedList.toArray(new String[0]), memberResults1.toArray(new String[0]));
+      assertArrayEquals(expectedList.toArray(new String[0]), memberResults2.toArray(new String[0]));
    }
 
    @Test
