@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import at.borkowski.scovillej.profile.SeriesProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 
 /**
@@ -16,7 +17,7 @@ import at.borkowski.scovillej.simulation.Simulation;
  *           The type of numbers measured
  */
 // TODO: rename to SeriesImpl, after removing SeriesImpl
-public abstract class NumberSeriesImpl<T extends Number> extends SeriesImpl<T> {
+public abstract class NumberSeriesImpl<T extends Number> implements SeriesProvider<T> {
    private Simulation sim;
    private long totalTicks;
 
