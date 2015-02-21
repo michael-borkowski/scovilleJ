@@ -1,7 +1,11 @@
 #!/bin/bash
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-RETRIES=3
+RETRIES=1
+
+if [[ "$1" == "--travis" ]]; then
+	RETRIES=3
+fi
 
 function build() {
 	cd "$DIR/../scovilleJ"
