@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.never;
@@ -136,6 +137,7 @@ public class SimulationImplTest {
                public Collection<String> getPhaseSubcription() {
                   return null;
                }
+
                @Override
                public void executePhase(SimulationContext context) {
                   serviceMemberResults_tick.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
@@ -145,6 +147,7 @@ public class SimulationImplTest {
                public Collection<String> getPhaseSubcription() {
                   return Arrays.asList(phases);
                }
+
                @Override
                public void executePhase(SimulationContext context) {
                   serviceMemberResults_all.add(context.getCurrentTick() + "-" + context.getCurrentPhase());
@@ -182,8 +185,66 @@ public class SimulationImplTest {
       sut = new SimulationImpl(totalTicks, phaseNames, members, series, services);
    }
 
+   @Test
    public void testTotalTicks() {
       assertEquals(totalTicks, sut.getTotalTicks());
+   }
+
+   @Test
+   public void testHandlingOfLastTickWithExecuteAndIncreaseTick() {
+      assertEquals(totalTicks, sut.getTotalTicks());
+
+      for (int i = 0; i < totalTicks - 1; i++)
+         sut.executeAndIncreaseTick();
+
+      assertEquals(totalTicks - 1, sut.getCurrentTick());
+      assertEquals(false, sut.executedCurrentTick());
+
+      sut.executeAndIncreaseTick();
+
+      assertEquals(totalTicks - 1, sut.getCurrentTick());
+      assertEquals(true, sut.executedCurrentTick());
+   }
+
+   @Test
+   public void testHandlingOfLastTickWithExecuteCurrentTick() {
+      assertEquals(totalTicks, sut.getTotalTicks());
+
+      for (int i = 0; i < totalTicks - 1; i++) {
+         sut.executeCurrentTick();
+         sut.increaseTick();
+      }
+
+      assertEquals(totalTicks - 1, sut.getCurrentTick());
+      assertEquals(false, sut.executedCurrentTick());
+
+      sut.executeCurrentTick();
+      sut.increaseTick();
+
+      assertEquals(totalTicks - 1, sut.getCurrentTick());
+      assertEquals(true, sut.executedCurrentTick());
+   }
+
+   @Test
+   public void testHandlingOfLastTickWithExecuteCurrentTickIncreaseStricty() {
+      assertEquals(totalTicks, sut.getTotalTicks());
+
+      for (int i = 0; i < totalTicks - 1; i++) {
+         sut.executeCurrentTick();
+         sut.increaseTickStrictly();
+      }
+
+      assertEquals(totalTicks - 1, sut.getCurrentTick());
+      assertEquals(false, sut.executedCurrentTick());
+
+      sut.executeCurrentTick();
+      try {
+         sut.increaseTickStrictly();
+         fail("expected exception");
+      } catch (IllegalStateException expected) {}
+
+      assertEquals(totalTicks - 1, sut.getCurrentTick());
+      assertEquals(true, sut.executedCurrentTick());
    }
 
    private SimulationEvent mockEvent(final long tick, final String phase) {
@@ -386,7 +447,7 @@ public class SimulationImplTest {
 
       List<String> expectedList_tick = new LinkedList<>();
       for (int i = 0; i < 6; i++)
-            expectedList_tick.add(i + "-" + Simulation.TICK_PHASE);
+         expectedList_tick.add(i + "-" + Simulation.TICK_PHASE);
       List<String> expectedList_all = new LinkedList<>();
       for (int i = 0; i < 6; i++)
          for (String s : phases)

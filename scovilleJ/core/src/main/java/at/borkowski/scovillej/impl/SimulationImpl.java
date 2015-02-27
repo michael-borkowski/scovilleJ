@@ -20,8 +20,6 @@ import at.borkowski.scovillej.simulation.SimulationMember;
 /**
  * An implementation for {@link Simulation}.
  */
-// TODO check coverage
-// TODO check whether processing for the last tick is correct
 public class SimulationImpl implements Simulation {
    private final long totalTicks;
    private final List<String> phases;
@@ -182,8 +180,10 @@ public class SimulationImpl implements Simulation {
       if (done)
          throw new IllegalStateException("can't re-execute tick");
       executeTick();
-      currentTick++;
-      done = false;
+      if (currentTick + 1 < totalTicks) {
+         currentTick++;
+         done = false;
+      }
    }
 
    @Override
