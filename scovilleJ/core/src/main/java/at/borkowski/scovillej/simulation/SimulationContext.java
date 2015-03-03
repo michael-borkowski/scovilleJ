@@ -4,8 +4,8 @@ import at.borkowski.scovillej.profile.Series;
 
 /**
  * Represents the simulation context to be used by simulation members in order
- * to access functionality outside the simulation (like series) and services, to
- * communicate with other simulation members.
+ * to access functionality of the simulation like series and services, for
+ * example to communicate with other simulation members.
  *
  */
 public interface SimulationContext {
