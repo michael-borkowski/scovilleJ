@@ -1,5 +1,7 @@
 package at.borkowski.scovillej.simulation;
 
+import java.util.List;
+
 import at.borkowski.scovillej.profile.SeriesResult;
 
 /**
@@ -123,4 +125,11 @@ public interface Simulation {
     * @return the series result
     */
    <T extends Number> SeriesResult<T> getSeries(String symbol);
+
+   /**
+    * Returns the phases used in this simulation.
+    * 
+    * @return the phases used in this simulation.
+    */
+   List<String> getPhases();
 }
