@@ -14,6 +14,7 @@
   <modules>
     <module>core</module>
     <module>services</module>
+    <module>prefetch</module>
   </modules>
 
   <properties>
