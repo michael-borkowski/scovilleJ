@@ -373,6 +373,81 @@ public class CommunicationServiceImplTest {
       socketA.close();
       socketB.close();
    }
+   
+   @Test
+   public void testParallelCommunication() throws IOException {
+      sut.setRates("accepter", null, null);
+
+      SimulationServerSocket<String> serverSocket = sut.createServerSocket("accepter", String.class);
+      assertEquals(0, serverSocket.available());
+      assertNull(serverSocket.accept());
+
+      SimulationSocket<String> socket1A = sut.beginConnect("accepter", String.class);
+      assertFalse(socket1A.established());
+      assertEquals(1, serverSocket.available());
+      
+      SimulationSocket<String> socket2A = sut.beginConnect("accepter", String.class);
+      assertFalse(socket2A.established());
+      assertEquals(2, serverSocket.available());
+
+      SimulationSocket<String> socket1B = serverSocket.accept();
+      assertTrue(socket1A.established());
+      assertTrue(socket1B.established());
+      assertFalse(socket2A.established());
+      assertEquals(1, serverSocket.available());
+
+      SimulationSocket<String> socket2B = serverSocket.accept();
+      assertTrue(socket1A.established());
+      assertTrue(socket1B.established());
+      assertEquals(0, serverSocket.available());
+
+      assertEquals(0, socket1A.available());
+      assertEquals(0, socket1B.available());
+      assertEquals(0, socket2A.available());
+      assertEquals(0, socket2B.available());
+
+      ////////////////////////////////////////
+
+      socket1A.write("hey there!");
+
+      assertEquals(0, socket1A.available());
+      assertEquals(1, socket1B.available());
+
+      assertEquals("hey there!", socket1B.read());
+
+      assertEquals(0, socket1A.available());
+      assertEquals(0, socket1B.available());
+
+      ////////////////////////////////////////
+
+      socket1B.write("how are you?");
+
+      assertEquals(1, socket1A.available());
+      assertEquals(0, socket1B.available());
+
+      socket1A.write("what are you doing?");
+
+      assertEquals(1, socket1A.available());
+      assertEquals(1, socket1B.available());
+
+      socket1B.write("funny.");
+
+      assertEquals(2, socket1A.available());
+      assertEquals(1, socket1B.available());
+
+      ////////////////////////////////////////
+
+      assertEquals("how are you?", socket1A.read());
+      assertEquals("funny.", socket1A.read());
+
+      assertEquals("what are you doing?", socket1B.read());
+
+      assertEquals(0, socket1A.available());
+      assertEquals(0, socket1B.available());
+
+      socket1A.close();
+      socket1B.close();
+   }
 
    private void advance(int count) throws IOException {
       Collection<PhaseHandler> handlers = sut.getPhaseHandlers();
