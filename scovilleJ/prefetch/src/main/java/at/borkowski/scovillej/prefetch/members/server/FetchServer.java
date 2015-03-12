@@ -1,4 +1,4 @@
-package at.borkowski.scovillej.prefetch.members;
+package at.borkowski.scovillej.prefetch.members.server;
 
 import java.io.IOException;
 import java.util.ArrayList;

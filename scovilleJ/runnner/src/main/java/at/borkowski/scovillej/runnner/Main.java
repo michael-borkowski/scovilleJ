@@ -37,7 +37,7 @@ public class Main {
 
       algorithm = new NullAlgorithm();
       algorithm = new StartAtDeadlineAlgorithm();
-      //algorithm = new IgnoreBlinkAlgorithm();
+      algorithm = new IgnoreBlinkAlgorithm();
 
       PrefetchSimulationBuilder builder = new PrefetchSimulationBuilder().requests(rs).files(files).totalTicks(1000000).algorithm(algorithm);
       Simulation sim = builder.create();
@@ -46,9 +46,10 @@ public class Main {
       
       sim.executeToEnd();
 
+      System.out.println();
+      System.out.println();
       System.out.println("Misses (due): " + profiling.getOverdue());
       System.out.println("Hits (age):   " + profiling.getCacheHitAges());
-      System.out.println();
       System.out.println("URT:          " + profiling.getURT());
       System.out.println("URT/bytes:    " + profiling.getURTperKB());
 

@@ -76,9 +76,9 @@ public class PrefetchProfilingServiceImpl implements PrefetchProfilingService, P
    }
 
    @Override
-   public void fetched(Request request) {
+   public void fetched(Request request, int actualSize, long tick, long duration) {
       long overdue = currentTick - request.getDeadline();
-      System.out.printf("%d - fetched %s (overdue %d)\n", currentTick, request.getFile(), overdue);
+      System.out.printf("%d - fetched %s (overdue %d) (%d B in %d t, %.2f B/t\n", tick, request.getFile(), overdue, actualSize, duration, (double) actualSize / duration);
       overdue = Math.max(0, overdue);
       seriesURT.measure(overdue);
       seriesURTperKB.measure((double) 1000 * overdue / request.getData());

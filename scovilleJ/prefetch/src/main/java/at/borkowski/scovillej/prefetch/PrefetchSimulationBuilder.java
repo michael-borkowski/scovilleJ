@@ -6,8 +6,8 @@ import java.util.Map;
 
 import at.borkowski.scovillej.SimulationBuilder;
 import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
-import at.borkowski.scovillej.prefetch.members.FetchClient;
-import at.borkowski.scovillej.prefetch.members.FetchServer;
+import at.borkowski.scovillej.prefetch.members.client.FetchClient;
+import at.borkowski.scovillej.prefetch.members.server.FetchServer;
 import at.borkowski.scovillej.prefetch.profiling.PrefetchProfilingResults;
 import at.borkowski.scovillej.prefetch.profiling.PrefetchProfilingServiceImpl;
 import at.borkowski.scovillej.services.comm.CommunicationServiceBuilder;

@@ -11,7 +11,7 @@ import java.util.Set;
 import at.borkowski.scovillej.prefetch.Request;
 
 public class IgnoreBlinkAlgorithm implements PrefetchAlgorithm {
-   public final static long CONNECTION_OVERHEAD = 4;
+   public final static long CONNECTION_OVERHEAD = 5;
    public final static double ALPHA = 1;
 
    @Override
