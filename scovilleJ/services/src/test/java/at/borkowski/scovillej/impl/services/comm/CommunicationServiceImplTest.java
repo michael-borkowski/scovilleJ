@@ -39,11 +39,6 @@ public class CommunicationServiceImplTest {
       sut.beginConnect("incompatible", byte[].class);
    }
 
-   @Test(expected = IllegalArgumentException.class)
-   public void testWrongType() throws IOException {
-      sut.createServerSocket("exotic", Exotic.class);
-   }
-
    @Test
    public void testDuplicate() throws IOException {
       sut.createServerSocket("existing", String.class);
