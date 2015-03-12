@@ -271,15 +271,6 @@ public class SimulationImpl implements Simulation {
       return tickToEvents;
    }
 
-   /**
-    * Testability method only.
-    * 
-    * @return the phases list
-    */
-   public List<String> test__getPhases() {
-      return phases;
-   }
-
    @Override
    public List<String> getPhases() {
       return phases;

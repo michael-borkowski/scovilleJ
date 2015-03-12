@@ -193,7 +193,7 @@ public class SimulationBuilderTest {
       sut.phase("a").phase("b").phase("b").totalTicks(10);
 
       SimulationImpl sim = (SimulationImpl) sut.create();
-      String[] phases = sim.test__getPhases().toArray(new String[0]);
+      String[] phases = sim.getPhases().toArray(new String[0]);
 
       assertArrayEquals(new String[] { "tick", "a", "b" }, phases);
    }
@@ -209,7 +209,7 @@ public class SimulationBuilderTest {
       sut.totalTicks(10);
 
       SimulationImpl sim = (SimulationImpl) sut.create();
-      String[] phases = sim.test__getPhases().toArray(new String[0]);
+      String[] phases = sim.getPhases().toArray(new String[0]);
 
       assertArrayEquals(new String[] { "a", "b", "tick", "c" }, phases);
    }
