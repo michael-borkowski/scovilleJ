@@ -7,6 +7,10 @@ import at.borkowski.scovillej.profile.Series;
  * to access functionality of the simulation like series and services, for
  * example to communicate with other simulation members.
  *
+ * This interface defines only functionality available during the
+ * initialization, as in contrast to {@link SimulationContext}, where all
+ * functionality can be used.
+ *
  */
 public interface SimulationInitializationContext {
    /**

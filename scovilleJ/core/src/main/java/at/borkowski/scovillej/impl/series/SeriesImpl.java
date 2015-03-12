@@ -13,7 +13,17 @@ public abstract class SeriesImpl<T> implements SeriesProvider<T> {
       }
    }
 
-   protected Formatter formatMetrics(Formatter f) {
-      return f;
+   /**
+    * Formats metrics for this class using the supplied formatter. Sub-classes
+    * should override this method to provide detailed string representations of
+    * the metrics (min, max, average, etc.)
+    * 
+    * @param formatter
+    *           the formatter to use
+    * @return the formatter itself (the supplied parameter
+    *         <code>formatter</code>)
+    */
+   protected Formatter formatMetrics(Formatter formatter) {
+      return formatter;
    }
 }

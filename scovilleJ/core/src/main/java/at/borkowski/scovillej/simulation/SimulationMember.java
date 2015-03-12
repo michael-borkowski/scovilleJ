@@ -7,8 +7,16 @@ import java.util.Collection;
  * for ticks, and may also handle ticks on a periodic bases.
  */
 public interface SimulationMember {
+   /**
+    * Called during the initialization phase of the simulation.
+    * 
+    * @param simulation
+    *           the owning simulation
+    * @param context
+    *           a context object providing initialization functionality
+    */
    void initialize(Simulation simulation, SimulationInitializationContext context);
-   
+
    /**
     * This method is called by the simulation implementation in order to
     * pre-create all events necessary for this member. The method should be
