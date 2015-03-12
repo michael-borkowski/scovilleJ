@@ -12,6 +12,7 @@ import at.borkowski.scovillej.simulation.PhaseHandler;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
+import at.borkowski.scovillej.simulation.SimulationInitializationContext;
 import at.borkowski.scovillej.simulation.SimulationMember;
 
 public class CommIntegrationTest {
@@ -19,7 +20,7 @@ public class CommIntegrationTest {
    public void test() {
       SimulationBuilder builder = new SimulationBuilder();
       builder.totalTicks(1000000);
-      builder.service(new CommunicationBuilder().communicationPhase("comm").limit("myserver", 4).bufferSize(1024 * 1024).createProvider());
+      builder.service(new CommunicationServiceBuilder().communicationPhase("comm").limit("myserver", 4).bufferSize(1024 * 1024).create());
       builder.member(new Server());
       builder.member(new Client());
       builder.phase(Simulation.TICK_PHASE);
@@ -44,7 +45,7 @@ public class CommIntegrationTest {
             public Collection<String> getPhaseSubcription() {
                return Arrays.asList(Simulation.TICK_PHASE);
             }
-            
+
             @Override
             public void executePhase(SimulationContext context) {
                Member.this.context = context;
@@ -69,6 +70,9 @@ public class CommIntegrationTest {
             throw new RuntimeException(e);
          }
       }
+
+      @Override
+      public void initialize(Simulation simulation, SimulationInitializationContext context) {}
 
       @Override
       public Collection<SimulationEvent> generateEvents() {

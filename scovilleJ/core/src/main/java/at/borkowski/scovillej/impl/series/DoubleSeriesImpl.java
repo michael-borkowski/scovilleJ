@@ -5,7 +5,7 @@ import java.util.Comparator;
 /**
  * A series of {@link Double} measures.
  */
-public class DoubleSeriesImpl extends SeriesImpl<Double> {
+public class DoubleSeriesImpl extends NumberSeriesImpl<Double> {
    public DoubleSeriesImpl() {
       super(new Comparator<Double>() {
          public int compare(Double o1, Double o2) {

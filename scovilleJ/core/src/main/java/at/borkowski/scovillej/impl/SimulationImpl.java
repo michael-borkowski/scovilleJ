@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import at.borkowski.scovillej.impl.series.NumberSeriesImpl;
 import at.borkowski.scovillej.profile.Series;
 import at.borkowski.scovillej.profile.SeriesProvider;
 import at.borkowski.scovillej.profile.SeriesResult;
@@ -15,6 +16,7 @@ import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
+import at.borkowski.scovillej.simulation.SimulationInitializationContext;
 import at.borkowski.scovillej.simulation.SimulationMember;
 
 /**
@@ -29,7 +31,11 @@ public class SimulationImpl implements Simulation {
    private final Map<String, SeriesProvider<?>> series;
    private final Set<ServiceProvider<?>> services;
 
+   private SimulationInitializationContext initializationContext;
+   private SimulationContext simulationContext;
+
    private long currentTick = 0;
+   private String currentPhase = null;
    private boolean done = false;
 
    /**
@@ -59,8 +65,18 @@ public class SimulationImpl implements Simulation {
       for (String phase : phases)
          phaseToHandlers.put(phase, new LinkedList<>());
 
+      initializeContexts();
+
+      for (SeriesProvider<?> provider : series.values())
+         provider.initialize(this);
+
+      for (SimulationMember member : members)
+         member.initialize(this, initializationContext);
+      for (SimulationMember member : services)
+         member.initialize(this, initializationContext);
+
       Collection<SimulationEvent> memberEvents;
-      for (SimulationMember member : members) {
+      for (SimulationMember member : this.members) {
          if ((memberEvents = member.generateEvents()) != null) {
             for (SimulationEvent event : memberEvents) {
                List<SimulationEvent> list;
@@ -71,9 +87,6 @@ public class SimulationImpl implements Simulation {
          }
       }
 
-      for (SeriesProvider<?> provider : series.values())
-         provider.initialize(this);
-
       for (SimulationMember member : this.members)
          if (member.getPhaseHandlers() != null)
             for (PhaseHandler handler : member.getPhaseHandlers())
@@ -82,6 +95,45 @@ public class SimulationImpl implements Simulation {
                      phaseToHandlers.get(phase).add(handler);
                else
                   phaseToHandlers.get(Simulation.TICK_PHASE).add(handler);
+   }
+
+   private void initializeContexts() {
+      initializationContext = new SimulationInitializationContext() {
+         @SuppressWarnings("unchecked")
+         @Override
+         public <T> Series<T> getSeries(String symbol, Class<T> clazz) {
+            if (series.get(symbol) == null)
+               series.put(symbol, createSeries(clazz));
+            if (!series.get(symbol).getValueClass().equals(clazz))
+               return null;
+            return (Series<T>) series.get(symbol);
+         }
+
+         @Override
+         public <T> T getService(Class<T> clazz) {
+            return lookup(clazz);
+         }
+      };
+      simulationContext = new SimulationContext() {
+         @Override
+         public <T> T getService(Class<T> clazz) {
+            return initializationContext.getService(clazz);
+         }
+
+         @Override
+         public <T> Series<T> getSeries(String symbol, Class<T> clazz) {
+            return initializationContext.getSeries(symbol, clazz);
+         }
+         @Override
+         public String getCurrentPhase() {
+            return currentPhase;
+         }
+
+         @Override
+         public long getCurrentTick() {
+            return currentTick;
+         }
+      };
    }
 
    @Override
@@ -113,46 +165,29 @@ public class SimulationImpl implements Simulation {
    }
 
    private void executeTick() {
-      for (final String currentPhase : phases) {
+      for (final String phase : phases) {
+         currentPhase = phase;
          if (tickToEvents.containsKey(currentTick))
             for (SimulationEvent event : tickToEvents.get(currentTick))
-               if (event.getPhaseSubcription().contains(currentPhase))
-                  handlePhase(currentPhase, event);
+               if ((event.getPhaseSubcription() != null && event.getPhaseSubcription().contains(currentPhase)) || (event.getPhaseSubcription() == null && currentPhase.equals(Simulation.TICK_PHASE)))
+                  handlePhase(event);
 
          for (PhaseHandler handler : phaseToHandlers.get(currentPhase))
-            handlePhase(currentPhase, handler);
+            handlePhase(handler);
       }
 
       done = true;
    }
 
-   private void handlePhase(final String currentPhase, PhaseHandler handler) {
-      handler.executePhase(new SimulationContext() {
-         @Override
-         public String getCurrentPhase() {
-            return currentPhase;
-         }
+   private void handlePhase(PhaseHandler handler) {
+      handler.executePhase(simulationContext);
+   }
 
-         @Override
-         public long getCurrentTick() {
-            return currentTick;
-         }
-
-         @SuppressWarnings("unchecked")
-         @Override
-         public <T extends Number> Series<T> getSeries(String symbol, Class<T> clazz) {
-            if (series.get(symbol) == null)
-               return null;
-            if (!series.get(symbol).getValueClass().equals(clazz))
-               return null;
-            return (Series<T>) series.get(symbol);
-         }
-
-         @Override
-         public <T> T getService(Class<T> clazz) {
-            return lookup(clazz);
-         }
-      });
+   private SeriesProvider<?> createSeries(Class<?> clazz) {
+      SeriesProvider<?> provider = NumberSeriesImpl.createIfKnown(clazz);
+      if (provider != null)
+         provider.initialize(this);
+      return provider;
    }
 
    @SuppressWarnings("unchecked")
@@ -219,7 +254,11 @@ public class SimulationImpl implements Simulation {
 
    @SuppressWarnings("unchecked")
    @Override
-   public <T extends Number> SeriesResult<T> getSeries(String symbol) {
+   public <T> SeriesResult<T> getSeries(String symbol, Class<T> clazz) {
+      if (series.get(symbol) == null)
+         return null;
+      if (!series.get(symbol).getValueClass().equals(clazz))
+         return null;
       return (SeriesResult<T>) series.get(symbol);
    }
 
@@ -240,7 +279,7 @@ public class SimulationImpl implements Simulation {
    public List<String> test__getPhases() {
       return phases;
    }
-   
+
    @Override
    public List<String> getPhases() {
       return phases;

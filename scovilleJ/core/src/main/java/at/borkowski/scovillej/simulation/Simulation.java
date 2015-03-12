@@ -120,11 +120,16 @@ public interface Simulation {
     * or have it provide invalid results. Generally, the returned object is
     * value only until the next advancing in the simulation.
     * 
+    * If the symbol is not known of the class does not match the originally
+    * created series, <code>null</code> is returned.
+    * 
     * @param symbol
     *           the symbol to return the series result for
+    * @param class1
+    *           the class of the series
     * @return the series result
     */
-   <T extends Number> SeriesResult<T> getSeries(String symbol);
+   <T> SeriesResult<T> getSeries(String symbol, Class<T> clazz);
 
    /**
     * Returns the phases used in this simulation.

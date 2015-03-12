@@ -10,7 +10,7 @@ import java.util.Map;
  * @param <T>
  *           The type of number measured
  */
-public interface SeriesResult<T extends Number> {
+public interface SeriesResult<T> {
 
    /**
     * Returns all measured values as a map from the tick to the value.

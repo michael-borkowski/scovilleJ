@@ -20,6 +20,7 @@ import at.borkowski.scovillej.simulation.PhaseHandler;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
+import at.borkowski.scovillej.simulation.SimulationInitializationContext;
 import at.borkowski.scovillej.simulation.SimulationMember;
 
 public class SimulationBuilderTest {
@@ -45,6 +46,9 @@ public class SimulationBuilderTest {
    @Test
    public void testEvents() {
       sut.member(new SimulationMember() {
+         @Override
+         public void initialize(Simulation simulation, SimulationInitializationContext context) {}
+
          @Override
          public Collection<SimulationEvent> generateEvents() {
             final SimulationMember this_ = this;
@@ -98,6 +102,9 @@ public class SimulationBuilderTest {
          }
       });
       sut.member(new SimulationMember() {
+         @Override
+         public void initialize(Simulation simulation, SimulationInitializationContext context) {}
+
          @Override
          public Collection<SimulationEvent> generateEvents() {
             final SimulationMember this_ = this;

@@ -9,7 +9,7 @@ import at.borkowski.scovillej.simulation.Simulation;
  * @param <T>
  *           The type of numbers measured
  */
-public interface SeriesProvider<T extends Number> extends Series<T>, SeriesResult<T> {
+public interface SeriesProvider<T> extends Series<T>, SeriesResult<T> {
    /**
     * Initializes the series provider. This method is guaranteed to be called
     * before any methods of {@link Series} or {@link SeriesResult}.

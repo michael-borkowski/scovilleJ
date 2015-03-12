@@ -14,15 +14,18 @@ public class SimulationServerSocketImpl<T> implements SimulationServerSocket<T> 
    private final String name;
    private final Queue<SimulationSocketImplB<T>> waitingClientSides = new LinkedList<>();
    private final Integer uplink, downlink;
+   private final Long updelay, downdelay;
    private final Serializer<T> serializer;
 
    private boolean open = true;
 
-   public SimulationServerSocketImpl(CommunicationServiceImpl owner, String name, Integer uplink, Integer downlink, Serializer<T> serializer) {
+   public SimulationServerSocketImpl(CommunicationServiceImpl owner, String name, Integer uplink, Integer downlink, Long updelay, Long downdelay, Serializer<T> serializer) {
       this.owner = owner;
       this.name = name;
       this.uplink = uplink;
       this.downlink = downlink;
+      this.updelay = updelay;
+      this.downdelay = downdelay;
       this.serializer = serializer;
    }
 
@@ -43,7 +46,7 @@ public class SimulationServerSocketImpl<T> implements SimulationServerSocket<T> 
       if (clientSide == null)
          return null;
 
-      return new SimulationSocketImplA<>(owner.getTickSource(), uplink, downlink, clientSide, serializer, owner.getBufferSize());
+      return new SimulationSocketImplA<>(owner.getTickSource(), uplink, downlink, updelay, downdelay, clientSide, serializer, owner.getBufferSize());
    }
 
    @Override

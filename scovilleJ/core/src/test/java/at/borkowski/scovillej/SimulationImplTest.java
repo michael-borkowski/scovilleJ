@@ -35,6 +35,7 @@ import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
+import at.borkowski.scovillej.simulation.SimulationInitializationContext;
 import at.borkowski.scovillej.simulation.SimulationMember;
 
 public class SimulationImplTest {
@@ -62,6 +63,9 @@ public class SimulationImplTest {
    @Before
    public void setUp() {
       member = spy(new SimulationMember() {
+         @Override
+         public void initialize(Simulation simulation, SimulationInitializationContext context) {}
+
          @Override
          public Collection<SimulationEvent> generateEvents() {
             return null;
@@ -109,6 +113,8 @@ public class SimulationImplTest {
          tick_evt.put(event.getScheduledTick(), event);
 
       SimulationMember eventProvider = new SimulationMember() {
+         @Override
+         public void initialize(Simulation simulation, SimulationInitializationContext context) {}
 
          @Override
          public Collection<PhaseHandler> getPhaseHandlers() {
@@ -130,6 +136,9 @@ public class SimulationImplTest {
 
       Set<ServiceProvider<?>> services = new HashSet<>();
       services.add(new ServiceProvider<A>() {
+         @Override
+         public void initialize(Simulation simulation, SimulationInitializationContext context) {}
+
          @Override
          public Collection<PhaseHandler> getPhaseHandlers() {
             return Arrays.asList(new PhaseHandler() {
@@ -386,8 +395,8 @@ public class SimulationImplTest {
    @Test
    public void testSeriesPresent() {
       sut.executeToEnd();
-      SeriesResult<Double> seriesA = sut.getSeries("series-a");
-      SeriesResult<Double> seriesB = sut.getSeries("series-b");
+      SeriesResult<Double> seriesA = sut.getSeries("series-a", Double.class);
+      SeriesResult<Double> seriesB = sut.getSeries("series-b", Double.class);
       assertNotNull(seriesA);
       assertNotNull(seriesB);
    }
@@ -407,8 +416,8 @@ public class SimulationImplTest {
       sut.executeUpToTick(14);
       sb.measure(1D);
       sut.executeToEnd();
-      SeriesResult<Double> seriesA = sut.getSeries("series-a");
-      SeriesResult<Double> seriesB = sut.getSeries("series-b");
+      SeriesResult<Double> seriesA = sut.getSeries("series-a", Double.class);
+      SeriesResult<Double> seriesB = sut.getSeries("series-b", Double.class);
       assertNotNull(seriesA);
       assertNotNull(seriesB);
 

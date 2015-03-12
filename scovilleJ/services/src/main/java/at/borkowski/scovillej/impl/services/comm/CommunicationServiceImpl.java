@@ -16,6 +16,7 @@ import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
+import at.borkowski.scovillej.simulation.SimulationInitializationContext;
 import at.borkowski.spicej.impl.SimulationTickSource;
 import at.borkowski.spicej.ticks.TickSource;
 
@@ -28,23 +29,28 @@ public class CommunicationServiceImpl implements CommunicationService, ServicePr
 
    private final Map<String, SimulationServerSocketImpl<?>> serverSockets = new HashMap<>();
    private final Map<String, Class<?>> clazzes = new HashMap<>();
-   private final Map<String, Integer> uplink;
-   private final Map<String, Integer> downlink;
+   private final Map<String, Integer> uplink, downlink;
+   private final Map<String, Long> updelay, downdelay;
    private final Map<Class<?>, Serializer<?>> serializers = new HashMap<>();
    private final int bufferSize;
 
    public CommunicationServiceImpl() {
-      this(Simulation.TICK_PHASE, new HashMap<String, Integer>(), new HashMap<String, Integer>(), DEFAULT_BUFFER_SIZE);
+      this(Simulation.TICK_PHASE, new HashMap<String, Integer>(), new HashMap<String, Integer>(), new HashMap<String, Long>(), new HashMap<String, Long>(), DEFAULT_BUFFER_SIZE);
    }
 
-   public CommunicationServiceImpl(String phase, Map<String, Integer> uplink, Map<String, Integer> downlink, int bufferSize) {
+   public CommunicationServiceImpl(String phase, Map<String, Integer> uplink, Map<String, Integer> downlink, Map<String, Long> updelay, Map<String, Long> downdelay, int bufferSize) {
       this.phase = phase;
       this.uplink = uplink;
       this.downlink = downlink;
+      this.updelay = updelay;
+      this.downdelay = downdelay;
       this.bufferSize = bufferSize;
 
       BuiltInSerializers.addTo(serializers);
    }
+
+   @Override
+   public void initialize(Simulation simulation, SimulationInitializationContext context) {}
 
    @Override
    public <T> SimulationSocket<T> beginConnect(String name, Class<T> clazz) throws IOException {
@@ -65,7 +71,7 @@ public class CommunicationServiceImpl implements CommunicationService, ServicePr
       if (serverSockets.containsKey(name))
          throw new IOException("name \"" + name + "\" already in use");
 
-      SimulationServerSocketImpl<T> serverSocket = new SimulationServerSocketImpl<T>(this, name, uplink.get(name), downlink.get(name), getSerializer(clazz));
+      SimulationServerSocketImpl<T> serverSocket = new SimulationServerSocketImpl<T>(this, name, uplink.get(name), downlink.get(name), updelay.get(name), downdelay.get(name), getSerializer(clazz));
       serverSockets.put(name, serverSocket);
       clazzes.put(name, clazz);
       return serverSocket;

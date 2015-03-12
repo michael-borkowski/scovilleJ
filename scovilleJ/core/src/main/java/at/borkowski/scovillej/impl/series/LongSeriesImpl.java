@@ -5,7 +5,7 @@ import java.util.Comparator;
 /**
  * A series of {@link Long} measures.
  */
-public class LongSeriesImpl extends SeriesImpl<Long> {
+public class LongSeriesImpl extends NumberSeriesImpl<Long> {
 
    public LongSeriesImpl() {
       super(new Comparator<Long>() {

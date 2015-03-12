@@ -15,6 +15,7 @@
     <module>core</module>
     <module>services</module>
     <module>prefetch</module>
+    <module>runnner</module>
   </modules>
 
   <properties>

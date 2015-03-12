@@ -5,7 +5,7 @@ import java.util.Comparator;
 /**
  * A series of {@link Integer} measures.
  */
-public class IntegerSeriesImpl extends SeriesImpl<Integer> {
+public class IntegerSeriesImpl extends NumberSeriesImpl<Integer> {
 
    public IntegerSeriesImpl() {
       super(new Comparator<Integer>() {
