@@ -35,7 +35,7 @@ public interface SeriesResult<T> {
    /**
     * Returns an average (arithmetic mean) of all measured values.
     * 
-    * @return
+    * @return the average
     */
    Double getAverage();
 
@@ -75,7 +75,7 @@ public interface SeriesResult<T> {
    /**
     * Returns the median candidates of all measured values.
     * 
-    * @return
+    * @return the native median candidates
     */
    T[] getNativeMedians();
 
@@ -86,7 +86,7 @@ public interface SeriesResult<T> {
     * on the implemented measurement series, but will be performed in a
     * mean-like way (possible rounded towards some integer value).
     * 
-    * @return
+    * @return the median in native type
     */
    T getNativeMedian();
 

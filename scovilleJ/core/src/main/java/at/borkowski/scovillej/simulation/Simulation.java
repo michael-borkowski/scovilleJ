@@ -22,7 +22,7 @@ import at.borkowski.scovillej.profile.SeriesResult;
  * 
  * Furthermore, a simulation provides its members with a possibility of
  * recording values for profiling, called <b>series</b>. The series results can
- * later be obtained via {@link #getSeries(String)}.
+ * later be obtained via {@link #getSeries(String, Class)}.
  *
  */
 public interface Simulation {
@@ -125,8 +125,10 @@ public interface Simulation {
     * 
     * @param symbol
     *           the symbol to return the series result for
-    * @param class1
+    * @param clazz
     *           the class of the series
+    * @param <T>
+    *           the type of series to reutrn
     * @return the series result
     */
    <T> SeriesResult<T> getSeries(String symbol, Class<T> clazz);

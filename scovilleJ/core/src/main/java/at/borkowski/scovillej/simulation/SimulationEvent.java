@@ -17,7 +17,7 @@ public interface SimulationEvent extends PhaseHandler {
    /**
     * Returns the tick this event is scheduled for
     * 
-    * @return
+    * @return the scheduled tick
     */
    long getScheduledTick();
 }

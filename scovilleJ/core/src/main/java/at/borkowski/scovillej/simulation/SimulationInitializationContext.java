@@ -22,6 +22,8 @@ public interface SimulationInitializationContext {
     *           the symbol (name of series) to record
     * @param clazz
     *           the runtime class object for <code>T</code>
+    * @param <T>
+    *           the type of series to return
     * @return the series objects
     */
    <T> Series<T> getSeries(String symbol, Class<T> clazz);
@@ -34,6 +36,8 @@ public interface SimulationInitializationContext {
     *           the type of service requests
     * @return the service object, or <code>null</code> if no service is
     *         providing this interface
+    * @param <T>
+    *           the type of service to return
     */
    <T> T getService(Class<T> clazz);
 }
