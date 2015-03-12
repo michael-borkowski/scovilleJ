@@ -203,17 +203,26 @@ public abstract class NumberSeriesImpl<T extends Number> extends SeriesImpl<T> {
          return calcNativeMedian(medianA(), medianB());
    }
 
-   public static SeriesProvider<?> createIfKnown(Class<?> clazz) {
+   /**
+    * Creates a {@link SeriesProvider} for a built-in series type. Returns
+    * <code>null</code> if the provided type is not built-in.
+    * 
+    * @param clazz
+    *           the type of series to create
+    * @return the series provider
+    */
+   @SuppressWarnings("unchecked")
+   public static <T> SeriesProvider<T> createIfKnown(Class<T> clazz) {
       if (clazz.equals(Double.class))
-         return new DoubleSeriesImpl();
+         return (SeriesProvider<T>) new DoubleSeriesImpl();
       else if (clazz.equals(Float.class))
-         return new FloatSeriesImpl();
+         return (SeriesProvider<T>) new FloatSeriesImpl();
       else if (clazz.equals(Integer.class))
-         return new IntegerSeriesImpl();
+         return (SeriesProvider<T>) new IntegerSeriesImpl();
       else if (clazz.equals(Long.class))
-         return new LongSeriesImpl();
+         return (SeriesProvider<T>) new LongSeriesImpl();
       else if (clazz.equals(Void.class))
-         return new VoidSeriesImpl();
+         return (SeriesProvider<T>) new VoidSeriesImpl();
       else
          return null;
    }
@@ -224,6 +233,5 @@ public abstract class NumberSeriesImpl<T extends Number> extends SeriesImpl<T> {
          return f;
       return f.format("range [%10.2f .. %10.2f] avg %10.2f median %10.2f", getMin().doubleValue(), getMax().doubleValue(), getAverage(), getDoubleMedian());
    }
-   
-   
+
 }
