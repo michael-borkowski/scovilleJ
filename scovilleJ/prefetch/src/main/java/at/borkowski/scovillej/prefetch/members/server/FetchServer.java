@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import at.borkowski.scovillej.simulation.PhaseHandler;
 import at.borkowski.scovillej.simulation.Simulation;
@@ -24,6 +23,19 @@ public class FetchServer implements SimulationMember, PhaseHandler {
    private final FileServerProcessor fileServerProcessor;
 
    private final List<ClientProcessor> clientProcessors = new LinkedList<>();
+
+   /**
+    * Testability constructor
+    * 
+    * @param socketProcessor
+    *           the (mocked) socket processor
+    * @param fileServerProcessor
+    *           the (mocked) file server processor
+    */
+   FetchServer(SocketProcessor socketProcessor, FileServerProcessor fileServerProcessor) {
+      this.socketProcessor = socketProcessor;
+      this.fileServerProcessor = fileServerProcessor;
+   }
 
    /**
     * Creates a new fetch server listening on the given socket name.
@@ -67,16 +79,6 @@ public class FetchServer implements SimulationMember, PhaseHandler {
    @Override
    public Collection<String> getPhaseSubcription() {
       return null;
-   }
-
-   /**
-    * Adds files to this server member.
-    * 
-    * @param files
-    *           the files to be added.
-    */
-   public void addFiles(Map<String, byte[]> files) {
-      fileServerProcessor.addFiles(files);
    }
 
    /**

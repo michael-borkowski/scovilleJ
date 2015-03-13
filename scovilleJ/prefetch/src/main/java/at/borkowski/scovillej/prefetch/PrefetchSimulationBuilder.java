@@ -132,7 +132,7 @@ public class PrefetchSimulationBuilder {
     * @return this object
     */
    public PrefetchSimulationBuilder files(Map<String, byte[]> files) {
-      fetchServer.addFiles(files);
+      fetchServer.getFileServerProcessor().addFiles(files);
       return this;
    }
 
