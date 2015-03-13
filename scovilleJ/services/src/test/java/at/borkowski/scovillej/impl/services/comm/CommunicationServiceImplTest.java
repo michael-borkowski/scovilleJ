@@ -15,6 +15,7 @@ import org.junit.Test;
 import at.borkowski.scovillej.profile.Series;
 import at.borkowski.scovillej.services.comm.SimulationServerSocket;
 import at.borkowski.scovillej.services.comm.SimulationSocket;
+import at.borkowski.scovillej.services.comm.impl.CommunicationServiceImpl;
 import at.borkowski.scovillej.simulation.PhaseHandler;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;

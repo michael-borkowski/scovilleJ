@@ -1,4 +1,4 @@
-package at.borkowski.scovillej.impl.services.comm;
+package at.borkowski.scovillej.services.comm.impl;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -6,11 +6,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import at.borkowski.scovillej.impl.services.comm.serializers.BuiltInSerializers;
 import at.borkowski.scovillej.services.comm.CommunicationService;
 import at.borkowski.scovillej.services.comm.Serializer;
 import at.borkowski.scovillej.services.comm.SimulationServerSocket;
 import at.borkowski.scovillej.services.comm.SimulationSocket;
+import at.borkowski.scovillej.services.comm.impl.serializers.BuiltInSerializers;
 import at.borkowski.scovillej.simulation.PhaseHandler;
 import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;

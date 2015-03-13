@@ -1,4 +1,4 @@
-package at.borkowski.scovillej.impl.services.comm;
+package at.borkowski.scovillej.services.comm.impl;
 
 import java.io.IOException;
 import java.io.InputStream;

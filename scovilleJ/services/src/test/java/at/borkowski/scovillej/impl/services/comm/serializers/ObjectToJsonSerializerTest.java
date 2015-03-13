@@ -7,6 +7,8 @@ import java.io.UnsupportedEncodingException;
 import org.junit.Before;
 import org.junit.Test;
 
+import at.borkowski.scovillej.services.comm.impl.serializers.ObjectToJsonSerializer;
+
 public class ObjectToJsonSerializerTest {
 
    public static final String CHARSET = "UTF-8";

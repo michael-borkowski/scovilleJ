@@ -3,7 +3,7 @@ package at.borkowski.scovillej.services.comm;
 import java.util.HashMap;
 import java.util.Map;
 
-import at.borkowski.scovillej.impl.services.comm.CommunicationServiceImpl;
+import at.borkowski.scovillej.services.comm.impl.CommunicationServiceImpl;
 import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 

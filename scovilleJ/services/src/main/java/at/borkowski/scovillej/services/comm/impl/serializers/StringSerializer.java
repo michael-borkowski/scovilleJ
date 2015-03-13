@@ -1,4 +1,4 @@
-package at.borkowski.scovillej.impl.services.comm.serializers;
+package at.borkowski.scovillej.services.comm.impl.serializers;
 
 import java.io.UnsupportedEncodingException;
 
