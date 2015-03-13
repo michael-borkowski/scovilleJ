@@ -1,6 +1,8 @@
 package at.borkowski.scovillej.impl.series;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Formatter;
 import java.util.HashMap;
@@ -201,6 +203,15 @@ public abstract class NumberSeriesImpl<T extends Number> extends SeriesImpl<T> {
          return medianA();
       else
          return calcNativeMedian(medianA(), medianB());
+   }
+
+   /**
+    * Returns a list of all known series classes.
+    * 
+    * @return all known series classes
+    */
+   public static Collection<Class<?>> getKnownSeriesClasses() {
+      return Arrays.asList(Double.class, Float.class, Integer.class, Long.class, Void.class);
    }
 
    /**

@@ -8,10 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import at.borkowski.scovillej.impl.SimulationImpl;
-import at.borkowski.scovillej.impl.series.DoubleSeriesImpl;
-import at.borkowski.scovillej.impl.series.FloatSeriesImpl;
-import at.borkowski.scovillej.impl.series.IntegerSeriesImpl;
-import at.borkowski.scovillej.impl.series.LongSeriesImpl;
 import at.borkowski.scovillej.profile.SeriesProvider;
 import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
@@ -75,54 +71,6 @@ public class SimulationBuilder {
     */
    public SimulationBuilder member(SimulationMember member) {
       members.add(member);
-      return this;
-   }
-
-   /**
-    * Adds a series and defines the type as {@link Double}.
-    * 
-    * @param symbol
-    *           the name of the series to add
-    * @return this object
-    */
-   public SimulationBuilder seriesDouble(String symbol) {
-      series.put(symbol, new DoubleSeriesImpl());
-      return this;
-   }
-
-   /**
-    * Adds a series and defines the type as {@link Float}.
-    * 
-    * @param symbol
-    *           the name of the series to add
-    * @return this object
-    */
-   public SimulationBuilder seriesFloat(String symbol) {
-      series.put(symbol, new FloatSeriesImpl());
-      return this;
-   }
-
-   /**
-    * Adds a series and defines the type as {@link Long}.
-    * 
-    * @param symbol
-    *           the name of the series to add
-    * @return this object
-    */
-   public SimulationBuilder seriesLong(String symbol) {
-      series.put(symbol, new LongSeriesImpl());
-      return this;
-   }
-
-   /**
-    * Adds a series and defines the type as {@link Integer}.
-    * 
-    * @param symbol
-    *           the name of the series to add
-    * @return this object
-    */
-   public SimulationBuilder seriesInteger(String symbol) {
-      series.put(symbol, new IntegerSeriesImpl());
       return this;
    }
 

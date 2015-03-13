@@ -98,7 +98,7 @@ public class VoidSeriesImpl extends SeriesImpl<Void> {
     */
    @Override
    public boolean hasSingleMedian() {
-      return true;
+      return !ticks.isEmpty();
    }
 
    @Override
