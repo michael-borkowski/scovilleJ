@@ -30,7 +30,7 @@ public class ClientProcessorTest {
 
    String request = null;
    byte[] response = null;
-   boolean close = false, closed = false;;
+   boolean close = false, closed = false;
 
    long tick = 0;
 
