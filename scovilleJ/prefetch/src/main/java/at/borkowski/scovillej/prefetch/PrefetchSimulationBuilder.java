@@ -16,6 +16,7 @@ import at.borkowski.scovillej.simulation.Simulation;
 /**
  * A class facilitating the creation of simulations of prefetching scenarios.
  */
+// TODO test this and all classes in this project
 public class PrefetchSimulationBuilder {
    private static final String COMM_PHASE = "comm";
    private static final long BASE_DELAY = 2;

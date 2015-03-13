@@ -7,7 +7,14 @@ import at.borkowski.scovillej.services.comm.impl.CommunicationServiceImpl;
 import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 
+/**
+ * A class facilitating the creation of communication service objects (see
+ * {@link CommunicationService}).
+ */
 public class CommunicationServiceBuilder {
+   /**
+    * The default buffer size used, in bytes.
+    */
    public static final int DEFAULT_BUFFER_SIZE = 1024 * 1024;
 
    private String phase = Simulation.TICK_PHASE;
@@ -19,6 +26,14 @@ public class CommunicationServiceBuilder {
 
    private ServiceProvider<CommunicationService> instance;
 
+   /**
+    * Sets the phase during which communiction takes place. The default is the
+    * main tick phase (see {@link Simulation#TICK_PHASE}.
+    * 
+    * @param phase
+    *           the communiction phase
+    * @return this object
+    */
    public CommunicationServiceBuilder communicationPhase(String phase) {
       checkUncreated();
 
@@ -26,6 +41,17 @@ public class CommunicationServiceBuilder {
       return this;
    }
 
+   /**
+    * Limits the given socket name to the given uplink and downlink byte rates.
+    * 
+    * @param socketName
+    *           the name of the socket to limit
+    * @param uplinkRate
+    *           the uplink (client to server) byte rate per tick
+    * @param downlinkRate
+    *           the downlink (server to client) byte rate per tick
+    * @return this object
+    */
    public CommunicationServiceBuilder limit(String socketName, Integer uplinkRate, Integer downlinkRate) {
       checkUncreated();
 
@@ -34,14 +60,31 @@ public class CommunicationServiceBuilder {
       return this;
    }
 
+   /**
+    * Limits the given socket name to the given byte rates, both uplink and
+    * downlink.
+    * 
+    * @param socketName
+    *           the name of the socket to limit
+    * @param rate
+    *           the rate to set
+    * @return this object
+    */
    public CommunicationServiceBuilder limit(String socketName, Integer rate) {
       return limit(socketName, rate, rate);
    }
 
-   public CommunicationServiceBuilder delay(String socketName, Long delay) {
-      return delay(socketName, delay, delay);
-   }
-
+   /**
+    * Adds a delay to the given socket.
+    * 
+    * @param socketName
+    *           the name of the socket to add delay to
+    * @param updelay
+    *           the uplink (client to server) delay in ticks
+    * @param downdelay
+    *           the downlink (server to client) delay in ticks
+    * @return
+    */
    public CommunicationServiceBuilder delay(String socketName, Long updelay, Long downdelay) {
       checkUncreated();
 
@@ -50,6 +93,26 @@ public class CommunicationServiceBuilder {
       return this;
    }
 
+   /**
+    * Adds a delay to the given socket, both uplink and downlink.
+    * 
+    * @param socketName
+    *           the name of the socket to add delay to
+    * @param delay
+    *           the delay in ticks to set
+    * @return this object
+    */
+   public CommunicationServiceBuilder delay(String socketName, Long delay) {
+      return delay(socketName, delay, delay);
+   }
+
+   /**
+    * Sets the buffer size, in bytes, used for communictation
+    * 
+    * @param bufferSize
+    *           the buffer size
+    * @return this object
+    */
    public CommunicationServiceBuilder bufferSize(int bufferSize) {
       checkUncreated();
 
@@ -68,7 +131,12 @@ public class CommunicationServiceBuilder {
       instance = new CommunicationServiceImpl(phase, uplink, downlink, updelay, downdelay, bufferSize);
    }
 
-   public ServiceProvider<?> create() {
+   /**
+    * Creates the communication service.
+    * 
+    * @return the communication service
+    */
+   public ServiceProvider<CommunicationService> create() {
       createIfNecessary();
       return instance;
    }
