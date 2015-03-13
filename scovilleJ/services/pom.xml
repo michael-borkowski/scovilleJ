@@ -8,7 +8,7 @@
   </parent>
 
   <artifactId>services</artifactId>
-  <name>${project.friendly-name}: Built-In Services</name>
+  <name>scovilleJ: Built-In Services</name>
   <description>Built-In Services useful in building simulations</description>
 
   <dependencies>

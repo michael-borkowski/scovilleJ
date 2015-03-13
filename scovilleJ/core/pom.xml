@@ -8,7 +8,7 @@
   </parent>
 
   <artifactId>core</artifactId>
-  <name>${project.friendly-name}: Core</name>
+  <name>scovilleJ: Core</name>
   <description>The core of scovilleJ, the framework for running synchronous simulations</description>
 
   <dependencies>

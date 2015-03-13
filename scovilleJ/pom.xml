@@ -5,7 +5,7 @@
   <artifactId>scovillej</artifactId>
   <version>0.0.3-SNAPSHOT</version>
 
-  <name>${project.friendly-name}</name>
+  <name>scovilleJ</name>
   <url>https://github.com/michael-borkowski/scovilleJ</url>
   <description>A framework for running synchronous simulations in Java</description>
 
@@ -23,7 +23,6 @@
     <junit-version>4.12</junit-version>
     <mockito-version>1.9.5</mockito-version>
 
-    <project.friendly-name>scovilleJ</project.friendly-name>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 

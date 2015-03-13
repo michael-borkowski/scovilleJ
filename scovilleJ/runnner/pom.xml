@@ -8,7 +8,7 @@
   </parent>
 
   <artifactId>runner</artifactId>
-  <name>${project.friendly-name}: Runner</name>
+  <name>scovilleJ: Runner</name>
   <description>The runner for scovilleJ</description>
 
   <build>
