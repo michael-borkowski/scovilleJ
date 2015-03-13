@@ -27,12 +27,12 @@ public class ClientProcessorTest {
    FileServerProcessor fileServerProcessor;
 
    SimulationContext context;
+   long tick = 0;
 
    String request = null;
    byte[] response = null;
    boolean close = false, closed = false;
 
-   long tick = 0;
 
    @Before
    public void setUp() throws Exception {
