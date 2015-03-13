@@ -3,7 +3,6 @@ package at.borkowski.scovillej.services.comm;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Formatter;
 
 import org.junit.Test;
 
@@ -103,15 +102,10 @@ public class CommIntegrationTest {
       @Override
       protected void tick() throws IOException {
          if (clientSocket != null) {
-            //if (clientSocket.isClosed())
-            //   clientSocket = null;
-            //else 
-            {
-               while (clientSocket.available() > 0) {
-                  byte[] msg = clientSocket.read();
+            while (clientSocket.available() > 0) {
+               byte[] msg = clientSocket.read();
 
-                  clientSocket.write(files[msg[0]]);
-               }
+               clientSocket.write(files[msg[0]]);
             }
          } else {
             if (serverSocket.available() > 0)
@@ -123,7 +117,6 @@ public class CommIntegrationTest {
    private class Client extends Member {
 
       int rx = -1;
-      long t0;
       byte[][] files = new byte[4][];
       SimulationSocket<byte[]> clientSocket;
 
@@ -132,7 +125,6 @@ public class CommIntegrationTest {
          clientSocket = comm.beginConnect("myserver", byte[].class);
       }
 
-      @SuppressWarnings("resource")
       @Override
       protected void tick() throws IOException {
          if (!clientSocket.established())
@@ -143,17 +135,11 @@ public class CommIntegrationTest {
             return;
          }
 
-         if (rx == -1) {
+         if (rx == -1)
             clientSocket.write(new byte[] { (byte) (rx = 0) });
-            t0 = context.getCurrentTick();
-         }
 
          while (clientSocket.available() > 0) {
             files[rx] = clientSocket.read();
-            int len = files[rx].length;
-            t0 = context.getCurrentTick() - t0;
-            double rate = (double) len / t0;
-            System.out.println("Received " + rx + " (" + files[rx].length + " B, " + new Formatter().format("%.2f", rate) + " B/t) at " + context.getCurrentTick());
             if (rx + 1 < files.length)
                clientSocket.write(new byte[] { (byte) ++rx });
          }
