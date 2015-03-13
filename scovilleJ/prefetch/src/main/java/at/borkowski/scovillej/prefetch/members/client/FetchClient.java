@@ -28,6 +28,25 @@ public class FetchClient implements SimulationMember, PhaseHandler {
    private PrefetchProfilingService profiling;
 
    /**
+    * Testability constructor.
+    * 
+    * @param socketProcessor
+    *           the (mocked) socket processor
+    * @param clientCodeProcessor
+    *           the (mocked) client code processor
+    * @param cacheProcessor
+    *           the (mocked) cache processor
+    * @param fetchProcessor
+    *           the (mocked) fetch processor
+    */
+   FetchClient(SocketProcessor socketProcessor, ClientCodeProcessor clientCodeProcessor, CacheProcessor cacheProcessor, FetchProcessor fetchProcessor) {
+      this.socketProcessor = socketProcessor;
+      this.clientCodeProcessor = clientCodeProcessor;
+      this.cacheProcessor = cacheProcessor;
+      this.fetchProcessor = fetchProcessor;
+   }
+
+   /**
     * Creates a new fetch client.
     * 
     * @param socketName
@@ -62,7 +81,7 @@ public class FetchClient implements SimulationMember, PhaseHandler {
       try {
          socketProcessor.executePhase(context);
 
-         if (socketProcessor.isReady())
+         if (!socketProcessor.isReady())
             return;
 
          clientCodeProcessor.executePhase(context);
