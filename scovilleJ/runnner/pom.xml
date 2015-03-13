@@ -4,7 +4,7 @@
   <parent>
     <groupId>at.borkowski.scovillej</groupId>
     <artifactId>scovillej</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4-SNAPSHOT</version>
   </parent>
 
   <artifactId>runner</artifactId>
@@ -49,7 +49,7 @@
     <dependency>
       <groupId>at.borkowski.scovillej</groupId>
       <artifactId>prefetch</artifactId>
-      <version>0.0.3</version>
+      <version>0.0.4-SNAPSHOT</version>
     </dependency>
 
     <!-- Command line parsing -->
