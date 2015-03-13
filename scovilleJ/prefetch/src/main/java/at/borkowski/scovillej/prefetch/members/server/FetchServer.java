@@ -1,16 +1,11 @@
 package at.borkowski.scovillej.prefetch.members.server;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import at.borkowski.scovillej.services.comm.CommunicationService;
-import at.borkowski.scovillej.services.comm.SimulationServerSocket;
-import at.borkowski.scovillej.services.comm.SimulationSocket;
 import at.borkowski.scovillej.simulation.PhaseHandler;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
@@ -25,16 +20,20 @@ import at.borkowski.scovillej.simulation.SimulationMember;
  */
 public class FetchServer implements SimulationMember, PhaseHandler {
 
-   private boolean initialized = false;
-   private CommunicationService comm;
-   private SimulationServerSocket<byte[]> serverSocket;
-   private List<ClientHandler> clientHandlers = new ArrayList<>();
+   private final SocketProcessor socketProcessor;
+   private final FileServerProcessor fileServerProcessor;
 
-   private final String socketName;
-   private final Map<String, byte[]> files = new HashMap<>();
+   private final List<ClientProcessor> clientProcessors = new LinkedList<>();
 
+   /**
+    * Creates a new fetch server listening on the given socket name.
+    * 
+    * @param socketName
+    *           the socket name
+    */
    public FetchServer(String socketName) {
-      this.socketName = socketName;
+      this.socketProcessor = new SocketProcessor(this, socketName);
+      this.fileServerProcessor = new FileServerProcessor();
    }
 
    @Override
@@ -53,64 +52,19 @@ public class FetchServer implements SimulationMember, PhaseHandler {
    @Override
    public void executePhase(SimulationContext context) {
       try {
-         if (!initialized)
-            initialize(context);
+         socketProcessor.executePhase(context);
 
-         if (serverSocket.available() > 0)
-            clientHandlers.add(new ClientHandler(serverSocket.accept()));
-
-         if (clientHandlers.size() > 0)
-            clientHandlers.get((int) (context.getCurrentTick() % clientHandlers.size())).handle(context);
+         if (clientProcessors.size() > 0)
+            clientProcessors.get((int) (context.getCurrentTick() % clientProcessors.size())).handle(context);
 
       } catch (Exception ex) {
          throw new RuntimeException(ex);
       }
    }
 
-   private void initialize(SimulationContext context) throws IOException {
-      comm = context.getService(CommunicationService.class);
-
-      serverSocket = comm.createServerSocket(socketName, byte[].class);
-
-      initialized = true;
-   }
-
    @Override
    public Collection<String> getPhaseSubcription() {
       return null;
-   }
-
-   private class ClientHandler {
-      private final SimulationSocket<byte[]> socket;
-
-      public ClientHandler(SimulationSocket<byte[]> socket) {
-         this.socket = socket;
-      }
-
-      public void handle(SimulationContext context) throws IOException {
-         if (socket.available() == 0)
-            return;
-         byte[] requestBytes = socket.read();
-         String request = requestBytes == null ? null : new String(requestBytes, "UTF8");
-
-         if (request == null)
-            close();
-         else
-            handle(request, context);
-      }
-
-      private void handle(String request, SimulationContext context) throws IOException {
-         if (files.containsKey(request))
-            socket.write(files.get(request));
-         else
-            socket.write(null);
-      }
-
-      private void close() {
-         socket.close();
-         clientHandlers.remove(this);
-      }
-
    }
 
    /**
@@ -120,6 +74,35 @@ public class FetchServer implements SimulationMember, PhaseHandler {
     *           the files to be added.
     */
    public void addFiles(Map<String, byte[]> files) {
-      this.files.putAll(files);
+      fileServerProcessor.addFiles(files);
+   }
+
+   /**
+    * Returns the {@link FileServerProcessor} sub-processor.
+    * 
+    * @return the sub-processor
+    */
+   public FileServerProcessor getFileServerProcessor() {
+      return fileServerProcessor;
+   }
+
+   /**
+    * Dereigsters a client sub-processor
+    * 
+    * @param clientHandler
+    *           the sub-processor
+    */
+   public void deregisterClientProcessor(ClientProcessor clientHandler) {
+      clientProcessors.remove(clientHandler);
+   }
+
+   /**
+    * Registers a client sub-processor
+    * 
+    * @param clientHandler
+    *           the sub-processor
+    */
+   public void registerClientProcessor(ClientProcessor clientHandler) {
+      clientProcessors.add(clientHandler);
    }
 }
