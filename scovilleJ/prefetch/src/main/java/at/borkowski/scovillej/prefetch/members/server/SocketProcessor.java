@@ -60,7 +60,7 @@ public class SocketProcessor {
          initialize(context);
 
       if (serverSocket.available() > 0)
-         owner.registerClientProcessor(new ClientProcessor(null, serverSocket.accept()));
+         owner.registerClientProcessor(new ClientProcessor(owner, serverSocket.accept()));
    }
 
    private void initialize(SimulationContext context) throws IOException {

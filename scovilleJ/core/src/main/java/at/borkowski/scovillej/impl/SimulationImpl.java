@@ -16,7 +16,6 @@ import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
-import at.borkowski.scovillej.simulation.SimulationInitializationContext;
 import at.borkowski.scovillej.simulation.SimulationMember;
 
 /**
@@ -31,8 +30,7 @@ public class SimulationImpl implements Simulation {
    private final Map<String, SeriesProvider<?>> series;
    private final Set<ServiceProvider<?>> services;
 
-   private SimulationInitializationContext initializationContext;
-   private SimulationContext simulationContext;
+   private final SimulationContext simulationContext;
 
    private long currentTick = 0;
    private String currentPhase = null;
@@ -62,18 +60,18 @@ public class SimulationImpl implements Simulation {
       this.members.addAll(members);
       this.members.addAll(services);
 
+      this.simulationContext = initializeContext();
+
       for (String phase : phases)
          phaseToHandlers.put(phase, new LinkedList<>());
-
-      initializeContexts();
 
       for (SeriesProvider<?> provider : series.values())
          provider.initialize(this);
 
       for (SimulationMember member : members)
-         member.initialize(this, initializationContext);
+         member.initialize(this, simulationContext);
       for (SimulationMember member : services)
-         member.initialize(this, initializationContext);
+         member.initialize(this, simulationContext);
 
       Collection<SimulationEvent> memberEvents;
       for (SimulationMember member : this.members) {
@@ -98,8 +96,8 @@ public class SimulationImpl implements Simulation {
    }
 
    // TODO: one context is enough, then it can be final as well
-   private void initializeContexts() {
-      initializationContext = new SimulationInitializationContext() {
+   private SimulationContext initializeContext() {
+      return new SimulationContext() {
          @SuppressWarnings("unchecked")
          @Override
          public <T> Series<T> getSeries(String symbol, Class<T> clazz) {
@@ -114,17 +112,7 @@ public class SimulationImpl implements Simulation {
          public <T> T getService(Class<T> clazz) {
             return lookup(clazz);
          }
-      };
-      simulationContext = new SimulationContext() {
-         @Override
-         public <T> T getService(Class<T> clazz) {
-            return initializationContext.getService(clazz);
-         }
 
-         @Override
-         public <T> Series<T> getSeries(String symbol, Class<T> clazz) {
-            return initializationContext.getSeries(symbol, clazz);
-         }
          @Override
          public String getCurrentPhase() {
             return currentPhase;

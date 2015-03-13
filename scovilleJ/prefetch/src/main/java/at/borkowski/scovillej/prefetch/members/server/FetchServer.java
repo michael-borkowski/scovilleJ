@@ -37,7 +37,9 @@ public class FetchServer implements SimulationMember, PhaseHandler {
    }
 
    @Override
-   public void initialize(Simulation simulation, SimulationInitializationContext context) {}
+   public void initialize(Simulation simulation, SimulationInitializationContext context) {
+      socketProcessor.initialize(simulation, context);
+   }
 
    @Override
    public Collection<SimulationEvent> generateEvents() {
