@@ -47,4 +47,8 @@ public class SocketProcessor {
    public void request(String file) throws IOException {
       socket.write(file.getBytes("UTF8"));
    }
+
+   public boolean isReady() {
+      return socket != null && socket.established();
+   }
 }
