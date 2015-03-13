@@ -18,6 +18,11 @@ import at.borkowski.scovillej.simulation.SimulationEvent;
 import at.borkowski.scovillej.simulation.SimulationInitializationContext;
 import at.borkowski.scovillej.simulation.SimulationMember;
 
+/**
+ * Represents the server member of the simulation, which provides client members
+ * with data. A simple mapping of {@link String} (file name) to
+ * <code>byte[]</code> (content) is used.
+ */
 public class FetchServer implements SimulationMember, PhaseHandler {
 
    public static final String SOCKET_NAME = "fetch-server";
@@ -104,6 +109,12 @@ public class FetchServer implements SimulationMember, PhaseHandler {
 
    }
 
+   /**
+    * Adds files to this server member.
+    * 
+    * @param files
+    *           the files to be added.
+    */
    public void addFiles(Map<String, byte[]> files) {
       this.files.putAll(files);
    }

@@ -9,6 +9,10 @@ import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationInitializationContext;
 
+/**
+ * Represents the socket sub-processor of {@link FetchClient}. It is responsible
+ * for communicating with the server member using a socket.
+ */
 public class SocketProcessor {
    private CommunicationService comm;
    private SimulationSocket<Object> socket;

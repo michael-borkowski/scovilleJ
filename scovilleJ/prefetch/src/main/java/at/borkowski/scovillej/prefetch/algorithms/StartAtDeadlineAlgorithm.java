@@ -6,6 +6,9 @@ import java.util.Set;
 
 import at.borkowski.scovillej.prefetch.Request;
 
+/**
+ * This algorithm schedules all fetches for the deadline of their request.
+ */
 public class StartAtDeadlineAlgorithm implements PrefetchAlgorithm {
    @Override
    public Map<Long, Request> schedule(Set<Request> requests) {

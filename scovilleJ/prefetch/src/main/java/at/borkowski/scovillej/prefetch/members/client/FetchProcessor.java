@@ -14,6 +14,10 @@ import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationInitializationContext;
 
+/**
+ * Represents the fetch sub-processor of {@link FetchClient}. It is responsible
+ * for fetching requests.
+ */
 public class FetchProcessor {
 
    private final FetchClient owner;

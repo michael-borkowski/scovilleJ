@@ -10,6 +10,10 @@ import java.util.Set;
 
 import at.borkowski.scovillej.prefetch.Request;
 
+/**
+ * This algorithm schedules all requests according to their parameters, assuming
+ * an infinite link bandwidth.
+ */
 public class IgnoreBlinkAlgorithm implements PrefetchAlgorithm {
    public final static long CONNECTION_OVERHEAD = 5;
    public final static double ALPHA = 1;
