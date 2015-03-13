@@ -25,14 +25,17 @@ import at.borkowski.scovillej.simulation.SimulationMember;
  */
 public class FetchServer implements SimulationMember, PhaseHandler {
 
-   public static final String SOCKET_NAME = "fetch-server";
-
    private boolean initialized = false;
    private CommunicationService comm;
    private SimulationServerSocket<byte[]> serverSocket;
    private List<ClientHandler> clientHandlers = new ArrayList<>();
 
+   private final String socketName;
    private final Map<String, byte[]> files = new HashMap<>();
+
+   public FetchServer(String socketName) {
+      this.socketName = socketName;
+   }
 
    @Override
    public void initialize(Simulation simulation, SimulationInitializationContext context) {}
@@ -67,7 +70,7 @@ public class FetchServer implements SimulationMember, PhaseHandler {
    private void initialize(SimulationContext context) throws IOException {
       comm = context.getService(CommunicationService.class);
 
-      serverSocket = comm.createServerSocket(SOCKET_NAME, byte[].class);
+      serverSocket = comm.createServerSocket(socketName, byte[].class);
 
       initialized = true;
    }

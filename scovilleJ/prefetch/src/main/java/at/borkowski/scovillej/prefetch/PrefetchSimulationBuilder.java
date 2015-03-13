@@ -6,11 +6,14 @@ import java.util.Map;
 
 import at.borkowski.scovillej.SimulationBuilder;
 import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
+import at.borkowski.scovillej.prefetch.members.aux.RateSetter;
 import at.borkowski.scovillej.prefetch.members.client.FetchClient;
 import at.borkowski.scovillej.prefetch.members.server.FetchServer;
 import at.borkowski.scovillej.prefetch.profiling.PrefetchProfilingResults;
 import at.borkowski.scovillej.prefetch.profiling.PrefetchProfilingServiceImpl;
+import at.borkowski.scovillej.services.comm.CommunicationService;
 import at.borkowski.scovillej.services.comm.CommunicationServiceBuilder;
+import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 
 /**
@@ -18,11 +21,17 @@ import at.borkowski.scovillej.simulation.Simulation;
  */
 // TODO test this and all classes in this project
 public class PrefetchSimulationBuilder {
+   private static final String RATE_PHASE = "rate";
    private static final String COMM_PHASE = "comm";
+
+   private static final String SOCKET_NAME = "fetch";
+
    private static final long BASE_DELAY = 2;
    private final FetchClient fetchClient;
    private final FetchServer fetchServer;
    private final PrefetchProfilingServiceImpl profilingService;
+   private final ServiceProvider<CommunicationService> communicationService;
+   private Map<Long, Integer> limits = null;
 
    private SimulationBuilder builder = new SimulationBuilder();
 
@@ -30,15 +39,17 @@ public class PrefetchSimulationBuilder {
     * Creates a new builder with all parameters set to default.
     */
    public PrefetchSimulationBuilder() {
+      builder.phase(RATE_PHASE);
       builder.phase(Simulation.TICK_PHASE);
       builder.phase(COMM_PHASE);
 
-      CommunicationServiceBuilder commBuilder = new CommunicationServiceBuilder().communicationPhase(COMM_PHASE).delay(FetchServer.SOCKET_NAME, BASE_DELAY).limit(FetchServer.SOCKET_NAME, 30);
+      CommunicationServiceBuilder commBuilder = new CommunicationServiceBuilder().communicationPhase(COMM_PHASE).delay(SOCKET_NAME, BASE_DELAY);
 
-      builder.service(commBuilder.create());
-      builder.member(fetchServer = new FetchServer());
-      builder.member(fetchClient = new FetchClient());
+      builder.service(communicationService = commBuilder.create());
       builder.service(profilingService = new PrefetchProfilingServiceImpl());
+
+      builder.member(fetchServer = new FetchServer(SOCKET_NAME));
+      builder.member(fetchClient = new FetchClient(SOCKET_NAME));
    }
 
    /**
@@ -47,7 +58,33 @@ public class PrefetchSimulationBuilder {
     * @return
     */
    public Simulation create() {
+      if (limits != null && !limits.isEmpty())
+         builder.member(new RateSetter(RATE_PHASE, communicationService.getService(), SOCKET_NAME, limits));
       return builder.create();
+   }
+
+   /**
+    * Adds an initial rate limit to the communication socket.
+    * 
+    * @param byteRate
+    *           the rate in bytes per seconds, or <code>null</code> for no limit
+    * @return this object
+    */
+   public PrefetchSimulationBuilder limit(Integer byteRate) {
+      communicationService.getService().setRates(SOCKET_NAME, byteRate, byteRate);
+      return this;
+   }
+
+   /**
+    * Sets limits at given points in time in the simulation.
+    * 
+    * @param byteRates
+    *           the map of ticks to limits
+    * @return this object
+    */
+   public PrefetchSimulationBuilder limits(Map<Long, Integer> byteRates) {
+      this.limits = byteRates;
+      return this;
    }
 
    /**

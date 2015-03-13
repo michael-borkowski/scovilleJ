@@ -16,6 +16,7 @@ public class ClientCodeProcessor {
    private final FetchClient owner;
 
    private Set<Request> required = new HashSet<>();
+   private Set<Request> missed = new HashSet<>();
 
    /**
     * Creates a new client code processor with the given owner
@@ -45,9 +46,10 @@ public class ClientCodeProcessor {
                else
                   owner.getProfilingService().lateArrival(request);
                done.add(request);
-            } else {
+            } else if (!missed.contains(request)) {
                owner.getProfilingService().cacheMiss(request);
                owner.getFetchProcessor().urge(tick, request);
+               missed.add(request);
             }
          }
       }

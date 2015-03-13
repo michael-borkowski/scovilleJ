@@ -2,7 +2,6 @@ package at.borkowski.scovillej.prefetch.members.client;
 
 import java.io.IOException;
 
-import at.borkowski.scovillej.prefetch.members.server.FetchServer;
 import at.borkowski.scovillej.services.comm.CommunicationService;
 import at.borkowski.scovillej.services.comm.SimulationSocket;
 import at.borkowski.scovillej.simulation.Simulation;
@@ -14,10 +13,16 @@ import at.borkowski.scovillej.simulation.SimulationInitializationContext;
  * for communicating with the server member using a socket.
  */
 public class SocketProcessor {
+   private final String socketName;
+
    private CommunicationService comm;
    private SimulationSocket<byte[]> socket;
 
    private boolean initialized = false;
+
+   public SocketProcessor(String socketName) {
+      this.socketName = socketName;
+   }
 
    public void initialize(Simulation simulation, SimulationInitializationContext context) {
       comm = context.getService(CommunicationService.class);
@@ -29,7 +34,7 @@ public class SocketProcessor {
    }
 
    private void initialize(SimulationContext context) throws IOException {
-      socket = comm.beginConnect(FetchServer.SOCKET_NAME, byte[].class);
+      socket = comm.beginConnect(socketName, byte[].class);
       initialized = true;
    }
 

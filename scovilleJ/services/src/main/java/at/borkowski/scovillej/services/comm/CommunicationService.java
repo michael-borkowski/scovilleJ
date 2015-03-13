@@ -37,8 +37,8 @@ public interface CommunicationService {
    <T> SimulationSocket<T> beginConnect(String name, Class<T> clazz) throws IOException;
 
    /**
-    * Sets the upink/downlink byte rates for the given socket. All future
-    * connections will use these rates.
+    * Sets the upink/downlink byte rates for the given socket. All present
+    * future connections with the given socket name will use these rates.
     * 
     * @param name
     *           the name of the socket to set rates
@@ -47,7 +47,7 @@ public interface CommunicationService {
     * @param downlink
     *           the downlink rate in bytes per tick
     */
-   // TODO: also influence existing connections
+   // TODO: test this
    void setRates(String name, Integer uplink, Integer downlink);
 
    /**

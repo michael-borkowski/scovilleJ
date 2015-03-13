@@ -29,9 +29,10 @@ public class FetchClient implements SimulationMember, PhaseHandler {
 
    /**
     * Creates a new fetch client.
+    * @param socketName 
     */
-   public FetchClient() {
-      socketProcessor = new SocketProcessor();
+   public FetchClient(String socketName) {
+      socketProcessor = new SocketProcessor(socketName);
       clientCodeProcessor = new ClientCodeProcessor(this);
       cacheProcessor = new CacheProcessor();
       fetchProcessor = new FetchProcessor(this);

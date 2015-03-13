@@ -38,10 +38,14 @@ public class Main {
       algorithm = new NullAlgorithm();
       algorithm = new StartAtDeadlineAlgorithm();
       algorithm = new IgnoreBlinkAlgorithm();
+      
+      Map<Long, Integer> limits = new HashMap<>();
 
-      PrefetchSimulationBuilder builder = new PrefetchSimulationBuilder().requests(rs).files(files).totalTicks(1000000).algorithm(algorithm);
+      limits.put(0L, 80);
+      limits.put(510000L, 22);
+
+      PrefetchSimulationBuilder builder = new PrefetchSimulationBuilder().requests(rs).files(files).totalTicks(1000000).algorithm(algorithm).limits(limits);
       Simulation sim = builder.create();
-
       PrefetchProfilingResults profiling = builder.getProfiling();
       
       sim.executeToEnd();

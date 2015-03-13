@@ -2,6 +2,7 @@ package at.borkowski.scovillej.services.comm.impl;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import at.borkowski.scovillej.services.comm.Serializer;
@@ -16,6 +17,8 @@ public class SimulationServerSocketImpl<T> implements SimulationServerSocket<T> 
    private final Integer uplink, downlink;
    private final Long updelay, downdelay;
    private final Serializer<T> serializer;
+
+   private final List<SimulationSocketImplA<T>> children = new LinkedList<>();
 
    private boolean open = true;
 
@@ -46,13 +49,20 @@ public class SimulationServerSocketImpl<T> implements SimulationServerSocket<T> 
       if (clientSide == null)
          return null;
 
-      return new SimulationSocketImplA<>(owner.getTickSource(), uplink, downlink, updelay, downdelay, clientSide, serializer, owner.getBufferSize());
+      SimulationSocketImplA<T> child = new SimulationSocketImplA<>(owner.getTickSource(), uplink, downlink, updelay, downdelay, clientSide, serializer, owner.getBufferSize());
+      children.add(child);
+      return child;
    }
 
    @Override
    public void close() {
       open = false;
       owner.removeServerSocket(name);
+   }
+
+   public void setRates(Integer uplink, Integer downlink) {
+      for (SimulationSocketImplA<T> child : children)
+         child.setRates(uplink, downlink);
    }
 
 }

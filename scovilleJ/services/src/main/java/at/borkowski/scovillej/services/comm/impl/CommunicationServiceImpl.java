@@ -85,6 +85,9 @@ public class CommunicationServiceImpl implements CommunicationService, ServicePr
    public void setRates(String name, Integer uplink, Integer downlink) {
       this.uplink.put(name, uplink);
       this.downlink.put(name, downlink);
+
+      if (serverSockets.containsKey(name))
+         serverSockets.get(name).setRates(uplink, downlink);
    }
 
    @Override
