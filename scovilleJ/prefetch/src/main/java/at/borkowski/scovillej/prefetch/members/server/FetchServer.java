@@ -29,7 +29,7 @@ public class FetchServer implements SimulationMember, PhaseHandler {
 
    private boolean initialized = false;
    private CommunicationService comm;
-   private SimulationServerSocket<Object> serverSocket;
+   private SimulationServerSocket<byte[]> serverSocket;
    private List<ClientHandler> clientHandlers = new ArrayList<>();
 
    private final Map<String, byte[]> files = new HashMap<>();
@@ -67,7 +67,7 @@ public class FetchServer implements SimulationMember, PhaseHandler {
    private void initialize(SimulationContext context) throws IOException {
       comm = context.getService(CommunicationService.class);
 
-      serverSocket = comm.createServerSocket(SOCKET_NAME, Object.class);
+      serverSocket = comm.createServerSocket(SOCKET_NAME, byte[].class);
 
       initialized = true;
    }
@@ -78,16 +78,17 @@ public class FetchServer implements SimulationMember, PhaseHandler {
    }
 
    private class ClientHandler {
-      private final SimulationSocket<Object> socket;
+      private final SimulationSocket<byte[]> socket;
 
-      public ClientHandler(SimulationSocket<Object> socket) {
+      public ClientHandler(SimulationSocket<byte[]> socket) {
          this.socket = socket;
       }
 
       public void handle(SimulationContext context) throws IOException {
          if (socket.available() == 0)
             return;
-         String request = (String) socket.read();
+         byte[] requestBytes = socket.read();
+         String request = requestBytes == null ? null : new String(requestBytes, "UTF8");
 
          if (request == null)
             close();

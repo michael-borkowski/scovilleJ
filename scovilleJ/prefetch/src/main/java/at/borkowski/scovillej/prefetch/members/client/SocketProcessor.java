@@ -15,7 +15,7 @@ import at.borkowski.scovillej.simulation.SimulationInitializationContext;
  */
 public class SocketProcessor {
    private CommunicationService comm;
-   private SimulationSocket<Object> socket;
+   private SimulationSocket<byte[]> socket;
 
    private boolean initialized = false;
 
@@ -29,7 +29,7 @@ public class SocketProcessor {
    }
 
    private void initialize(SimulationContext context) throws IOException {
-      socket = comm.beginConnect(FetchServer.SOCKET_NAME, Object.class);
+      socket = comm.beginConnect(FetchServer.SOCKET_NAME, byte[].class);
       initialized = true;
    }
 
@@ -40,6 +40,6 @@ public class SocketProcessor {
    }
 
    public void request(String file) throws IOException {
-      socket.write(file);
+      socket.write(file.getBytes("UTF8"));
    }
 }
