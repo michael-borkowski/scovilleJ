@@ -19,7 +19,8 @@ public class RateSetter implements SimulationMember {
    private List<SimulationEvent> events = new LinkedList<>();
 
    public RateSetter(String phase, CommunicationService communicationService, String socketName, Map<Long, Integer> limits) {
-      for (Long tick : limits.keySet())
+      for (Long tick : limits.keySet()) {
+         Integer limit = limits.get(tick);
          events.add(new SimulationEvent() {
 
             @Override
@@ -29,7 +30,7 @@ public class RateSetter implements SimulationMember {
 
             @Override
             public void executePhase(SimulationContext context) {
-               communicationService.setRates(socketName, limits.get(tick), limits.get(tick));
+               communicationService.setRates(socketName, limit, limit);
             }
 
             @Override
@@ -37,6 +38,7 @@ public class RateSetter implements SimulationMember {
                return tick;
             }
          });
+      }
    }
 
    @Override

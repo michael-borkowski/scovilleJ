@@ -145,4 +145,14 @@ public class CommunicationServiceImpl implements CommunicationService, ServicePr
       return bufferSize;
    }
 
+   @Override
+   public Integer getDownlinkRate(String name) {
+      return downlink.get(name);
+   }
+
+   @Override
+   public Integer getUplinkRate(String name) {
+      return uplink.get(name);
+   }
+
 }

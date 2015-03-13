@@ -34,6 +34,8 @@ public class PrefetchSimulationBuilder {
 
    private SimulationBuilder builder = new SimulationBuilder();
 
+   private RateSetter rateSetter;
+
    /**
     * Creates a new builder with all parameters set to default.
     */
@@ -58,7 +60,7 @@ public class PrefetchSimulationBuilder {
     */
    public Simulation create() {
       if (limits != null && !limits.isEmpty())
-         builder.member(new RateSetter(RATE_PHASE, communicationService.getService(), SOCKET_NAME, limits));
+         builder.member(rateSetter = new RateSetter(RATE_PHASE, communicationService.getService(), SOCKET_NAME, limits));
       return builder.create();
    }
 
@@ -155,5 +157,50 @@ public class PrefetchSimulationBuilder {
     */
    public PrefetchProfilingResults getProfiling() {
       return profilingService;
+   }
+
+   /**
+    * Testability method.
+    * 
+    * @return the fetch server
+    */
+   FetchServer test__getFetchServer() {
+      return fetchServer;
+   }
+
+   /**
+    * Testability method.
+    * 
+    * @return the fetch client
+    */
+   FetchClient test__getFetchClient() {
+      return fetchClient;
+   }
+
+   /**
+    * Testability method.
+    * 
+    * @return the communication service
+    */
+   ServiceProvider<CommunicationService> test__getCommunicationService() {
+      return communicationService;
+   }
+
+   /**
+    * Testability method.
+    * 
+    * @return socket name
+    */
+   String test__getSocketName() {
+      return SOCKET_NAME;
+   }
+
+   /**
+    * Testability method
+    * 
+    * @return rate setter
+    */
+   RateSetter test__getRateSetter() {
+      return rateSetter;
    }
 }

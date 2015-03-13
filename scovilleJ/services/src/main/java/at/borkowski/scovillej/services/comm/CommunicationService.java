@@ -37,7 +37,7 @@ public interface CommunicationService {
    <T> SimulationSocket<T> beginConnect(String name, Class<T> clazz) throws IOException;
 
    /**
-    * Sets the upink/downlink byte rates for the given socket. All present
+    * Sets the upink/downlink byte rates for the given socket. All present and
     * future connections with the given socket name will use these rates.
     * 
     * @param name
@@ -59,4 +59,22 @@ public interface CommunicationService {
     *           the serializer to use
     */
    <T> void addSerializer(Class<T> clazz, Serializer<T> serializer);
+
+   /**
+    * Returns the current uplink byte rate for the given socket.
+    * 
+    * @param name
+    *           the socket name
+    * @return the uplink byte rate, or <code>null</code> if unlimited
+    */
+   Integer getUplinkRate(String name);
+
+   /**
+    * Returns the current downlink byte rate for the given socket.
+    * 
+    * @param name
+    *           the socket name
+    * @return the downlink byte rate, or <code>null</code> if unlimited
+    */
+   Integer getDownlinkRate(String name);
 }

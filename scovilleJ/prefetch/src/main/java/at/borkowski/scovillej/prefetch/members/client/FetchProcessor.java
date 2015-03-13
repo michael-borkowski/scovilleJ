@@ -83,4 +83,12 @@ public class FetchProcessor {
          tick--;
       scheduled.put(tick, request);
    }
+
+   public PrefetchAlgorithm getAlgorithm() {
+      return algorithm;
+   }
+
+   public Set<Request> getPendingRequests() {
+      return toFetch;
+   }
 }
