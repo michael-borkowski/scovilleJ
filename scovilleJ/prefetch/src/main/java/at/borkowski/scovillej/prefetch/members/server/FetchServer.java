@@ -25,7 +25,7 @@ public class FetchServer implements SimulationMember, PhaseHandler {
    private final List<ClientProcessor> clientProcessors = new LinkedList<>();
 
    /**
-    * Testability constructor
+    * Testability constructor.
     * 
     * @param socketProcessor
     *           the (mocked) socket processor
@@ -103,10 +103,10 @@ public class FetchServer implements SimulationMember, PhaseHandler {
    /**
     * Registers a client sub-processor
     * 
-    * @param clientHandler
+    * @param clientProcessor
     *           the sub-processor
     */
-   public void registerClientProcessor(ClientProcessor clientHandler) {
-      clientProcessors.add(clientHandler);
+   public void registerClientProcessor(ClientProcessor clientProcessor) {
+      clientProcessors.add(clientProcessor);
    }
 }
