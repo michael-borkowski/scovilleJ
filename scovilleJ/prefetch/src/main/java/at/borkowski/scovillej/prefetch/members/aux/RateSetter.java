@@ -36,11 +36,6 @@ public class RateSetter implements SimulationMember {
             public long getScheduledTick() {
                return tick;
             }
-
-            @Override
-            public SimulationMember getMember() {
-               return RateSetter.this;
-            }
          });
    }
 

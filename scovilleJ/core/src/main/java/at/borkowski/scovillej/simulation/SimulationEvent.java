@@ -8,13 +8,6 @@ package at.borkowski.scovillej.simulation;
  */
 public interface SimulationEvent extends PhaseHandler {
    /**
-    * Returns the member which is responsible for this event.
-    * 
-    * @return the owning member
-    */
-   SimulationMember getMember();
-
-   /**
     * Returns the tick this event is scheduled for
     * 
     * @return the scheduled tick

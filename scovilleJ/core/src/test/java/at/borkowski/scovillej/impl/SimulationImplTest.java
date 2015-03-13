@@ -260,11 +260,6 @@ public class SimulationImplTest {
       SimulationEvent event = spy(new SimulationEvent() {
 
          @Override
-         public SimulationMember getMember() {
-            return null;
-         }
-
-         @Override
          public long getScheduledTick() {
             return tick;
          }

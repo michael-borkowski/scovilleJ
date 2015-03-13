@@ -51,18 +51,12 @@ public class SimulationBuilderTest {
 
          @Override
          public Collection<SimulationEvent> generateEvents() {
-            final SimulationMember this_ = this;
             List<SimulationEvent> events = new LinkedList<>();
             events.add(new SimulationEvent() {
 
                @Override
                public long getScheduledTick() {
                   return 1;
-               }
-
-               @Override
-               public SimulationMember getMember() {
-                  return this_;
                }
 
                @Override
@@ -78,11 +72,6 @@ public class SimulationBuilderTest {
                @Override
                public long getScheduledTick() {
                   return 3;
-               }
-
-               @Override
-               public SimulationMember getMember() {
-                  return this_;
                }
 
                @Override
@@ -107,18 +96,12 @@ public class SimulationBuilderTest {
 
          @Override
          public Collection<SimulationEvent> generateEvents() {
-            final SimulationMember this_ = this;
             List<SimulationEvent> events = new LinkedList<>();
             events.add(new SimulationEvent() {
 
                @Override
                public long getScheduledTick() {
                   return 5;
-               }
-
-               @Override
-               public SimulationMember getMember() {
-                  return this_;
                }
 
                @Override
@@ -134,11 +117,6 @@ public class SimulationBuilderTest {
                @Override
                public long getScheduledTick() {
                   return 7;
-               }
-
-               @Override
-               public SimulationMember getMember() {
-                  return this_;
                }
 
                @Override
