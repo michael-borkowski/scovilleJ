@@ -1,5 +1,10 @@
 package at.borkowski.scovillej.runnner;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +22,31 @@ import at.borkowski.scovillej.simulation.Simulation;
 public class Main {
 
    public static void main(String[] args) {
+      InputStream configurationSource;
+      if (args.length > 1) {
+         usage();
+         return;
+      } else if (args.length == 0 || "-".equals(args[0])) {
+         configurationSource = System.in;
+      } else {
+         try {
+            configurationSource = new FileInputStream(args[0]);
+         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            usage();
+            return;
+         }
+      }
+
+      if (configurationSource != System.in) {
+         try {
+            configurationSource.close();
+         } catch (IOException e) {
+            e.printStackTrace();
+            return;
+         }
+      }
+
       List<Request> rs = new LinkedList<>();
       rs.add(new Request(100000, 5 * 1024, 22, "/data/A"));
       rs.add(new Request(200000, 1 * 1024, 22, "/data/B"));
@@ -38,7 +68,7 @@ public class Main {
       algorithm = new NullAlgorithm();
       algorithm = new StartAtDeadlineAlgorithm();
       algorithm = new IgnoreBlinkAlgorithm();
-      
+
       Map<Long, Integer> limits = new HashMap<>();
 
       limits.put(0L, 80);
@@ -47,7 +77,7 @@ public class Main {
       PrefetchSimulationBuilder builder = new PrefetchSimulationBuilder().requests(rs).files(files).totalTicks(1000000).algorithm(algorithm).limits(limits);
       Simulation sim = builder.create();
       PrefetchProfilingResults profiling = builder.getProfiling();
-      
+
       sim.executeToEnd();
 
       System.out.println();
@@ -58,6 +88,12 @@ public class Main {
       System.out.println("URT/bytes:    " + profiling.getURTperKB());
 
       System.out.println("End.");
+   }
+
+   private static void usage() {
+      System.err.println("Usage: runner            reads configuration from standard input");
+      System.err.println("       runner -          reads configuration from standard input");
+      System.err.println("       runner <filename> reads configuration from filename");
    }
 
 }
