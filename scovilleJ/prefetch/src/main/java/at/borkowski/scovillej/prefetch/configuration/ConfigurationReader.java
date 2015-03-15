@@ -97,11 +97,11 @@ public class ConfigurationReader {
       if (split.length != 4)
          throw new ConfigurationException("line " + lineCounter + ": usage is \"<tick> " + CMD_REQUEST + " <data> <byterate>");
 
-      long data;
+      int data;
       double byterate;
 
       try {
-         data = Long.parseLong(split[2]);
+         data = Integer.parseInt(split[2]);
       } catch (NumberFormatException nfEx) {
          throw new ConfigurationException("could not parse request data length on line " + lineCounter + ": " + split[2], nfEx);
       }

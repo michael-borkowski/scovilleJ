@@ -1,6 +1,5 @@
 package at.borkowski.scovillej.runnner;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -59,9 +58,9 @@ public class Main {
       rs.add(new Request(800000, 152 * 1024, 22, "/data/I"));
       rs.add(new Request(900000, 251 * 1024, 22, "/data/J"));
 
-      Map<String, byte[]> files = new HashMap<>();
+      Map<String, Integer> files = new HashMap<>();
       for (Request r : rs)
-         files.put(r.getFile(), new byte[(int) r.getData()]);
+         files.put(r.getFile(), r.getData());
 
       PrefetchAlgorithm algorithm;
 

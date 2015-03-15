@@ -10,7 +10,7 @@ package at.borkowski.scovillej.prefetch;
  */
 public class Request {
    private final long deadline;
-   private final long data;
+   private final int data;
    private final double availableByterate;
    private final String file;
 
@@ -26,7 +26,7 @@ public class Request {
     * @param file
     *           the file name
     */
-   public Request(long deadline, long data, double availableByterate, String file) {
+   public Request(long deadline, int data, double availableByterate, String file) {
       this.deadline = deadline;
       this.availableByterate = availableByterate;
       this.data = data;
@@ -47,7 +47,7 @@ public class Request {
     * 
     * @return the predicted data size
     */
-   public long getData() {
+   public int getData() {
       return data;
    }
 

@@ -39,7 +39,7 @@ public class ClientProcessorTest {
       fileServerProcessor = mock(FileServerProcessor.class);
       when(fileServerProcessor.hasFile("file-a")).thenReturn(true);
       when(fileServerProcessor.hasFile("file-b")).thenReturn(false);
-      when(fileServerProcessor.getFile("file-a")).thenReturn(new byte[100]);
+      when(fileServerProcessor.getFileLength("file-a")).thenReturn(100);
 
       socket = new SimulationSocket<byte[]>() {
          @Override

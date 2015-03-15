@@ -129,11 +129,11 @@ public class PrefetchSimulationBuilder {
     * Adds files which the server member will provide.
     * 
     * @param files
-    *           the files as a map from {@link String} (file name) to
-    *           <code>byte[]</code> (content)
+    *           the files as a map from {@link String} (file name) to length in
+    *           bytes (content is irrelevant)
     * @return this object
     */
-   public PrefetchSimulationBuilder files(Map<String, byte[]> files) {
+   public PrefetchSimulationBuilder files(Map<String, Integer> files) {
       fetchServer.getFileServerProcessor().addFiles(files);
       return this;
    }

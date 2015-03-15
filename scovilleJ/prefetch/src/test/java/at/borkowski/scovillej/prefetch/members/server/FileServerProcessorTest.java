@@ -13,14 +13,14 @@ import org.junit.Test;
 public class FileServerProcessorTest {
 
    FileServerProcessor sut;
-   Map<String, byte[]> files = new HashMap<>();
+   Map<String, Integer> files = new HashMap<>();
 
    @Before
    public void setUp() throws Exception {
       sut = new FileServerProcessor();
 
-      files.put("file-a", new byte[100]);
-      files.put("file-b", new byte[30]);
+      files.put("file-a", 100);
+      files.put("file-b", 30);
 
       sut.addFiles(files);
    }
@@ -30,8 +30,8 @@ public class FileServerProcessorTest {
       assertTrue(sut.hasFile("file-a"));
       assertTrue(sut.hasFile("file-b"));
       assertFalse(sut.hasFile("file-c"));
-      assertEquals(100, sut.getFile("file-a").length);
-      assertEquals(30, sut.getFile("file-b").length);
+      assertEquals(100, sut.getFileLength("file-a"));
+      assertEquals(30, sut.getFileLength("file-b"));
    }
 
 }

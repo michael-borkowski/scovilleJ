@@ -37,7 +37,7 @@ public class ClientProcessor {
    public void handle(SimulationContext context) throws IOException {
       if (socket.available() == 0)
          return;
-      
+
       byte[] requestBytes = socket.read();
       String request = requestBytes == null ? null : new String(requestBytes, "UTF8");
 
@@ -49,7 +49,7 @@ public class ClientProcessor {
 
    private void handle(String request, SimulationContext context) throws IOException {
       if (owner.getFileServerProcessor().hasFile(request))
-         socket.write(owner.getFileServerProcessor().getFile(request));
+         socket.write(new byte[owner.getFileServerProcessor().getFileLength(request)]);
       else
          socket.write(null);
    }

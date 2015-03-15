@@ -8,15 +8,16 @@ import java.util.Map;
  * responsible for providing files by name.
  */
 public class FileServerProcessor {
-   private final Map<String, byte[]> files = new HashMap<>();
+   private final Map<String, Integer> files = new HashMap<>();
 
    /**
-    * Adds files to the file server
+    * Adds files to the file server. Files are described by their file name and
+    * length (content is irrelevant).
     * 
     * @param files
     *           the files to add
     */
-   public void addFiles(Map<String, byte[]> files) {
+   public void addFiles(Map<String, Integer> files) {
       this.files.putAll(files);
    }
 
@@ -32,13 +33,13 @@ public class FileServerProcessor {
    }
 
    /**
-    * Returns a file from the file server
+    * The length of a file from the file server
     * 
     * @param file
     *           the file name to fetch
-    * @return the file data
+    * @return the file length
     */
-   public byte[] getFile(String file) {
+   public int getFileLength(String file) {
       return this.files.get(file);
    }
 
