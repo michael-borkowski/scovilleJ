@@ -12,6 +12,7 @@ import at.borkowski.scovillej.prefetch.algorithms.NullAlgorithm;
 import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
 import at.borkowski.scovillej.prefetch.impl.VirtualPayload;
 import at.borkowski.scovillej.prefetch.members.aux.RateControlService;
+import at.borkowski.scovillej.prefetch.members.aux.RatePredictionService;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationInitializationContext;
@@ -24,6 +25,7 @@ public class FetchProcessor {
 
    private final FetchClient owner;
    private RateControlService rateControlService;
+   private RatePredictionService ratePredictionService;
 
    private final Set<Request> toFetch = new HashSet<>();
    private Map<Long, Request> scheduled = new HashMap<>();
@@ -68,11 +70,12 @@ public class FetchProcessor {
    }
 
    private void reschedule() {
-      scheduled = algorithm.schedule(toFetch);
+      scheduled = algorithm.schedule(toFetch, ratePredictionService);
    }
 
    public void initialize(Simulation simulation, SimulationInitializationContext context) {
       rateControlService = context.getService(RateControlService.class);
+      ratePredictionService = context.getService(RatePredictionService.class);
       reschedule();
    }
 

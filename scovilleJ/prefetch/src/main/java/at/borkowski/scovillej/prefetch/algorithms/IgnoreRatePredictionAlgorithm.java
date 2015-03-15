@@ -9,17 +9,18 @@ import java.util.Map;
 import java.util.Set;
 
 import at.borkowski.scovillej.prefetch.Request;
+import at.borkowski.scovillej.prefetch.members.aux.RatePredictionService;
 
 /**
  * This algorithm schedules all requests according to their parameters, assuming
  * an infinite link bandwidth.
  */
-public class IgnoreBlinkAlgorithm implements PrefetchAlgorithm {
+public class IgnoreRatePredictionAlgorithm implements PrefetchAlgorithm {
    public final static long CONNECTION_OVERHEAD = 5;
    public final static double ALPHA = 1;
 
    @Override
-   public Map<Long, Request> schedule(Set<Request> requests) {
+   public Map<Long, Request> schedule(Set<Request> requests, RatePredictionService ratePredictionService) {
       HashMap<Long, Request> ret = new HashMap<>();
 
       List<Request> sortedByDeadline = new LinkedList<Request>(requests);

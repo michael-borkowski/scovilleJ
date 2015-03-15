@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import at.borkowski.scovillej.prefetch.Request;
+import at.borkowski.scovillej.prefetch.members.aux.RatePredictionService;
 
 /**
  * This algorithm schedules all fetches for the deadline of their request, or
@@ -12,7 +13,7 @@ import at.borkowski.scovillej.prefetch.Request;
  */
 public class StartAtDeadlineAlgorithm implements PrefetchAlgorithm {
    @Override
-   public Map<Long, Request> schedule(Set<Request> requests) {
+   public Map<Long, Request> schedule(Set<Request> requests, RatePredictionService ratePredictionService) {
       HashMap<Long, Request> ret = new HashMap<>();
 
       for (Request req : requests) {

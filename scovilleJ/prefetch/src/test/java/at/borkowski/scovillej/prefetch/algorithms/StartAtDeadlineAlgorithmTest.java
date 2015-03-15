@@ -30,7 +30,7 @@ public class StartAtDeadlineAlgorithmTest {
       req.add(new Request(3000, 10, 5));
       req.add(new Request(3010, 300, 5));
 
-      Map<Long, Request> schedules = sut.schedule(req);
+      Map<Long, Request> schedules = sut.schedule(req, null);
       Map<Request, Long> times = new HashMap<>();
 
       for (Entry<Long, Request> entry : schedules.entrySet())
@@ -47,7 +47,7 @@ public class StartAtDeadlineAlgorithmTest {
       req.add(r1 = new Request(1000, 100, 4));
       req.add(r2 = new Request(1000, 100, 4));
 
-      Map<Long, Request> schedules = sut.schedule(req);
+      Map<Long, Request> schedules = sut.schedule(req, null);
       Map<Request, Long> times = new HashMap<>();
 
       for (Entry<Long, Request> entry : schedules.entrySet())

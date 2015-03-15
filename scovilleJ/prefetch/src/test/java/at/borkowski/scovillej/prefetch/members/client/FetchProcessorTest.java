@@ -24,6 +24,7 @@ import at.borkowski.scovillej.prefetch.Request;
 import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
 import at.borkowski.scovillej.prefetch.impl.VirtualPayload;
 import at.borkowski.scovillej.prefetch.members.aux.RateControlService;
+import at.borkowski.scovillej.prefetch.members.aux.RatePredictionService;
 import at.borkowski.scovillej.prefetch.profiling.PrefetchProfilingService;
 import at.borkowski.scovillej.profile.Series;
 import at.borkowski.scovillej.simulation.SimulationContext;
@@ -61,7 +62,7 @@ public class FetchProcessorTest {
       sut.setAlgorithm(new PrefetchAlgorithm() {
 
          @Override
-         public Map<Long, Request> schedule(Set<Request> requests) {
+         public Map<Long, Request> schedule(Set<Request> requests, RatePredictionService ratePredictionService) {
             Map<Long, Request> ret = new HashMap<>();
             for (Request req : requests)
                ret.put(req.getDeadline() + req.getData(), req);
