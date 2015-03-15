@@ -76,7 +76,11 @@ public class FetchProcessorTest {
          @SuppressWarnings("unchecked")
          @Override
          public <T> T getService(Class<T> clazz) {
-            return (T) mock(RateControlService.class);
+            if (clazz.equals(RateControlService.class))
+               return (T) mock(RateControlService.class);
+            else if (clazz.equals(RatePredictionService.class))
+               return (T) mock(RatePredictionService.class);
+            throw new RuntimeException();
          }
 
          @Override
@@ -102,7 +106,9 @@ public class FetchProcessorTest {
    private Answer<VirtualPayload> returnData() {
       return new Answer<VirtualPayload>() {
          public VirtualPayload answer(InvocationOnMock invocation) throws Throwable {
-            return data;
+            VirtualPayload ret = data;
+            data = null;
+            return ret;
          }
       };
    }

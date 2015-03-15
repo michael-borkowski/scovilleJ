@@ -55,8 +55,10 @@ public class FetchProcessor {
       } else {
          current = null;
          for (Request request : scheduled.keySet())
-            if (scheduled.get(request) <= tick && scheduled.get(request) < scheduled.get(current))
+            if (scheduled.get(request) <= tick && (current == null || scheduled.get(request) < scheduled.get(current)))
                current = request;
+         
+         scheduled.remove(current);
 
          if (current != null) {
             System.out.printf("%d -              requesting %d (%d, %d)\n", tick, current.getData(), scheduled.get(current), current.getDeadline());

@@ -1,12 +1,10 @@
 package at.borkowski.scovillej.prefetch.algorithms;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,9 +42,6 @@ public class StartAtDeadlineAlgorithmTest {
       req.add(r2 = new Request(1000, 100, 4));
 
       Map<Request, Long> schedules = sut.schedule(req, null);
-
-      assertTrue(schedules.containsKey(r1.getDeadline()));
-      assertFalse(schedules.containsKey(r1.getDeadline() - 1));
 
       assertEquals(r1.getDeadline(), schedules.get(r1).longValue());
       assertEquals(r2.getDeadline(), schedules.get(r2).longValue());
