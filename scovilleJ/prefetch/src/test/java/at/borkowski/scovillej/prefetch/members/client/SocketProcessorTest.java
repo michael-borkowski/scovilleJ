@@ -19,7 +19,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import at.borkowski.scovillej.prefetch.Request;
-import at.borkowski.scovillej.prefetch.VirtualPayload;
+import at.borkowski.scovillej.prefetch.impl.VirtualPayload;
 import at.borkowski.scovillej.services.comm.CommunicationService;
 import at.borkowski.scovillej.services.comm.SimulationSocket;
 import at.borkowski.scovillej.simulation.SimulationContext;

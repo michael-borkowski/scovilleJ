@@ -21,8 +21,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import at.borkowski.scovillej.prefetch.Request;
-import at.borkowski.scovillej.prefetch.VirtualPayload;
 import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
+import at.borkowski.scovillej.prefetch.impl.VirtualPayload;
 import at.borkowski.scovillej.prefetch.profiling.PrefetchProfilingService;
 import at.borkowski.scovillej.profile.Series;
 import at.borkowski.scovillej.simulation.SimulationContext;

@@ -1,10 +1,13 @@
-package at.borkowski.scovillej.prefetch;
+package at.borkowski.scovillej.prefetch.impl;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
+
+import at.borkowski.scovillej.prefetch.impl.VirtualPayload;
+import at.borkowski.scovillej.prefetch.impl.VirtualPayloadSerializer;
 
 public class VirtualPayloadSerializerTest {
 

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import at.borkowski.scovillej.SimulationBuilder;
 import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
+import at.borkowski.scovillej.prefetch.impl.VirtualPayloadSerializer;
 import at.borkowski.scovillej.prefetch.members.aux.RateSetter;
 import at.borkowski.scovillej.prefetch.members.client.FetchClient;
 import at.borkowski.scovillej.prefetch.members.server.FetchServer;

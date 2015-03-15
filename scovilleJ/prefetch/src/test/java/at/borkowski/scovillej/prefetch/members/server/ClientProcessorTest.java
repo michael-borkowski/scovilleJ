@@ -11,7 +11,7 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import at.borkowski.scovillej.prefetch.VirtualPayload;
+import at.borkowski.scovillej.prefetch.impl.VirtualPayload;
 import at.borkowski.scovillej.profile.Series;
 import at.borkowski.scovillej.services.comm.SimulationSocket;
 import at.borkowski.scovillej.simulation.SimulationContext;

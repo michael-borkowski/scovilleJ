@@ -1,4 +1,4 @@
-package at.borkowski.scovillej.prefetch;
+package at.borkowski.scovillej.prefetch.impl;
 
 import java.nio.ByteBuffer;
 

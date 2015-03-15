@@ -1,4 +1,4 @@
-package at.borkowski.scovillej.prefetch;
+package at.borkowski.scovillej.prefetch.impl;
 
 public class VirtualPayload {
    private final int size;

@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Set;
 
 import at.borkowski.scovillej.prefetch.Request;
-import at.borkowski.scovillej.prefetch.VirtualPayload;
 import at.borkowski.scovillej.prefetch.algorithms.NullAlgorithm;
 import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
+import at.borkowski.scovillej.prefetch.impl.VirtualPayload;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationInitializationContext;
