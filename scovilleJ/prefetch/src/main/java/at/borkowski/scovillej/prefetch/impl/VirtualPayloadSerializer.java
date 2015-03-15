@@ -19,8 +19,8 @@ public class VirtualPayloadSerializer implements Serializer<VirtualPayload> {
 
    @Override
    public byte[] serialize(VirtualPayload object) {
-      byte[] ret = new byte[4 + (object.getTransferPayload() ? object.getSize() : 0)];
-      ByteBuffer wrapper = ByteBuffer.allocate(4 + object.getSize());
+      byte[] ret = new byte[4 + Math.max(0, object.getTransferPayload() ? object.getSize() - 4 : 0)];
+      ByteBuffer wrapper = ByteBuffer.allocate(4);
       wrapper.putInt(0, object.getSize());
       wrapper.get(ret, 0, 4);
       return ret;

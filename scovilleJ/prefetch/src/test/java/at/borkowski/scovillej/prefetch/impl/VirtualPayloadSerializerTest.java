@@ -12,14 +12,14 @@ public class VirtualPayloadSerializerTest {
 
    @Test
    public void testSerializationWithPayload1() {
-      byte[] bytes = new byte[104];
+      byte[] bytes = new byte[100];
       bytes[3] = 100;
       assertArrayEquals(bytes, sut.serialize(new VirtualPayload(100, true)));
    }
 
    @Test
    public void testSerializationWithPayload2() {
-      byte[] bytes = new byte[104];
+      byte[] bytes = new byte[100];
       bytes[3] = 100;
       assertArrayEquals(bytes, sut.serialize(new VirtualPayload(100)));
    }
@@ -28,6 +28,41 @@ public class VirtualPayloadSerializerTest {
    public void testSerializationWithZeroPayload() {
       byte[] bytes = new byte[4];
       assertArrayEquals(bytes, sut.serialize(new VirtualPayload(0, true)));
+   }
+
+   @Test
+   public void testSerializationWithOnePayload() {
+      byte[] bytes = new byte[4];
+      bytes[3] = 1;
+      assertArrayEquals(bytes, sut.serialize(new VirtualPayload(1, true)));
+   }
+
+   @Test
+   public void testSerializationWithTwoPayload() {
+      byte[] bytes = new byte[4];
+      bytes[3] = 2;
+      assertArrayEquals(bytes, sut.serialize(new VirtualPayload(2, true)));
+   }
+
+   @Test
+   public void testSerializationWithThreePayload() {
+      byte[] bytes = new byte[4];
+      bytes[3] = 3;
+      assertArrayEquals(bytes, sut.serialize(new VirtualPayload(3, true)));
+   }
+
+   @Test
+   public void testSerializationWithFourPayload() {
+      byte[] bytes = new byte[4];
+      bytes[3] = 4;
+      assertArrayEquals(bytes, sut.serialize(new VirtualPayload(4, true)));
+   }
+
+   @Test
+   public void testSerializationWithFivePayload() {
+      byte[] bytes = new byte[5];
+      bytes[3] = 5;
+      assertArrayEquals(bytes, sut.serialize(new VirtualPayload(5, true)));
    }
 
    @Test
