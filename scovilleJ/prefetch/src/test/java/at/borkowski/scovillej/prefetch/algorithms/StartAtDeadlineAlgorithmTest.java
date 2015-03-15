@@ -30,14 +30,10 @@ public class StartAtDeadlineAlgorithmTest {
       req.add(new Request(3000, 10, 5));
       req.add(new Request(3010, 300, 5));
 
-      Map<Long, Request> schedules = sut.schedule(req, null);
-      Map<Request, Long> times = new HashMap<>();
-
-      for (Entry<Long, Request> entry : schedules.entrySet())
-         times.put(entry.getValue(), entry.getKey());
+      Map<Request, Long> schedules = sut.schedule(req, null);
 
       for (Request r : req)
-         assertEquals(r.getDeadline(), times.get(r).longValue());
+         assertEquals(r.getDeadline(), schedules.get(r).longValue());
    }
 
    @Test
@@ -47,20 +43,12 @@ public class StartAtDeadlineAlgorithmTest {
       req.add(r1 = new Request(1000, 100, 4));
       req.add(r2 = new Request(1000, 100, 4));
 
-      Map<Long, Request> schedules = sut.schedule(req, null);
-      Map<Request, Long> times = new HashMap<>();
-
-      for (Entry<Long, Request> entry : schedules.entrySet())
-         times.put(entry.getValue(), entry.getKey());
+      Map<Request, Long> schedules = sut.schedule(req, null);
 
       assertTrue(schedules.containsKey(r1.getDeadline()));
-      assertTrue(schedules.containsKey(r1.getDeadline() - 1));
+      assertFalse(schedules.containsKey(r1.getDeadline() - 1));
 
-      if (schedules.get(r1.getDeadline()) == r1)
-         assertSame(r2, schedules.get(r1.getDeadline() - 1));
-      else if (schedules.get(r1.getDeadline()) == r2)
-         assertSame(r1, schedules.get(r1.getDeadline() - 1));
-      else
-         fail();
+      assertEquals(r1.getDeadline(), schedules.get(r1).longValue());
+      assertEquals(r2.getDeadline(), schedules.get(r2).longValue());
    }
 }

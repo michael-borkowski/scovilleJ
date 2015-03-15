@@ -28,7 +28,7 @@ public class FetchProcessor {
    private RatePredictionService ratePredictionService;
 
    private final Set<Request> toFetch = new HashSet<>();
-   private Map<Long, Request> scheduled = new HashMap<>();
+   private Map<Request, Long> scheduled = new HashMap<>();
 
    private PrefetchAlgorithm algorithm = new NullAlgorithm();
 
@@ -53,15 +53,13 @@ public class FetchProcessor {
             current = null;
          }
       } else {
-         long sel = tick;
-         for (long lambda : scheduled.keySet())
-            if (lambda <= tick && lambda < sel)
-               sel = lambda;
-
-         current = scheduled.remove(sel);
+         current = null;
+         for (Request request : scheduled.keySet())
+            if (scheduled.get(request) <= tick && scheduled.get(request) < scheduled.get(current))
+               current = request;
 
          if (current != null) {
-            System.out.printf("%d -              requesting %s (%d, %d)\n", tick, current.getData(), sel, current.getDeadline());
+            System.out.printf("%d -              requesting %d (%d, %d)\n", tick, current.getData(), scheduled.get(current), current.getDeadline());
             owner.getSocketProcessor().request(current);
             rateControlService.setRequestSpecificRate(current.getAvailableByterate());
             currentStart = tick;
@@ -88,9 +86,7 @@ public class FetchProcessor {
    }
 
    public void urge(long tick, Request request) {
-      while (scheduled.containsKey(tick))
-         tick--;
-      scheduled.put(tick, request);
+      scheduled.put(request, tick);
    }
 
    public PrefetchAlgorithm getAlgorithm() {

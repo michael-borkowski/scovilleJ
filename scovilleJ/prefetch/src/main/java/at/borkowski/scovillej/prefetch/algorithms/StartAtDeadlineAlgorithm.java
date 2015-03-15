@@ -13,14 +13,12 @@ import at.borkowski.scovillej.prefetch.members.aux.RatePredictionService;
  */
 public class StartAtDeadlineAlgorithm implements PrefetchAlgorithm {
    @Override
-   public Map<Long, Request> schedule(Collection<Request> requests, RatePredictionService ratePredictionService) {
-      HashMap<Long, Request> ret = new HashMap<>();
+   public Map<Request, Long> schedule(Collection<Request> requests, RatePredictionService ratePredictionService) {
+      HashMap<Request, Long> ret = new HashMap<>();
 
       for (Request req : requests) {
          long start = req.getDeadline();
-         while (ret.containsKey(start))
-            start--;
-         ret.put(start, req);
+         ret.put(req, start);
       }
 
       return ret;

@@ -19,8 +19,8 @@ public class IgnoreRatePredictionAlgorithm implements PrefetchAlgorithm {
    public final static long CONNECTION_OVERHEAD = 5;
 
    @Override
-   public Map<Long, Request> schedule(Collection<Request> requests, RatePredictionService ratePredictionService) {
-      HashMap<Long, Request> ret = new HashMap<>();
+   public Map<Request, Long> schedule(Collection<Request> requests, RatePredictionService ratePredictionService) {
+      HashMap<Request, Long> ret = new HashMap<>();
 
       List<Request> sortedByDeadline = new LinkedList<Request>(requests);
       Collections.sort(sortedByDeadline, new Comparator<Request>() {
@@ -34,10 +34,9 @@ public class IgnoreRatePredictionAlgorithm implements PrefetchAlgorithm {
 
       for (Request req : sortedByDeadline) {
          long start = getStart(previousStart, req);
-         while (ret.containsKey(start))
-            start--;
+         ret.put(req, start);
+         
          previousStart = start;
-         ret.put(start, req);
       }
 
       return ret;

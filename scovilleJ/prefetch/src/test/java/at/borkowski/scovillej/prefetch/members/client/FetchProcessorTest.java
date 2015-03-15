@@ -11,9 +11,9 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -62,10 +62,10 @@ public class FetchProcessorTest {
       sut.setAlgorithm(new PrefetchAlgorithm() {
 
          @Override
-         public Map<Long, Request> schedule(Set<Request> requests, RatePredictionService ratePredictionService) {
-            Map<Long, Request> ret = new HashMap<>();
+         public Map<Request, Long> schedule(Collection<Request> requests, RatePredictionService ratePredictionService) {
+            Map<Request, Long> ret = new HashMap<>();
             for (Request req : requests)
-               ret.put(req.getDeadline() + req.getData(), req);
+               ret.put(req, req.getDeadline() + req.getData());
             return ret;
          }
       });

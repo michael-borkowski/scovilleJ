@@ -12,8 +12,8 @@ import at.borkowski.scovillej.prefetch.members.aux.RatePredictionService;
  */
 public class NullAlgorithm implements PrefetchAlgorithm {
    @Override
-   public Map<Long, Request> schedule(Collection<Request> requests, RatePredictionService ratePredictionService) {
-      HashMap<Long, Request> ret = new HashMap<>();
+   public Map<Request, Long> schedule(Collection<Request> requests, RatePredictionService ratePredictionService) {
+      HashMap<Request, Long> ret = new HashMap<>();
       return ret;
    }
 }

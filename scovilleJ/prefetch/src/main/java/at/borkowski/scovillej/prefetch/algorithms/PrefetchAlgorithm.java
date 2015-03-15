@@ -11,6 +11,5 @@ import at.borkowski.scovillej.prefetch.members.aux.RatePredictionService;
  * requests.
  */
 public interface PrefetchAlgorithm {
-   // TODO: multimap
-   Map<Long, Request> schedule(Collection<Request> requests, RatePredictionService ratePredictionService);
+   Map<Request, Long> schedule(Collection<Request> requests, RatePredictionService ratePredictionService);
 }

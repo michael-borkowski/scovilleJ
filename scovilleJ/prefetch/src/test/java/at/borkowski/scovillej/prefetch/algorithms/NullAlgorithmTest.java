@@ -28,7 +28,7 @@ public class NullAlgorithmTest {
       req.add(new Request(3000, 10, 5));
       req.add(new Request(3010, 300, 5));
 
-      Map<Long, Request> schedules = sut.schedule(req, null);
+      Map<Request, Long> schedules = sut.schedule(req, null);
       assertTrue(schedules.isEmpty());
    }
 }

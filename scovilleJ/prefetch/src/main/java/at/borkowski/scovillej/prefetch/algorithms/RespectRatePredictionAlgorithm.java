@@ -20,8 +20,8 @@ public class RespectRatePredictionAlgorithm implements PrefetchAlgorithm {
    public final static double ALPHA = 1;
 
    @Override
-   public Map<Long, Request> schedule(Collection<Request> requests, RatePredictionService ratePredictionService) {
-      HashMap<Long, Request> ret = new HashMap<>();
+   public Map<Request, Long> schedule(Collection<Request> requests, RatePredictionService ratePredictionService) {
+      HashMap<Request, Long> ret = new HashMap<>();
 
       List<Request> sortedByDeadline = new LinkedList<Request>(requests);
       Collections.sort(sortedByDeadline, new Comparator<Request>() {
@@ -35,10 +35,9 @@ public class RespectRatePredictionAlgorithm implements PrefetchAlgorithm {
 
       for (Request req : sortedByDeadline) {
          long start = getStart(previousStart, req, ratePredictionService);
-         while (ret.containsKey(start))
-            start--;
+         ret.put(req, start);
+         
          previousStart = start;
-         ret.put(start, req);
       }
 
       return ret;
@@ -49,7 +48,9 @@ public class RespectRatePredictionAlgorithm implements PrefetchAlgorithm {
       long tick = Math.min(busyUntil, req.getDeadline()) - CONNECTION_OVERHEAD - 1;
 
       while (data > 0 && tick >= 0) {
-         data -= Math.min(req.getAvailableByterate(), ratePredictionService.predict(tick));
+         Integer prediction = ratePredictionService.predict(tick);
+         if(prediction == null) prediction = Integer.MAX_VALUE;
+         data -= Math.min(req.getAvailableByterate(), prediction);
          tick--;
       }
 
