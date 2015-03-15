@@ -1,7 +1,7 @@
 package at.borkowski.scovillej.prefetch.algorithms;
 
+import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import at.borkowski.scovillej.prefetch.Request;
 import at.borkowski.scovillej.prefetch.members.aux.RatePredictionService;
@@ -11,5 +11,6 @@ import at.borkowski.scovillej.prefetch.members.aux.RatePredictionService;
  * requests.
  */
 public interface PrefetchAlgorithm {
-   Map<Long, Request> schedule(Set<Request> requests, RatePredictionService ratePredictionService);
+   // TODO: multimap
+   Map<Long, Request> schedule(Collection<Request> requests, RatePredictionService ratePredictionService);
 }

@@ -15,8 +15,9 @@ import at.borkowski.scovillej.prefetch.members.aux.RatePredictionService;
  * This algorithm schedules all requests according to their parameters, assuming
  * an infinite link bandwidth.
  */
-public class IgnoreRatePredictionAlgorithm implements PrefetchAlgorithm {
+public class RespectRatePredictionAlgorithm implements PrefetchAlgorithm {
    public final static long CONNECTION_OVERHEAD = 5;
+   public final static double ALPHA = 1;
 
    @Override
    public Map<Long, Request> schedule(Collection<Request> requests, RatePredictionService ratePredictionService) {
@@ -33,7 +34,7 @@ public class IgnoreRatePredictionAlgorithm implements PrefetchAlgorithm {
       long previousStart = Long.MAX_VALUE;
 
       for (Request req : sortedByDeadline) {
-         long start = getStart(previousStart, req);
+         long start = getStart(previousStart, req, ratePredictionService);
          while (ret.containsKey(start))
             start--;
          previousStart = start;
@@ -43,9 +44,15 @@ public class IgnoreRatePredictionAlgorithm implements PrefetchAlgorithm {
       return ret;
    }
 
-   private long getStart(long busyUntil, Request req) {
-      long required = (long) (req.getData() / req.getAvailableByterate()) + 1;
-      required += CONNECTION_OVERHEAD;
-      return Math.min(busyUntil, req.getDeadline()) - required;
+   private long getStart(long busyUntil, Request req, RatePredictionService ratePredictionService) {
+      long data = req.getData();
+      long tick = Math.min(busyUntil, req.getDeadline()) - CONNECTION_OVERHEAD - 1;
+
+      while (data > 0 && tick >= 0) {
+         data -= Math.min(req.getAvailableByterate(), ratePredictionService.predict(tick));
+         tick--;
+      }
+
+      return tick;
    }
 }
