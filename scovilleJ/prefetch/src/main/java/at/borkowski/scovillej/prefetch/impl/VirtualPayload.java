@@ -5,7 +5,7 @@ public class VirtualPayload {
    private final boolean transferPayload;
 
    public VirtualPayload(int size) {
-      this(size, false);
+      this(size, true);
    }
 
    public VirtualPayload(int size, boolean transferPayload) {

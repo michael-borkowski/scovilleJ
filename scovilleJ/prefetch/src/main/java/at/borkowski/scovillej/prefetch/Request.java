@@ -10,7 +10,7 @@ package at.borkowski.scovillej.prefetch;
 public class Request {
    private final long deadline;
    private final int data;
-   private final double availableByterate;
+   private final int availableByterate;
 
    /**
     * Creates a request object
@@ -22,7 +22,7 @@ public class Request {
     * @param availableByterate
     *           the provided byte rate
     */
-   public Request(long deadline, int data, double availableByterate) {
+   public Request(long deadline, int data, int availableByterate) {
       this.deadline = deadline;
       this.availableByterate = availableByterate;
       this.data = data;
@@ -33,7 +33,7 @@ public class Request {
     * 
     * @return the available byte rate
     */
-   public double getAvailableByterate() {
+   public int getAvailableByterate() {
       return availableByterate;
    }
 

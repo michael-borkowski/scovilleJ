@@ -3,6 +3,7 @@ package at.borkowski.scovillej.prefetch.members.aux;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,6 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import at.borkowski.scovillej.services.comm.CommunicationService;
+import at.borkowski.scovillej.simulation.Simulation;
+import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
 
 public class RateSetterTest {
@@ -41,9 +44,11 @@ public class RateSetterTest {
 
       Set<Long> todo = new HashSet<>(limits.keySet());
 
-      sut = new RateSetter("phase", communicationService, "socket", limits);
+      sut = new RateSetter("phase", "socket", limits);
 
-      sut.initialize(null, null);
+      SimulationContext context = mock(SimulationContext.class);
+      when(context.getService(CommunicationService.class)).thenReturn(communicationService);
+      sut.initialize(mock(Simulation.class), context);
 
       assertNull(sut.getPhaseHandlers());
 

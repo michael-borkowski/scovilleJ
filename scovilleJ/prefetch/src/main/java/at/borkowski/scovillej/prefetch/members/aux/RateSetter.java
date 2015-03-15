@@ -8,17 +8,25 @@ import java.util.Map;
 
 import at.borkowski.scovillej.services.comm.CommunicationService;
 import at.borkowski.scovillej.simulation.PhaseHandler;
+import at.borkowski.scovillej.simulation.ServiceProvider;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationEvent;
 import at.borkowski.scovillej.simulation.SimulationInitializationContext;
-import at.borkowski.scovillej.simulation.SimulationMember;
 
-public class RateSetter implements SimulationMember {
+public class RateSetter implements ServiceProvider<RateControlService>, RateControlService {
+
+   private Simulation simulation;
+   private CommunicationService communicationService;
+   private final String socketName;
 
    private List<SimulationEvent> events = new LinkedList<>();
+   private Integer requestSpecific;
+   private Integer global;
 
-   public RateSetter(String phase, CommunicationService communicationService, String socketName, Map<Long, Integer> limits) {
+   public RateSetter(String phase, String socketName, Map<Long, Integer> limits) {
+      this.socketName = socketName;
+
       for (Long tick : limits.keySet()) {
          Integer limit = limits.get(tick);
          events.add(new SimulationEvent() {
@@ -30,7 +38,8 @@ public class RateSetter implements SimulationMember {
 
             @Override
             public void executePhase(SimulationContext context) {
-               communicationService.setRates(socketName, limit, limit);
+               global = limit;
+               refreshRates();
             }
 
             @Override
@@ -42,7 +51,10 @@ public class RateSetter implements SimulationMember {
    }
 
    @Override
-   public void initialize(Simulation simulation, SimulationInitializationContext context) {}
+   public void initialize(Simulation simulation, SimulationInitializationContext context) {
+      this.communicationService = context.getService(CommunicationService.class);
+      this.simulation = simulation;
+   }
 
    @Override
    public Collection<SimulationEvent> generateEvents() {
@@ -52,6 +64,32 @@ public class RateSetter implements SimulationMember {
    @Override
    public Collection<PhaseHandler> getPhaseHandlers() {
       return null;
+   }
+
+   @Override
+   public void setRequestSpecificRate(Integer requestSpecific) {
+      this.requestSpecific = requestSpecific;
+      refreshRates();
+   }
+
+   private void refreshRates() {
+      Integer uplink, downlink;
+      downlink = uplink = global;
+      
+      if(requestSpecific != null && (global == null || global > requestSpecific)) downlink = requestSpecific;
+      
+      System.out.println(simulation.getCurrentTick() + " - [set rate " + uplink + " / " + downlink + "] from " + global + " / " + requestSpecific);
+      communicationService.setRates(socketName, uplink, downlink);
+   }
+
+   @Override
+   public Class<RateControlService> getServiceClass() {
+      return RateControlService.class;
+   }
+
+   @Override
+   public RateControlService getService() {
+      return this;
    }
 
 }

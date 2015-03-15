@@ -120,7 +120,7 @@ public class ConfigurationReader {
          throw new ConfigurationException("line " + lineCounter + ": usage is \"<tick> " + CMD_REQUEST + " <data> <byterate>");
 
       int data;
-      double byterate;
+      int byterate;
 
       try {
          data = Integer.parseInt(split[2]);
@@ -128,7 +128,7 @@ public class ConfigurationReader {
          throw new ConfigurationException("could not parse request data length on line " + lineCounter + ": " + split[2], nfEx);
       }
       try {
-         byterate = Double.parseDouble(split[3]);
+         byterate = Integer.parseInt(split[3]);
       } catch (NumberFormatException nfEx) {
          throw new ConfigurationException("could not parse request byte rate on line " + lineCounter + ": " + split[3], nfEx);
       }

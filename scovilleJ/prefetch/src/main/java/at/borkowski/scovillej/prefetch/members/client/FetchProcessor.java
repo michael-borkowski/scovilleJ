@@ -11,6 +11,7 @@ import at.borkowski.scovillej.prefetch.Request;
 import at.borkowski.scovillej.prefetch.algorithms.NullAlgorithm;
 import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
 import at.borkowski.scovillej.prefetch.impl.VirtualPayload;
+import at.borkowski.scovillej.prefetch.members.aux.RateControlService;
 import at.borkowski.scovillej.simulation.Simulation;
 import at.borkowski.scovillej.simulation.SimulationContext;
 import at.borkowski.scovillej.simulation.SimulationInitializationContext;
@@ -22,6 +23,7 @@ import at.borkowski.scovillej.simulation.SimulationInitializationContext;
 public class FetchProcessor {
 
    private final FetchClient owner;
+   private RateControlService rateControlService;
 
    private final Set<Request> toFetch = new HashSet<>();
    private Map<Long, Request> scheduled = new HashMap<>();
@@ -41,6 +43,7 @@ public class FetchProcessor {
       if (current != null) {
          VirtualPayload payload = owner.getSocketProcessor().readIfPossible();
          if (payload != null) {
+            rateControlService.setRequestSpecificRate(null);
             long duration = tick - currentStart;
             owner.getProfilingService().fetched(current, payload.getSize(), tick, duration);
             owner.getCacheProcessor().save(current, tick);
@@ -58,6 +61,7 @@ public class FetchProcessor {
          if (current != null) {
             System.out.printf("%d -              requesting %s (%d, %d)\n", tick, current.getData(), sel, current.getDeadline());
             owner.getSocketProcessor().request(current);
+            rateControlService.setRequestSpecificRate(current.getAvailableByterate());
             currentStart = tick;
          }
       }
@@ -68,6 +72,7 @@ public class FetchProcessor {
    }
 
    public void initialize(Simulation simulation, SimulationInitializationContext context) {
+      rateControlService = context.getService(RateControlService.class);
       reschedule();
    }
 

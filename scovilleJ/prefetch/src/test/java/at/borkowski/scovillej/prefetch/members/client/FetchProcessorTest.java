@@ -23,6 +23,7 @@ import org.mockito.stubbing.Answer;
 import at.borkowski.scovillej.prefetch.Request;
 import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
 import at.borkowski.scovillej.prefetch.impl.VirtualPayload;
+import at.borkowski.scovillej.prefetch.members.aux.RateControlService;
 import at.borkowski.scovillej.prefetch.profiling.PrefetchProfilingService;
 import at.borkowski.scovillej.profile.Series;
 import at.borkowski.scovillej.simulation.SimulationContext;
@@ -70,13 +71,11 @@ public class FetchProcessorTest {
 
       requests = new Request[] { new Request(100, 10, 1), new Request(200, 13, 1) };
 
-      sut.addRequests(Arrays.asList(requests));
-      sut.initialize(null, null);
-
       context = new SimulationContext() {
+         @SuppressWarnings("unchecked")
          @Override
          public <T> T getService(Class<T> clazz) {
-            return null;
+            return (T) mock(RateControlService.class);
          }
 
          @Override
@@ -94,6 +93,9 @@ public class FetchProcessorTest {
             return "tick";
          }
       };
+
+      sut.addRequests(Arrays.asList(requests));
+      sut.initialize(null, context);
    }
 
    private Answer<VirtualPayload> returnData() {
@@ -174,9 +176,9 @@ public class FetchProcessorTest {
    @Test
    public void testUrge() throws IOException {
       subTestRequest0();
-      
+
       sut.urge(0, requests[1]);
-      
+
       verify(socketProcessor, never()).request(requests[1]);
 
       advance();

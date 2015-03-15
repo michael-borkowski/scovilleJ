@@ -44,9 +44,9 @@ public class ConfigurationReaderTest {
    @Test
    public void testRequests() throws Exception {
       line("# comment");
-      line("100 request 40         50.5");
-      line("120          request        50 50.5# end-line comment with # another hash sign");
-      line("210 request    100 \t\t        0.3 # end-line comment");
+      line("100 request 40         50");
+      line("120          request        50 50# end-line comment with # another hash sign");
+      line("210 request    100 \t\t        03 # end-line comment");
       line("250                request\t1\t100# end-line comment immediately after data");
       buildSut();
 
@@ -59,19 +59,19 @@ public class ConfigurationReaderTest {
 
       assertEquals(100, configuration.getRequests().get(0).getDeadline());
       assertEquals(40, configuration.getRequests().get(0).getData());
-      assertEquals(50.5, configuration.getRequests().get(0).getAvailableByterate(), 0.000001);
+      assertEquals(50, configuration.getRequests().get(0).getAvailableByterate());
 
       assertEquals(120, configuration.getRequests().get(1).getDeadline());
       assertEquals(50, configuration.getRequests().get(1).getData());
-      assertEquals(50.5, configuration.getRequests().get(1).getAvailableByterate(), 0.000001);
+      assertEquals(50, configuration.getRequests().get(1).getAvailableByterate());
 
       assertEquals(210, configuration.getRequests().get(2).getDeadline());
       assertEquals(100, configuration.getRequests().get(2).getData());
-      assertEquals(0.3, configuration.getRequests().get(2).getAvailableByterate(), 0.000001);
+      assertEquals(3, configuration.getRequests().get(2).getAvailableByterate());
 
       assertEquals(250, configuration.getRequests().get(3).getDeadline());
       assertEquals(1, configuration.getRequests().get(3).getData());
-      assertEquals(100, configuration.getRequests().get(3).getAvailableByterate(), 0.000001);
+      assertEquals(100, configuration.getRequests().get(3).getAvailableByterate());
 
    }
 
@@ -99,10 +99,10 @@ public class ConfigurationReaderTest {
    }
 
    @Test
-   public void textEnd() throws Exception {
+   public void testEnd() throws Exception {
       line("# comment");
-      line("100 request 40 50.5");
-      line("110 request 40 50.5");
+      line("100 request 40 5");
+      line("110 request 40 50");
       line("300 end");
       buildSut();
 
@@ -118,9 +118,9 @@ public class ConfigurationReaderTest {
    @Test(expected = ConfigurationException.class)
    public void testNonMonotonic() throws Exception {
       line("# comment");
-      line("100 request 40 50.5");
-      line("110 request 40 50.5");
-      line("100 request 40 50.5");
+      line("100 request 40 50");
+      line("110 request 40 50");
+      line("100 request 40 50");
       buildSut();
 
       sut.read();
@@ -129,7 +129,7 @@ public class ConfigurationReaderTest {
    @Test(expected = ConfigurationException.class)
    public void testNonNumberTick() throws Exception {
       line("# comment");
-      line("100x request 40 50.5");
+      line("100x request 40 50");
       buildSut();
 
       sut.read();
@@ -138,7 +138,7 @@ public class ConfigurationReaderTest {
    @Test(expected = ConfigurationException.class)
    public void testNonNumberParameter1() throws Exception {
       line("# comment");
-      line("100 request 40x 50.5");
+      line("100 request 40x 50");
       buildSut();
 
       sut.read();
@@ -147,7 +147,7 @@ public class ConfigurationReaderTest {
    @Test(expected = ConfigurationException.class)
    public void testNonNumberParameter2() throws Exception {
       line("# comment");
-      line("100 request 40 50x.5");
+      line("100 request 40 50x");
       buildSut();
 
       sut.read();
@@ -174,7 +174,7 @@ public class ConfigurationReaderTest {
    @Test(expected = ConfigurationException.class)
    public void testUnknownCommand() throws Exception {
       line("# comment");
-      line("100 request 40 50.5");
+      line("100 request 40 50");
       line("100 banana");
       buildSut();
 
@@ -184,7 +184,7 @@ public class ConfigurationReaderTest {
    @Test(expected = ConfigurationException.class)
    public void testWrongCommandSyntax1() throws Exception {
       line("# comment");
-      line("100 request 40 50.5 banana");
+      line("100 request 40 50 banana");
       buildSut();
 
       sut.read();
@@ -211,7 +211,7 @@ public class ConfigurationReaderTest {
    @Test(expected = ConfigurationException.class)
    public void testAfterEnd1() throws Exception {
       line("# comment");
-      line("100 request 40 50.5");
+      line("100 request 40 50");
       line("110 end");
       line("120 request 10 10");
       buildSut();
@@ -222,7 +222,7 @@ public class ConfigurationReaderTest {
    @Test(expected = ConfigurationException.class)
    public void testAfterEnd2() throws Exception {
       line("# comment");
-      line("100 request 40 50.5");
+      line("100 request 40 50");
       line("110 end");
       line("109 request 10 10");
       buildSut();
@@ -233,7 +233,7 @@ public class ConfigurationReaderTest {
    @Test(expected = ConfigurationException.class)
    public void testNegativeTick() throws Exception {
       line("# comment");
-      line("100 request 40 50.5");
+      line("100 request 40 50");
       line("-110 end");
       buildSut();
 

@@ -75,8 +75,7 @@ public class PrefetchSimulationBuilder {
     * @return the simulation
     */
    public Simulation create() {
-      if (limitsReal != null && !limitsReal.isEmpty())
-         builder.member(rateSetter = new RateSetter(RATE_PHASE, communicationService.getService(), SOCKET_NAME, limitsReal));
+      builder.service(rateSetter = new RateSetter(RATE_PHASE, SOCKET_NAME, limitsReal));
       if (limitsPredicted != null && !limitsPredicted.isEmpty())
          builder.service(ratePredicter = new RatePredictionServiceProvider(limitsPredicted));
       return builder.create();
