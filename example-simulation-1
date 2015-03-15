@@ -2,16 +2,16 @@
 
 
 0		algorithm at.borkowski.scovillej.prefetch.algorithms.IgnoreBlinkAlgorithm
-0		rate-real	25
-0		rate-prediction	25
-100000		request		5000	22
-200000		request		1000	22
-300000		request		503000	22
-400000		request		3000	22
-500000		request		25000	22
-600000		request		20	22
-700000		request		10000	22
-700001		request		100000	22
-800000		request		152000	22
-900000		request		251000	22
+0		rate-real	100
+0		rate-prediction	100
+100000		request		5000	80
+200000		request		1000	20
+300000		request		503000	150
+400000		request		3000	150
+500000		request		25000	70
+600000		request		20	40
+700000		request		10000	2
+700001		request		100000	80
+800000		request		152000	220
+900000		request		251000	10
 1000000		end
