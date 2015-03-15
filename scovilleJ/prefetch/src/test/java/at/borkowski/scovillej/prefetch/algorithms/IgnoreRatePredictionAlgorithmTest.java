@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import at.borkowski.scovillej.prefetch.Request;
 
-public class IgnoreBlinkAlgorithmTest {
+public class IgnoreRatePredictionAlgorithmTest {
 
    IgnoreRatePredictionAlgorithm sut;
 
