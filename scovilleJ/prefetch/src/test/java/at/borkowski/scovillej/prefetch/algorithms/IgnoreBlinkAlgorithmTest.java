@@ -25,10 +25,10 @@ public class IgnoreBlinkAlgorithmTest {
    @Test
    public void test() {
       Set<Request> req = new HashSet<>();
-      req.add(new Request(1000, 100, 4, "file1"));
-      req.add(new Request(2000, 300, 4, "file2"));
-      req.add(new Request(3000, 10, 5, "file3"));
-      req.add(new Request(3010, 300, 5, "file3"));
+      req.add(new Request(1000, 100, 4));
+      req.add(new Request(2000, 300, 4));
+      req.add(new Request(3000, 10, 5));
+      req.add(new Request(3010, 300, 5));
 
       Map<Long, Request> schedules = sut.schedule(req);
       Map<Request, Long> times = new HashMap<>();
@@ -43,8 +43,8 @@ public class IgnoreBlinkAlgorithmTest {
    @Test
    public void testOverlap() {
       Set<Request> req = new HashSet<>();
-      req.add(new Request(1000, 100, 4, "file1"));
-      req.add(new Request(1000, 100, 4, "file2"));
+      req.add(new Request(1000, 100, 4));
+      req.add(new Request(1000, 100, 4));
 
       Map<Long, Request> schedules = sut.schedule(req);
       Map<Request, Long> times = new HashMap<>();

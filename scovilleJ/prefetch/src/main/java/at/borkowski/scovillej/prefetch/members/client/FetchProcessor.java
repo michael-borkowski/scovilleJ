@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import at.borkowski.scovillej.prefetch.Request;
+import at.borkowski.scovillej.prefetch.VirtualPayload;
 import at.borkowski.scovillej.prefetch.algorithms.NullAlgorithm;
 import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
 import at.borkowski.scovillej.simulation.Simulation;
@@ -38,11 +39,11 @@ public class FetchProcessor {
       long tick = context.getCurrentTick();
 
       if (current != null) {
-         byte[] payload = owner.getSocketProcessor().readIfPossible();
+         VirtualPayload payload = owner.getSocketProcessor().readIfPossible();
          if (payload != null) {
             long duration = tick - currentStart;
-            owner.getProfilingService().fetched(current, payload.length, tick, duration);
-            owner.getCacheProcessor().save(current.getFile(), payload, tick);
+            owner.getProfilingService().fetched(current, payload.getSize(), tick, duration);
+            owner.getCacheProcessor().save(current, tick);
 
             current = null;
          }
@@ -55,8 +56,8 @@ public class FetchProcessor {
          current = scheduled.remove(sel);
 
          if (current != null) {
-            System.out.printf("%d -              requesting %s (%d, %d)\n", tick, current.getFile(), sel, current.getDeadline());
-            owner.getSocketProcessor().request(current.getFile());
+            System.out.printf("%d -              requesting %s (%d, %d)\n", tick, current.getData(), sel, current.getDeadline());
+            owner.getSocketProcessor().request(current);
             currentStart = tick;
          }
       }

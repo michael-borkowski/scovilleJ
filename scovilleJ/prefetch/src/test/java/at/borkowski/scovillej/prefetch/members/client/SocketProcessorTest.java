@@ -1,8 +1,9 @@
 package at.borkowski.scovillej.prefetch.members.client;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
@@ -17,6 +18,8 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import at.borkowski.scovillej.prefetch.Request;
+import at.borkowski.scovillej.prefetch.VirtualPayload;
 import at.borkowski.scovillej.services.comm.CommunicationService;
 import at.borkowski.scovillej.services.comm.SimulationSocket;
 import at.borkowski.scovillej.simulation.SimulationContext;
@@ -26,11 +29,11 @@ public class SocketProcessorTest {
    SocketProcessor sut;
    CommunicationService communicationService;
    SimulationContext context;
-   SimulationSocket<byte[]> socket;
+   SimulationSocket<VirtualPayload> socket;
 
    long tick = 0;
    boolean established = false;
-   byte[] data = null;
+   VirtualPayload data = null;
 
    @SuppressWarnings("unchecked")
    @Before
@@ -43,11 +46,11 @@ public class SocketProcessorTest {
       when(context.getService(CommunicationService.class)).thenReturn(communicationService);
       when(context.getCurrentTick()).then(returnCurrentTick());
 
-      when(communicationService.beginConnect("socket", byte[].class)).thenReturn(socket);
+      when(communicationService.beginConnect("socket", VirtualPayload.class)).thenReturn(socket);
       when(socket.established()).then(returnEstablished());
       when(socket.available()).then(returnAvailable());
       when(socket.read()).then(returnData());
-      doAnswer(writeData()).when(socket).write(any(byte[].class));
+      doAnswer(writeData()).when(socket).write(any(VirtualPayload.class));
 
       sut.initialize(null, context);
    }
@@ -56,7 +59,7 @@ public class SocketProcessorTest {
       return new Answer<Void>() {
          @Override
          public Void answer(InvocationOnMock invocation) throws Throwable {
-            data = (byte[]) invocation.getArguments()[0];
+            data = (VirtualPayload) invocation.getArguments()[0];
             return null;
          }
       };
@@ -71,10 +74,10 @@ public class SocketProcessorTest {
       };
    }
 
-   private Answer<byte[]> returnData() {
-      return new Answer<byte[]>() {
+   private Answer<VirtualPayload> returnData() {
+      return new Answer<VirtualPayload>() {
          @Override
-         public byte[] answer(InvocationOnMock invocation) throws Throwable {
+         public VirtualPayload answer(InvocationOnMock invocation) throws Throwable {
             return data;
          }
       };
@@ -104,7 +107,7 @@ public class SocketProcessorTest {
 
       advance();
 
-      verify(communicationService).beginConnect("socket", byte[].class);
+      verify(communicationService).beginConnect("socket", VirtualPayload.class);
 
       advance();
 
@@ -134,9 +137,9 @@ public class SocketProcessorTest {
       advance();
       advance();
 
-      data = new byte[10];
+      data = new VirtualPayload(10);
 
-      assertArrayEquals(data, sut.readIfPossible());
+      assertSame(data, sut.readIfPossible());
    }
 
    @Test
@@ -145,9 +148,9 @@ public class SocketProcessorTest {
       advance();
       advance();
 
-      sut.request("file");
+      sut.request(new Request(10, 20, 30));
 
-      assertArrayEquals("file".getBytes("UTF8"), data);
+      assertEquals(20, data.getSize());
    }
 
    private void advance() throws IOException {

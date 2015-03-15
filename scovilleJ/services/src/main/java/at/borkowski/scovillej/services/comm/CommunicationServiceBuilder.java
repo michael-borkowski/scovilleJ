@@ -1,6 +1,8 @@
 package at.borkowski.scovillej.services.comm;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import at.borkowski.scovillej.services.comm.impl.CommunicationServiceImpl;
@@ -23,6 +25,7 @@ public class CommunicationServiceBuilder {
    private final Map<String, Integer> downlink = new HashMap<>();
    private final Map<String, Long> updelay = new HashMap<>();
    private final Map<String, Long> downdelay = new HashMap<>();
+   private final List<Serializer<?>> serializers = new LinkedList<>();
 
    private ServiceProvider<CommunicationService> instance;
 
@@ -120,6 +123,20 @@ public class CommunicationServiceBuilder {
       return this;
    }
 
+   /**
+    * Adds a custom serializer to the serializer list
+    * 
+    * @param serializer
+    *           the serializer to add
+    * @return this object
+    */
+   public CommunicationServiceBuilder serializer(Serializer<?> serializer) {
+      checkUncreated();
+
+      serializers.add(serializer);
+      return this;
+   }
+
    private void checkUncreated() {
       if (instance != null)
          throw new IllegalStateException("instance already created");
@@ -128,7 +145,7 @@ public class CommunicationServiceBuilder {
    private void createIfNecessary() {
       if (instance != null)
          return;
-      instance = new CommunicationServiceImpl(phase, uplink, downlink, updelay, downdelay, bufferSize);
+      instance = new CommunicationServiceImpl(phase, uplink, downlink, updelay, downdelay, bufferSize, serializers);
    }
 
    /**

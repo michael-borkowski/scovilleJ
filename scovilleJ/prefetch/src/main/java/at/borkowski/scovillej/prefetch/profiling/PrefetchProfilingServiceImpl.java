@@ -67,7 +67,7 @@ public class PrefetchProfilingServiceImpl implements PrefetchProfilingService, P
    @Override
    public void fetched(Request request, int actualSize, long tick, long duration) {
       long overdue = simulation.getCurrentTick() - request.getDeadline();
-      System.out.printf("%d - fetched %s (overdue %d) (%d B in %d t, %.2f B/t\n", tick, request.getFile(), overdue, actualSize, duration, (double) actualSize / duration);
+      System.out.printf("%d - fetched %d (overdue %d) (%d B in %d t, %.2f B/t\n", tick, request.getData(), overdue, actualSize, duration, (double) actualSize / duration);
       overdue = Math.max(0, overdue);
       seriesURT.measure(overdue);
       seriesURTperKB.measure((double) 1000 * overdue / request.getData());
@@ -75,20 +75,20 @@ public class PrefetchProfilingServiceImpl implements PrefetchProfilingService, P
 
    @Override
    public void cacheHit(Request request, long age) {
-      System.out.printf("%d - cache hit for %s (age %d)\n", simulation.getCurrentTick(), request.getFile(), age);
+      System.out.printf("%d - cache hit for %d (age %d)\n", simulation.getCurrentTick(), request.getData(), age);
       seriesAge.measure(age);
    }
 
    @Override
    public void cacheMiss(Request request) {
-      System.out.printf("%d - cache miss for %s\n", simulation.getCurrentTick(), request.getFile());
+      System.out.printf("%d - cache miss for %d\n", simulation.getCurrentTick(), request.getData());
       seriesMisses.measure(null);
    }
 
    @Override
    public void lateArrival(Request request) {
       long overdue = simulation.getCurrentTick() - request.getDeadline();
-      System.out.printf("%d - late arrival for %s (overdue %d)\n", simulation.getCurrentTick(), request.getFile(), overdue);
+      System.out.printf("%d - late arrival for %d (overdue %d)\n", simulation.getCurrentTick(), request.getData(), overdue);
       seriesOverdue.measure(overdue);
    }
 

@@ -11,14 +11,14 @@ public interface PrefetchProfilingService {
     * 
     * @param request
     *           the request fetched
-    * @param actualSize
-    *           the actual size returned
+    * @param size
+    *           the size fetched
     * @param tick
     *           the current tick
     * @param duration
     *           the duration of transfer
     */
-   void fetched(Request request, int actualSize, long tick, long duration);
+   void fetched(Request request, int size, long tick, long duration);
 
    /**
     * Registers a cache hit (ie. the request being satisfied directly from the
@@ -46,7 +46,7 @@ public interface PrefetchProfilingService {
     * @param request
     *           will be changed
     */
-   // change to unified arrival
+   // TODO: change to unified arrival
    void lateArrival(Request request);
 
 }

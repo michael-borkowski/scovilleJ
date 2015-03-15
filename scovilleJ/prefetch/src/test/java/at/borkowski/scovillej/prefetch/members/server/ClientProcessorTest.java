@@ -3,16 +3,15 @@ package at.borkowski.scovillej.prefetch.members.server;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import at.borkowski.scovillej.prefetch.VirtualPayload;
 import at.borkowski.scovillej.profile.Series;
 import at.borkowski.scovillej.services.comm.SimulationSocket;
 import at.borkowski.scovillej.simulation.SimulationContext;
@@ -23,37 +22,32 @@ public class ClientProcessorTest {
    ClientProcessor sut;
 
    FetchServer owner;
-   SimulationSocket<byte[]> socket;
-   FileServerProcessor fileServerProcessor;
+   SimulationSocket<VirtualPayload> socket;
 
    SimulationContext context;
    long tick = 0;
 
-   String request = null;
-   byte[] response = null;
+   Integer request = null;
+   VirtualPayload response = null;
    boolean close = false, closed = false;
 
 
    @Before
    public void setUp() throws Exception {
-      fileServerProcessor = mock(FileServerProcessor.class);
-      when(fileServerProcessor.hasFile("file-a")).thenReturn(true);
-      when(fileServerProcessor.hasFile("file-b")).thenReturn(false);
-      when(fileServerProcessor.getFileLength("file-a")).thenReturn(100);
 
-      socket = new SimulationSocket<byte[]>() {
+      socket = new SimulationSocket<VirtualPayload>() {
          @Override
-         public void write(byte[] object) throws IOException {
+         public void write(VirtualPayload object) throws IOException {
             response = object;
          }
 
          @Override
-         public byte[] read() throws IOException {
+         public VirtualPayload read() throws IOException {
             if (close)
                return null;
             if (request == null)
                throw new WouldBlockException();
-            byte[] ret = request.getBytes("UTF8");
+            VirtualPayload ret = new VirtualPayload(request);
             request = null;
             return ret;
          }
@@ -75,7 +69,6 @@ public class ClientProcessorTest {
       };
 
       owner = mock(FetchServer.class);
-      doReturn(fileServerProcessor).when(owner).getFileServerProcessor();
 
       sut = new ClientProcessor(owner, socket);
 
@@ -108,22 +101,15 @@ public class ClientProcessorTest {
       advance();
       advance();
 
-      request = "file-a";
+      request = 100;
 
       advance();
 
       assertNull(request);
-      assertEquals(100, response.length);
+      assertEquals(100, response.getSize());
 
       advance();
       advance();
-
-      request = "file-b";
-
-      advance();
-
-      assertNull(request);
-      assertNull(request);
 
       close = true;
       

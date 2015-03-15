@@ -68,7 +68,7 @@ public class ClientCodeProcessorTest {
 
    @Test
    public void test() throws IOException {
-      Request[] requests = { new Request(10, 20, 10, "file1"), new Request(20, 20, 10, "file2"), new Request(30, 20, 10, "file3") };
+      Request[] requests = { new Request(10, 20, 10), new Request(20, 20, 10), new Request(30, 20, 10) };
 
       sut.addRequests(Arrays.asList(requests));
 
@@ -90,8 +90,8 @@ public class ClientCodeProcessorTest {
 
       // request 1
 
-      when(cacheProcessor.hasFile("file2")).thenReturn(true);
-      when(cacheProcessor.getTimestamp("file2")).thenReturn(19L);
+      when(cacheProcessor.hasFile(requests[1])).thenReturn(true);
+      when(cacheProcessor.getTimestamp(requests[1])).thenReturn(19L);
       verify(profiling, never()).lateArrival(any(Request.class));
 
       advance(9);
@@ -123,8 +123,8 @@ public class ClientCodeProcessorTest {
       
       advance();
 
-      when(cacheProcessor.hasFile("file3")).thenReturn(true);
-      when(cacheProcessor.getTimestamp("file3")).thenReturn(31L);
+      when(cacheProcessor.hasFile(requests[2])).thenReturn(true);
+      when(cacheProcessor.getTimestamp(requests[2])).thenReturn(31L);
       
       advance();
 

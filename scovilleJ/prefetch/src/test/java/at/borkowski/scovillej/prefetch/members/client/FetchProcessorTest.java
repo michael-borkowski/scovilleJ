@@ -3,8 +3,6 @@ package at.borkowski.scovillej.prefetch.members.client;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -23,6 +21,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import at.borkowski.scovillej.prefetch.Request;
+import at.borkowski.scovillej.prefetch.VirtualPayload;
 import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
 import at.borkowski.scovillej.prefetch.profiling.PrefetchProfilingService;
 import at.borkowski.scovillej.profile.Series;
@@ -42,7 +41,7 @@ public class FetchProcessorTest {
    SimulationContext context;
    long tick = 0;
 
-   byte[] data = null;
+   VirtualPayload data = null;
 
    @Before
    public void setUp() throws Exception {
@@ -69,7 +68,7 @@ public class FetchProcessorTest {
          }
       });
 
-      requests = new Request[] { new Request(100, 10, 1, "file-1"), new Request(200, 13, 1, "file-2") };
+      requests = new Request[] { new Request(100, 10, 1), new Request(200, 13, 1) };
 
       sut.addRequests(Arrays.asList(requests));
       sut.initialize(null, null);
@@ -97,9 +96,9 @@ public class FetchProcessorTest {
       };
    }
 
-   private Answer<byte[]> returnData() {
-      return new Answer<byte[]>() {
-         public byte[] answer(InvocationOnMock invocation) throws Throwable {
+   private Answer<VirtualPayload> returnData() {
+      return new Answer<VirtualPayload>() {
+         public VirtualPayload answer(InvocationOnMock invocation) throws Throwable {
             return data;
          }
       };
@@ -110,12 +109,12 @@ public class FetchProcessorTest {
 
       advanceUntil(110);
 
-      verify(socketProcessor, never()).request(anyString());
+      verify(socketProcessor, never()).request(any(Request.class));
       verify(socketProcessor, never()).readIfPossible();
 
       advance();
 
-      verify(socketProcessor).request("file-1");
+      verify(socketProcessor).request(requests[0]);
       verify(socketProcessor, never()).readIfPossible();
 
       advance();
@@ -126,14 +125,14 @@ public class FetchProcessorTest {
       advance();
 
       verify(profilingService, never()).fetched(any(Request.class), anyInt(), anyLong(), anyLong());
-      verify(cacheProcessor, never()).save(anyString(), any(byte[].class), anyLong());
+      verify(cacheProcessor, never()).save(any(Request.class), anyLong());
 
-      data = new byte[11];
+      data = new VirtualPayload(11);
 
       advance();
 
       verify(profilingService).fetched(requests[0], 11, 114, 4);
-      verify(cacheProcessor).save("file-1", data, 114);
+      verify(cacheProcessor).save(requests[0], 114);
 
       data = null;
    }
@@ -143,11 +142,11 @@ public class FetchProcessorTest {
 
       advanceUntil(213);
 
-      verify(socketProcessor, never()).request("file-2");
+      verify(socketProcessor, never()).request(requests[1]);
 
       advance();
 
-      verify(socketProcessor).request("file-2");
+      verify(socketProcessor).request(requests[1]);
 
       advance();
       advance();
@@ -156,14 +155,14 @@ public class FetchProcessorTest {
       advance();
 
       verify(profilingService, never()).fetched(same(requests[1]), anyInt(), anyLong(), anyLong());
-      verify(cacheProcessor, never()).save(eq("file-2"), any(byte[].class), anyLong());
+      verify(cacheProcessor, never()).save(same(requests[1]), anyLong());
 
-      data = new byte[37];
+      data = new VirtualPayload(37);
 
       advance();
 
       verify(profilingService).fetched(requests[1], 37, 219, 6);
-      verify(cacheProcessor).save("file-2", data, 219);
+      verify(cacheProcessor).save(requests[1], 219);
    }
 
    @Test
@@ -178,11 +177,11 @@ public class FetchProcessorTest {
       
       sut.urge(0, requests[1]);
       
-      verify(socketProcessor, never()).request("file-2");
+      verify(socketProcessor, never()).request(requests[1]);
 
       advance();
 
-      verify(socketProcessor).request("file-2");
+      verify(socketProcessor).request(requests[1]);
 
       advance();
       advance();
@@ -191,14 +190,14 @@ public class FetchProcessorTest {
       advance();
 
       verify(profilingService, never()).fetched(same(requests[1]), anyInt(), anyLong(), anyLong());
-      verify(cacheProcessor, never()).save(eq("file-2"), any(byte[].class), anyLong());
+      verify(cacheProcessor, never()).save(same(requests[1]), anyLong());
 
-      data = new byte[37];
+      data = new VirtualPayload(37);
 
       advance();
 
       verify(profilingService).fetched(requests[1], 37, 121, 6);
-      verify(cacheProcessor).save("file-2", data, 121);
+      verify(cacheProcessor).save(requests[1], 121);
    }
 
    private void advanceUntil(int tick) throws IOException {

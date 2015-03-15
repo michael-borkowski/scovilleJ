@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import at.borkowski.scovillej.services.comm.CommunicationService;
@@ -35,10 +37,10 @@ public class CommunicationServiceImpl implements CommunicationService, ServicePr
    private final int bufferSize;
 
    public CommunicationServiceImpl() {
-      this(Simulation.TICK_PHASE, new HashMap<String, Integer>(), new HashMap<String, Integer>(), new HashMap<String, Long>(), new HashMap<String, Long>(), DEFAULT_BUFFER_SIZE);
+      this(Simulation.TICK_PHASE, new HashMap<String, Integer>(), new HashMap<String, Integer>(), new HashMap<String, Long>(), new HashMap<String, Long>(), DEFAULT_BUFFER_SIZE, new LinkedList<>());
    }
 
-   public CommunicationServiceImpl(String phase, Map<String, Integer> uplink, Map<String, Integer> downlink, Map<String, Long> updelay, Map<String, Long> downdelay, int bufferSize) {
+   public CommunicationServiceImpl(String phase, Map<String, Integer> uplink, Map<String, Integer> downlink, Map<String, Long> updelay, Map<String, Long> downdelay, int bufferSize, List<Serializer<?>> serializers) {
       this.phase = phase;
       this.uplink = uplink;
       this.downlink = downlink;
@@ -46,7 +48,9 @@ public class CommunicationServiceImpl implements CommunicationService, ServicePr
       this.downdelay = downdelay;
       this.bufferSize = bufferSize;
 
-      BuiltInSerializers.addTo(serializers);
+      BuiltInSerializers.addTo(this.serializers);
+      for (Serializer<?> serializer : serializers)
+         this.serializers.put(serializer.getSerializedClass(), serializer);
    }
 
    @Override

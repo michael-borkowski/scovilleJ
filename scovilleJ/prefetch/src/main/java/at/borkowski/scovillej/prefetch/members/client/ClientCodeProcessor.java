@@ -40,9 +40,9 @@ public class ClientCodeProcessor {
       Set<Request> done = new HashSet<>();
       for (Request request : required) {
          if (request.getDeadline() <= tick) {
-            if (owner.getCacheProcessor().hasFile(request.getFile())) {
+            if (owner.getCacheProcessor().hasFile(request)) {
                if (request.getDeadline() == tick)
-                  owner.getProfilingService().cacheHit(request, tick - owner.getCacheProcessor().getTimestamp(request.getFile()));
+                  owner.getProfilingService().cacheHit(request, tick - owner.getCacheProcessor().getTimestamp(request));
                else
                   owner.getProfilingService().lateArrival(request);
                done.add(request);

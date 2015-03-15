@@ -111,6 +111,6 @@ public class ConfigurationReader {
          throw new ConfigurationException("could not parse request byte rate on line " + lineCounter + ": " + split[3], nfEx);
       }
 
-      return new Request(tick, data, byterate, "TO_BE_REMOVED");
+      return new Request(tick, data, byterate);
    }
 }

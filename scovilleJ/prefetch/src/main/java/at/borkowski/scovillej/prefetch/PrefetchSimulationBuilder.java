@@ -44,7 +44,7 @@ public class PrefetchSimulationBuilder {
       builder.phase(Simulation.TICK_PHASE);
       builder.phase(COMM_PHASE);
 
-      CommunicationServiceBuilder commBuilder = new CommunicationServiceBuilder().communicationPhase(COMM_PHASE).delay(SOCKET_NAME, BASE_DELAY);
+      CommunicationServiceBuilder commBuilder = new CommunicationServiceBuilder().communicationPhase(COMM_PHASE).delay(SOCKET_NAME, BASE_DELAY).serializer(new VirtualPayloadSerializer());
 
       builder.service(communicationService = commBuilder.create());
       builder.service(profilingService = new PrefetchProfilingServiceImpl());
@@ -56,7 +56,7 @@ public class PrefetchSimulationBuilder {
    /**
     * Creates the simulation.
     * 
-    * @return
+    * @return the simulation
     */
    public Simulation create() {
       if (limits != null && !limits.isEmpty())
@@ -122,19 +122,6 @@ public class PrefetchSimulationBuilder {
     */
    public PrefetchSimulationBuilder totalTicks(long tickCount) {
       builder.totalTicks(tickCount);
-      return this;
-   }
-
-   /**
-    * Adds files which the server member will provide.
-    * 
-    * @param files
-    *           the files as a map from {@link String} (file name) to length in
-    *           bytes (content is irrelevant)
-    * @return this object
-    */
-   public PrefetchSimulationBuilder files(Map<String, Integer> files) {
-      fetchServer.getFileServerProcessor().addFiles(files);
       return this;
    }
 

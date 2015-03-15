@@ -20,7 +20,6 @@ import at.borkowski.scovillej.simulation.SimulationMember;
 public class FetchServer implements SimulationMember, PhaseHandler {
 
    private final SocketProcessor socketProcessor;
-   private final FileServerProcessor fileServerProcessor;
 
    private final List<ClientProcessor> clientProcessors = new LinkedList<>();
 
@@ -29,12 +28,9 @@ public class FetchServer implements SimulationMember, PhaseHandler {
     * 
     * @param socketProcessor
     *           the (mocked) socket processor
-    * @param fileServerProcessor
-    *           the (mocked) file server processor
     */
-   FetchServer(SocketProcessor socketProcessor, FileServerProcessor fileServerProcessor) {
+   FetchServer(SocketProcessor socketProcessor) {
       this.socketProcessor = socketProcessor;
-      this.fileServerProcessor = fileServerProcessor;
    }
 
    /**
@@ -45,7 +41,6 @@ public class FetchServer implements SimulationMember, PhaseHandler {
     */
    public FetchServer(String socketName) {
       this.socketProcessor = new SocketProcessor(this, socketName);
-      this.fileServerProcessor = new FileServerProcessor();
    }
 
    @Override
@@ -79,15 +74,6 @@ public class FetchServer implements SimulationMember, PhaseHandler {
    @Override
    public Collection<String> getPhaseSubcription() {
       return null;
-   }
-
-   /**
-    * Returns the {@link FileServerProcessor} sub-processor.
-    * 
-    * @return the sub-processor
-    */
-   public FileServerProcessor getFileServerProcessor() {
-      return fileServerProcessor;
    }
 
    /**

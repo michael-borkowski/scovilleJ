@@ -2,6 +2,7 @@ package at.borkowski.scovillej.prefetch.members.server;
 
 import java.io.IOException;
 
+import at.borkowski.scovillej.prefetch.VirtualPayload;
 import at.borkowski.scovillej.services.comm.CommunicationService;
 import at.borkowski.scovillej.services.comm.SimulationServerSocket;
 import at.borkowski.scovillej.simulation.Simulation;
@@ -17,7 +18,7 @@ public class SocketProcessor {
    private final String socketName;
 
    private CommunicationService comm;
-   private SimulationServerSocket<byte[]> serverSocket;
+   private SimulationServerSocket<VirtualPayload> serverSocket;
 
    private boolean initialized = false;
 
@@ -64,7 +65,7 @@ public class SocketProcessor {
    }
 
    private void initialize(SimulationContext context) throws IOException {
-      serverSocket = comm.createServerSocket(socketName, byte[].class);
+      serverSocket = comm.createServerSocket(socketName, VirtualPayload.class);
       initialized = true;
    }
 }

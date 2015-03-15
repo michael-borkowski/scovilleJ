@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import at.borkowski.scovillej.prefetch.Request;
+
 public class CacheProcessorTest {
 
    CacheProcessor sut;
@@ -16,12 +18,13 @@ public class CacheProcessorTest {
 
    @Test
    public void test() {
-      assertFalse(sut.hasFile("file"));
+      Request request = new Request(1, 2, 3);
+      assertFalse(sut.hasFile(request));
 
-      sut.save("file", null, 123);
+      sut.save(request, 123);
 
-      assertTrue(sut.hasFile("file"));
-      assertEquals(123, sut.getTimestamp("file"));
+      assertTrue(sut.hasFile(request));
+      assertEquals(123, sut.getTimestamp(request));
    }
 
 }

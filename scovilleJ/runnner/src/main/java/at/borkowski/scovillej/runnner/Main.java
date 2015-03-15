@@ -47,20 +47,16 @@ public class Main {
       }
 
       List<Request> rs = new LinkedList<>();
-      rs.add(new Request(100000, 5 * 1024, 22, "/data/A"));
-      rs.add(new Request(200000, 1 * 1024, 22, "/data/B"));
-      rs.add(new Request(300000, 503 * 1024, 22, "/data/C"));
-      rs.add(new Request(400000, 3 * 1024, 22, "/data/D"));
-      rs.add(new Request(500000, 25 * 1024, 22, "/data/E"));
-      rs.add(new Request(600000, 20, 22, "/data/F"));
-      rs.add(new Request(700000, 10 * 1024, 22, "/data/G"));
-      rs.add(new Request(700001, 100 * 1024, 21, "/data/H"));
-      rs.add(new Request(800000, 152 * 1024, 22, "/data/I"));
-      rs.add(new Request(900000, 251 * 1024, 22, "/data/J"));
-
-      Map<String, Integer> files = new HashMap<>();
-      for (Request r : rs)
-         files.put(r.getFile(), r.getData());
+      rs.add(new Request(100000, 5 * 1024, 22));
+      rs.add(new Request(200000, 1 * 1024, 22));
+      rs.add(new Request(300000, 503 * 1024, 22));
+      rs.add(new Request(400000, 3 * 1024, 22));
+      rs.add(new Request(500000, 25 * 1024, 22));
+      rs.add(new Request(600000, 20, 22));
+      rs.add(new Request(700000, 10 * 1024, 22));
+      rs.add(new Request(700001, 100 * 1024, 21));
+      rs.add(new Request(800000, 152 * 1024, 22));
+      rs.add(new Request(900000, 251 * 1024, 22));
 
       PrefetchAlgorithm algorithm;
 
@@ -73,7 +69,7 @@ public class Main {
       limits.put(0L, 80);
       limits.put(510000L, 22);
 
-      PrefetchSimulationBuilder builder = new PrefetchSimulationBuilder().requests(rs).files(files).totalTicks(1000000).algorithm(algorithm).limits(limits);
+      PrefetchSimulationBuilder builder = new PrefetchSimulationBuilder().requests(rs).totalTicks(1000000).algorithm(algorithm).limits(limits);
       Simulation sim = builder.create();
       PrefetchProfilingResults profiling = builder.getProfiling();
 

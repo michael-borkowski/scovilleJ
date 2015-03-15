@@ -49,7 +49,7 @@ public class FetchClient implements SimulationMember, PhaseHandler {
    /**
     * Creates a new fetch client.
     * 
-    * @param socketName
+    * @param socketName the socket to use
     */
    public FetchClient(String socketName) {
       socketProcessor = new SocketProcessor(socketName);

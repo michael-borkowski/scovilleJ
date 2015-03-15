@@ -16,21 +16,18 @@ import at.borkowski.scovillej.simulation.SimulationContext;
 public class FetchServerTest {
 
    SocketProcessor socketProcessor;
-   FileServerProcessor fileServerProcessor;
 
    FetchServer sut;
 
    @Before
    public void setUp() throws Exception {
       socketProcessor = mock(SocketProcessor.class);
-      fileServerProcessor = mock(FileServerProcessor.class);
 
-      sut = new FetchServer(socketProcessor, fileServerProcessor);
+      sut = new FetchServer(socketProcessor);
    }
 
    @Test
    public void testBasicGetters() {
-      assertSame(fileServerProcessor, sut.getFileServerProcessor());
       assertNotEquals(0, sut.getPhaseHandlers().size());
       assertNull(sut.getPhaseSubcription());
       assertNull(sut.generateEvents());

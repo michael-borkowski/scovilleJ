@@ -2,6 +2,7 @@ package at.borkowski.scovillej.prefetch.members.server;
 
 import java.io.IOException;
 
+import at.borkowski.scovillej.prefetch.VirtualPayload;
 import at.borkowski.scovillej.services.comm.SimulationSocket;
 import at.borkowski.scovillej.simulation.SimulationContext;
 
@@ -11,7 +12,7 @@ import at.borkowski.scovillej.simulation.SimulationContext;
  */
 public class ClientProcessor {
    private final FetchServer owner;
-   private final SimulationSocket<byte[]> socket;
+   private final SimulationSocket<VirtualPayload> socket;
 
    /**
     * Creates a new client processor
@@ -21,7 +22,7 @@ public class ClientProcessor {
     * @param socket
     *           the socket to communicate over
     */
-   public ClientProcessor(FetchServer owner, SimulationSocket<byte[]> socket) {
+   public ClientProcessor(FetchServer owner, SimulationSocket<VirtualPayload> socket) {
       this.owner = owner;
       this.socket = socket;
    }
@@ -38,8 +39,7 @@ public class ClientProcessor {
       if (socket.available() == 0)
          return;
 
-      byte[] requestBytes = socket.read();
-      String request = requestBytes == null ? null : new String(requestBytes, "UTF8");
+      VirtualPayload request = socket.read();
 
       if (request == null)
          close();
@@ -47,11 +47,8 @@ public class ClientProcessor {
          handle(request, context);
    }
 
-   private void handle(String request, SimulationContext context) throws IOException {
-      if (owner.getFileServerProcessor().hasFile(request))
-         socket.write(new byte[owner.getFileServerProcessor().getFileLength(request)]);
-      else
-         socket.write(null);
+   private void handle(VirtualPayload request, SimulationContext context) throws IOException {
+      socket.write(new VirtualPayload(request.getSize()));
    }
 
    private void close() {

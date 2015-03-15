@@ -2,6 +2,8 @@ package at.borkowski.scovillej.prefetch.members.client;
 
 import java.io.IOException;
 
+import at.borkowski.scovillej.prefetch.Request;
+import at.borkowski.scovillej.prefetch.VirtualPayload;
 import at.borkowski.scovillej.services.comm.CommunicationService;
 import at.borkowski.scovillej.services.comm.SimulationSocket;
 import at.borkowski.scovillej.simulation.Simulation;
@@ -16,7 +18,7 @@ public class SocketProcessor {
    private final String socketName;
 
    private CommunicationService comm;
-   private SimulationSocket<byte[]> socket;
+   private SimulationSocket<VirtualPayload> socket;
 
    private boolean initialized = false;
 
@@ -34,18 +36,18 @@ public class SocketProcessor {
    }
 
    private void initialize(SimulationContext context) throws IOException {
-      socket = comm.beginConnect(socketName, byte[].class);
+      socket = comm.beginConnect(socketName, VirtualPayload.class);
       initialized = true;
    }
 
-   public byte[] readIfPossible() throws IOException {
+   public VirtualPayload readIfPossible() throws IOException {
       if (socket.available() != 0)
-         return (byte[]) socket.read();
+         return (VirtualPayload) socket.read();
       return null;
    }
 
-   public void request(String file) throws IOException {
-      socket.write(file.getBytes("UTF8"));
+   public void request(Request request) throws IOException {
+      socket.write(new VirtualPayload(request.getData(), false));
    }
 
    public boolean isReady() {

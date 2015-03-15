@@ -87,26 +87,26 @@ public class PrefetchProfilingServiceImplTest {
 
    @Test
    public void testFetched() throws Exception {
-      sut.fetched(new Request(1, 2, 3, "file"), 4, 5, 6);
+      sut.fetched(new Request(1, 2, 3), 4, 5, 6);
       assertEquals(1, sut.getURT().getCount());
       assertEquals(1, sut.getURTperKB().getCount());
    }
 
    @Test
    public void testCacheHit() throws Exception {
-      sut.cacheHit(new Request(1, 2, 3, "file"), 4);
+      sut.cacheHit(new Request(1, 2, 3), 4);
       assertEquals(1, sut.getCacheHitAges().getCount());
    }
 
    @Test
    public void testCacheMiss() throws Exception {
-      sut.cacheMiss(new Request(1, 2, 3, "file"));
+      sut.cacheMiss(new Request(1, 2, 3));
       assertEquals(1, sut.getCacheMisses().getCount());
    }
 
    @Test
    public void testLateArrival() throws Exception {
-      sut.lateArrival(new Request(1, 2, 3, "file"));
+      sut.lateArrival(new Request(1, 2, 3));
       assertEquals(1, sut.getOverdue().getCount());
    }
 

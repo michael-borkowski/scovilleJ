@@ -12,6 +12,7 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import at.borkowski.scovillej.prefetch.VirtualPayload;
 import at.borkowski.scovillej.profile.Series;
 import at.borkowski.scovillej.services.comm.CommunicationService;
 import at.borkowski.scovillej.services.comm.SimulationServerSocket;
@@ -27,8 +28,8 @@ public class SocketProcessorTest {
    FetchServer owner;
    CommunicationService communicationService;
 
-   SimulationServerSocket<byte[]> serverSocket;
-   SimulationSocket<byte[]> clientSocket;
+   SimulationServerSocket<VirtualPayload> serverSocket;
+   SimulationSocket<VirtualPayload> clientSocket;
 
    SimulationContext context;
 
@@ -43,9 +44,9 @@ public class SocketProcessorTest {
 
       clientSocket = mock(SimulationSocket.class);
 
-      serverSocket = new SimulationServerSocket<byte[]>() {
+      serverSocket = new SimulationServerSocket<VirtualPayload>() {
          @Override
-         public SimulationSocket<byte[]> accept() throws IOException {
+         public SimulationSocket<VirtualPayload> accept() throws IOException {
             if (available) {
                available = false;
                return clientSocket;
@@ -61,7 +62,7 @@ public class SocketProcessorTest {
          @Override
          public void close() {}
       };
-      doReturn(serverSocket).when(communicationService).createServerSocket("socket", byte[].class);
+      doReturn(serverSocket).when(communicationService).createServerSocket("socket", VirtualPayload.class);
 
       sut = new SocketProcessor(owner, "socket");
 
@@ -104,7 +105,7 @@ public class SocketProcessorTest {
    public void test() throws IOException {
       advance();
 
-      verify(communicationService).createServerSocket("socket", byte[].class);
+      verify(communicationService).createServerSocket("socket", VirtualPayload.class);
 
       advance();
       advance();

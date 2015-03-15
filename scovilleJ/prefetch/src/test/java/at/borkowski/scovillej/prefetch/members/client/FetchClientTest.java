@@ -94,8 +94,8 @@ public class FetchClientTest {
    @Test
    public void testAddRequests() throws Exception {
       List<Request> requests = new LinkedList<>();
-      requests.add(new Request(1, 2, 3, "file1"));
-      requests.add(new Request(4, 5, 6, "file2"));
+      requests.add(new Request(1, 2, 3));
+      requests.add(new Request(4, 5, 6));
       sut.addRequests(requests);
 
       verify(fetchProcessor).addRequests(requests);
