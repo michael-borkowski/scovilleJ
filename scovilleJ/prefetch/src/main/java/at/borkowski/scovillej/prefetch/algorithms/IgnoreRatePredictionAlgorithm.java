@@ -17,7 +17,6 @@ import at.borkowski.scovillej.prefetch.members.aux.RatePredictionService;
  */
 public class IgnoreRatePredictionAlgorithm implements PrefetchAlgorithm {
    public final static long CONNECTION_OVERHEAD = 5;
-   public final static double ALPHA = 1;
 
    @Override
    public Map<Long, Request> schedule(Set<Request> requests, RatePredictionService ratePredictionService) {
@@ -47,7 +46,6 @@ public class IgnoreRatePredictionAlgorithm implements PrefetchAlgorithm {
    private long getStart(long busyUntil, Request req) {
       long required = (long) (req.getData() / req.getAvailableByterate()) + 1;
       required += CONNECTION_OVERHEAD;
-      required /= ALPHA;
       return Math.min(busyUntil, req.getDeadline()) - required;
    }
 }
