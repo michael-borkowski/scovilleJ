@@ -1,6 +1,6 @@
 package at.borkowski.scovillej.prefetch.algorithms;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,19 +8,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import at.borkowski.scovillej.prefetch.Request;
 
 public class IgnoreRatePredictionAlgorithmTest {
 
-   IgnoreRatePredictionAlgorithm sut;
-
-   @Before
-   public void setUp() throws Exception {
-      sut = new IgnoreRatePredictionAlgorithm();
-   }
+   IgnoreRatePredictionAlgorithm sut = new IgnoreRatePredictionAlgorithm();
 
    @Test
    public void test() {
