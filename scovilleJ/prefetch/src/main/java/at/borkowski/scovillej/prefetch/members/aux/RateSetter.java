@@ -16,7 +16,6 @@ import at.borkowski.scovillej.simulation.SimulationInitializationContext;
 
 public class RateSetter implements ServiceProvider<RateControlService>, RateControlService {
 
-   private Simulation simulation;
    private CommunicationService communicationService;
    private final String socketName;
 
@@ -53,7 +52,6 @@ public class RateSetter implements ServiceProvider<RateControlService>, RateCont
    @Override
    public void initialize(Simulation simulation, SimulationInitializationContext context) {
       this.communicationService = context.getService(CommunicationService.class);
-      this.simulation = simulation;
    }
 
    @Override
@@ -78,7 +76,6 @@ public class RateSetter implements ServiceProvider<RateControlService>, RateCont
       
       if(requestSpecific != null && (global == null || global > requestSpecific)) downlink = requestSpecific;
       
-      System.out.println(simulation.getCurrentTick() + " - [set rate " + uplink + " / " + downlink + "] from " + global + " / " + requestSpecific);
       communicationService.setRates(socketName, uplink, downlink);
    }
 
