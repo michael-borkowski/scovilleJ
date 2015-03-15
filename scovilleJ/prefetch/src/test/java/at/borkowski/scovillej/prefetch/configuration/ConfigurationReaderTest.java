@@ -72,7 +72,6 @@ public class ConfigurationReaderTest {
       assertEquals(250, configuration.getRequests().get(3).getDeadline());
       assertEquals(1, configuration.getRequests().get(3).getData());
       assertEquals(100, configuration.getRequests().get(3).getAvailableByterate());
-
    }
 
    @Test
@@ -95,7 +94,6 @@ public class ConfigurationReaderTest {
       assertEquals(8, configuration.getRatePredicted().get(120L).intValue());
       assertEquals(5, configuration.getRatePredicted().get(210L).intValue());
       assertEquals(3, configuration.getRateReal().get(250L).intValue());
-
    }
 
    @Test
@@ -112,7 +110,25 @@ public class ConfigurationReaderTest {
       assertEquals(0, configuration.getRatePredicted().size());
       assertEquals(0, configuration.getRateReal().size());
       assertEquals(2, configuration.getRequests().size());
+   }
 
+   @Test
+   public void testAlgorithm() throws Exception {
+      line("# comment");
+      line("0 algorithm " + ConfigurationReaderTest_Algorithm.class.getName());
+      line("100 request 40 5");
+      line("110 request 40 50");
+      line("300 end");
+      buildSut();
+
+      Configuration configuration = sut.read();
+
+      assertEquals(301, configuration.getTicks());
+      assertEquals(0, configuration.getRatePredicted().size());
+      assertEquals(0, configuration.getRateReal().size());
+      assertEquals(2, configuration.getRequests().size());
+
+      assertEquals(ConfigurationReaderTest_Algorithm.class, configuration.getAlgorithm().getClass());
    }
 
    @Test(expected = ConfigurationException.class)
@@ -235,6 +251,54 @@ public class ConfigurationReaderTest {
       line("# comment");
       line("100 request 40 50");
       line("-110 end");
+      buildSut();
+
+      sut.read();
+   }
+
+   @Test(expected = ConfigurationException.class)
+   public void testAlgorithmUnknown() throws Exception {
+      line("# comment");
+      line("0 algorithm NOT_" + ConfigurationReaderTest_Algorithm.class.getName());
+      line("100 request 40 5");
+      line("110 request 40 50");
+      line("300 end");
+      buildSut();
+
+      sut.read();
+   }
+
+   @Test(expected = ConfigurationException.class)
+   public void testAlgorithmNotzero() throws Exception {
+      line("# comment");
+      line("1 algorithm NOT_" + ConfigurationReaderTest_Algorithm.class.getName());
+      line("100 request 40 5");
+      line("110 request 40 50");
+      line("300 end");
+      buildSut();
+
+      sut.read();
+   }
+
+   @Test(expected = ConfigurationException.class)
+   public void testAlgorithmParameters() throws Exception {
+      line("# comment");
+      line("0 algorithm a b");
+      line("100 request 40 5");
+      line("110 request 40 50");
+      line("300 end");
+      buildSut();
+
+      sut.read();
+   }
+
+   @Test(expected = ConfigurationException.class)
+   public void testAlgorithmException() throws Exception {
+      line("# comment");
+      line("0 algorithm " + ConfigurationReaderTest_BadAlgorithm1.class.getName());
+      line("100 request 40 5");
+      line("110 request 40 50");
+      line("300 end");
       buildSut();
 
       sut.read();

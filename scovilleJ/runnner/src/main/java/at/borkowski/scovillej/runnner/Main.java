@@ -49,7 +49,7 @@ public class Main {
          }
       }
 
-      //PrefetchSimulationBuilder builder = new PrefetchSimulationBuilder().requests(rs).totalTicks(1000000).algorithm(algorithm).limitsReal(limits);
+      //PrefetchSimulationBuilder builder = new PrefetchSimulationBuilder().requests(rs).totalTicks(1000000).algorithm(algorithm).limitsReal(limitsReal);
       PrefetchSimulationBuilder builder = PrefetchSimulationBuilder.fromConfiguration(configuration);
       Simulation sim = builder.create();
       PrefetchProfilingResults profiling = builder.getProfiling();

@@ -30,7 +30,6 @@ public class PrefetchSimulationBuilder {
 
    private static final long BASE_DELAY = 2;
    private final FetchClient fetchClient;
-   private final FetchServer fetchServer;
    private final PrefetchProfilingServiceImpl profilingService;
    private final ServiceProvider<CommunicationService> communicationService;
    private Map<Long, Integer> limitsReal = null;
@@ -39,7 +38,7 @@ public class PrefetchSimulationBuilder {
    private SimulationBuilder builder = new SimulationBuilder();
 
    private RateSetter rateSetter;
-   private RatePredictionServiceProvider ratePredicter;
+   private RatePredictionServiceProvider ratePredictionServiceProvider;
 
    /**
     * Creates a new builder with all parameters set to default.
@@ -54,7 +53,7 @@ public class PrefetchSimulationBuilder {
       builder.service(communicationService = commBuilder.create());
       builder.service(profilingService = new PrefetchProfilingServiceImpl());
 
-      builder.member(fetchServer = new FetchServer(SOCKET_NAME));
+      builder.member(new FetchServer(SOCKET_NAME));
       builder.member(fetchClient = new FetchClient(SOCKET_NAME));
    }
 
@@ -76,8 +75,7 @@ public class PrefetchSimulationBuilder {
     */
    public Simulation create() {
       builder.service(rateSetter = new RateSetter(RATE_PHASE, SOCKET_NAME, limitsReal));
-      if (limitsPredicted != null && !limitsPredicted.isEmpty())
-         builder.service(ratePredicter = new RatePredictionServiceProvider(limitsPredicted));
+      builder.service(ratePredictionServiceProvider = new RatePredictionServiceProvider(limitsPredicted));
       return builder.create();
    }
 
@@ -105,7 +103,7 @@ public class PrefetchSimulationBuilder {
       return this;
    }
 
-   private PrefetchSimulationBuilder limitsPredicted(Map<Long, Integer> byteRates) {
+   public PrefetchSimulationBuilder limitsPredicted(Map<Long, Integer> byteRates) {
       this.limitsPredicted = byteRates;
       return this;
    }
@@ -171,15 +169,6 @@ public class PrefetchSimulationBuilder {
    /**
     * Testability method.
     * 
-    * @return the fetch server
-    */
-   FetchServer test__getFetchServer() {
-      return fetchServer;
-   }
-
-   /**
-    * Testability method.
-    * 
     * @return the fetch client
     */
    FetchClient test__getFetchClient() {
@@ -212,13 +201,8 @@ public class PrefetchSimulationBuilder {
    RateSetter test__getRateSetter() {
       return rateSetter;
    }
-
-   /**
-    * Testability method
-    * 
-    * @return rate predictor
-    */
+   
    RatePredictionServiceProvider test__getRatePredictionServiceProvider() {
-      return ratePredicter;
+      return ratePredictionServiceProvider;
    }
 }
