@@ -1,0 +1,17 @@
+# Example simulation
+
+
+0		algorithm at.borkowski.scovillej.prefetch.algorithms.IgnoreBlinkAlgorithm
+0		rate-real	25
+0		rate-prediction	25
+100000		request		5000	22
+200000		request		1000	22
+300000		request		503000	22
+400000		request		3000	22
+500000		request		25000	22
+600000		request		20	22
+700000		request		10000	22
+700001		request		100000	22
+800000		request		152000	22
+900000		request		251000	22
+1000000		end

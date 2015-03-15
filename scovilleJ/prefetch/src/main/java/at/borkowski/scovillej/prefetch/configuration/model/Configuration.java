@@ -4,18 +4,21 @@ import java.util.List;
 import java.util.Map;
 
 import at.borkowski.scovillej.prefetch.Request;
+import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
 
 public class Configuration {
    private final long ticks;
    private final List<Request> requests;
    private final Map<Long, Integer> rateReal;
    private final Map<Long, Integer> ratePredicted;
+   private final PrefetchAlgorithm algorithm;
 
-   public Configuration(long ticks, List<Request> requests, Map<Long, Integer> rateReal, Map<Long, Integer> ratePredicted) {
+   public Configuration(long ticks, List<Request> requests, Map<Long, Integer> rateReal, Map<Long, Integer> ratePredicted, PrefetchAlgorithm algorithm) {
       this.ticks = ticks;
       this.requests = requests;
       this.rateReal = rateReal;
       this.ratePredicted = ratePredicted;
+      this.algorithm = algorithm;
    }
 
    public long getTicks() {
@@ -32,6 +35,10 @@ public class Configuration {
 
    public List<Request> getRequests() {
       return requests;
+   }
+   
+   public PrefetchAlgorithm getAlgorithm() {
+      return algorithm;
    }
 
 }

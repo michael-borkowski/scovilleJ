@@ -48,8 +48,8 @@ public class PrefetchSimulationBuilderTest {
    @Test
    public void test() {
       sut.algorithm(algorithm);
-      sut.limit(13);
-      sut.limits(limits);
+      sut.limitReal(13);
+      sut.limitsReal(limits);
       sut.request(request0);
       sut.requests(requests);
       sut.totalTicks(10000);

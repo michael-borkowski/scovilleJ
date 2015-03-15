@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import at.borkowski.scovillej.prefetch.Request;
+import at.borkowski.scovillej.prefetch.algorithms.NullAlgorithm;
+import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
 import at.borkowski.scovillej.prefetch.configuration.model.Configuration;
 
 public class ConfigurationReader {
@@ -20,6 +22,7 @@ public class ConfigurationReader {
    public static final String CMD_REQUEST = "request";
    public static final String CMD_RATE_REAL = "rate-real";
    public static final String CMD_RATE_PREDICTION = "rate-prediction";
+   public static final String CMD_ALGORITHM = "algorithm";
 
    public ConfigurationReader(InputStream input) {
       try {
@@ -33,6 +36,7 @@ public class ConfigurationReader {
       List<Request> requests = new LinkedList<>();
       Map<Long, Integer> real = new HashMap<>();
       Map<Long, Integer> predicted = new HashMap<>();
+      PrefetchAlgorithm algorithm = new NullAlgorithm();
 
       String line;
       long tick = 0, lastTick = -1, end = -1;
@@ -67,16 +71,34 @@ public class ConfigurationReader {
             parseRate(tick, lineCounter, CMD_RATE_REAL, real, split);
          else if (split[1].equals(CMD_RATE_PREDICTION))
             parseRate(tick, lineCounter, CMD_RATE_PREDICTION, predicted, split);
+         else if (split[1].equals(CMD_ALGORITHM))
+            algorithm = parseAlgorithm(tick, lineCounter, split);
          else
             throw new ConfigurationException("unknown command: " + split[1]);
-         
+
          lastTick = tick;
       }
 
       if (end == -1)
          end = tick;
 
-      return new Configuration(end + 1, requests, real, predicted);
+      return new Configuration(end + 1, requests, real, predicted, algorithm);
+   }
+
+   private PrefetchAlgorithm parseAlgorithm(long tick, int lineCounter, String[] split) throws ConfigurationException {
+      if (tick != 0)
+         throw new ConfigurationException("line " + lineCounter + ": algorithm must be set at tick 0");
+      if (split.length != 3)
+         throw new ConfigurationException("line " + lineCounter + ": usage is \"0 " + CMD_ALGORITHM + " <algorithm-class>");
+
+      try {
+         Class<?> clazz = Class.forName(split[2]);
+         return (PrefetchAlgorithm) clazz.newInstance();
+      } catch (ClassNotFoundException e) {
+         throw new ConfigurationException("line " + lineCounter + ": class not found: " + split[2], e);
+      } catch (InstantiationException | IllegalAccessException e) {
+         throw new ConfigurationException("line " + lineCounter + ": could not instanciate class: " + split[2] + " (is there a constructor without parameters?)", e);
+      }
    }
 
    private void parseRate(long tick, int lineCounter, String cmd, Map<Long, Integer> map, String[] split) throws ConfigurationException {

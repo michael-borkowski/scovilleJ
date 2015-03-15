@@ -6,7 +6,9 @@ import java.util.Map;
 
 import at.borkowski.scovillej.SimulationBuilder;
 import at.borkowski.scovillej.prefetch.algorithms.PrefetchAlgorithm;
+import at.borkowski.scovillej.prefetch.configuration.model.Configuration;
 import at.borkowski.scovillej.prefetch.impl.VirtualPayloadSerializer;
+import at.borkowski.scovillej.prefetch.members.aux.RatePredictionServiceProvider;
 import at.borkowski.scovillej.prefetch.members.aux.RateSetter;
 import at.borkowski.scovillej.prefetch.members.client.FetchClient;
 import at.borkowski.scovillej.prefetch.members.server.FetchServer;
@@ -31,11 +33,13 @@ public class PrefetchSimulationBuilder {
    private final FetchServer fetchServer;
    private final PrefetchProfilingServiceImpl profilingService;
    private final ServiceProvider<CommunicationService> communicationService;
-   private Map<Long, Integer> limits = null;
+   private Map<Long, Integer> limitsReal = null;
+   private Map<Long, Integer> limitsPredicted = null;
 
    private SimulationBuilder builder = new SimulationBuilder();
 
    private RateSetter rateSetter;
+   private RatePredictionServiceProvider ratePredicter;
 
    /**
     * Creates a new builder with all parameters set to default.
@@ -54,14 +58,27 @@ public class PrefetchSimulationBuilder {
       builder.member(fetchClient = new FetchClient(SOCKET_NAME));
    }
 
+   public static PrefetchSimulationBuilder fromConfiguration(Configuration configuration) {
+      PrefetchSimulationBuilder builder = new PrefetchSimulationBuilder();
+      builder.totalTicks(configuration.getTicks());
+      builder.requests(configuration.getRequests());
+      builder.limitsReal(configuration.getRateReal());
+      builder.limitsPredicted(configuration.getRatePredicted());
+      builder.algorithm(configuration.getAlgorithm());
+
+      return builder;
+   }
+
    /**
     * Creates the simulation.
     * 
     * @return the simulation
     */
    public Simulation create() {
-      if (limits != null && !limits.isEmpty())
-         builder.member(rateSetter = new RateSetter(RATE_PHASE, communicationService.getService(), SOCKET_NAME, limits));
+      if (limitsReal != null && !limitsReal.isEmpty())
+         builder.member(rateSetter = new RateSetter(RATE_PHASE, communicationService.getService(), SOCKET_NAME, limitsReal));
+      if (limitsPredicted != null && !limitsPredicted.isEmpty())
+         builder.service(ratePredicter = new RatePredictionServiceProvider(limitsPredicted));
       return builder.create();
    }
 
@@ -72,20 +89,25 @@ public class PrefetchSimulationBuilder {
     *           the rate in bytes per seconds, or <code>null</code> for no limit
     * @return this object
     */
-   public PrefetchSimulationBuilder limit(Integer byteRate) {
+   public PrefetchSimulationBuilder limitReal(Integer byteRate) {
       communicationService.getService().setRates(SOCKET_NAME, byteRate, byteRate);
       return this;
    }
 
    /**
-    * Sets limits at given points in time in the simulation.
+    * Sets limitsReal at given points in time in the simulation.
     * 
     * @param byteRates
-    *           the map of ticks to limits
+    *           the map of ticks to limitsReal
     * @return this object
     */
-   public PrefetchSimulationBuilder limits(Map<Long, Integer> byteRates) {
-      this.limits = byteRates;
+   public PrefetchSimulationBuilder limitsReal(Map<Long, Integer> byteRates) {
+      this.limitsReal = byteRates;
+      return this;
+   }
+
+   private PrefetchSimulationBuilder limitsPredicted(Map<Long, Integer> byteRates) {
+      this.limitsPredicted = byteRates;
       return this;
    }
 
@@ -190,5 +212,14 @@ public class PrefetchSimulationBuilder {
     */
    RateSetter test__getRateSetter() {
       return rateSetter;
+   }
+
+   /**
+    * Testability method
+    * 
+    * @return rate predictor
+    */
+   RatePredictionServiceProvider test__getRatePredictionServiceProvider() {
+      return ratePredicter;
    }
 }
