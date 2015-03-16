@@ -49,7 +49,6 @@ public class Main {
          }
       }
 
-      //PrefetchSimulationBuilder builder = new PrefetchSimulationBuilder().requests(rs).totalTicks(1000000).algorithm(algorithm).limitsReal(limitsReal);
       PrefetchSimulationBuilder builder = PrefetchSimulationBuilder.fromConfiguration(configuration);
       Simulation sim = builder.create();
       PrefetchProfilingResults profiling = builder.getProfiling();
@@ -61,7 +60,7 @@ public class Main {
       System.out.println("Misses (due): " + profiling.getOverdue());
       System.out.println("Hits (age):   " + profiling.getCacheHitAges());
       System.out.println("URT:          " + profiling.getURT());
-      System.out.println("URT/bytes:    " + profiling.getURTperKB());
+      System.out.println("Stretch:      " + profiling.getStretch());
 
       System.out.println("End.");
    }

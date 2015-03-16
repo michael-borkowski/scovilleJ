@@ -24,7 +24,7 @@ public class PrefetchProfilingServiceImpl implements PrefetchProfilingService, P
    private static String OVERDUE = "prefetch-profiling-overdue";
    private static String AGE = "prefetch-profiling-age";
    private static String MISS = "prefetch-profiling-miss";
-   private static String URTperKB = "prefetch-profiling-urt-per-byte";
+   private static String STRETCH = "prefetch-profiling-stretch";
 
    private Simulation simulation;
 
@@ -32,7 +32,7 @@ public class PrefetchProfilingServiceImpl implements PrefetchProfilingService, P
    private Series<Long> seriesOverdue;
    private Series<Long> seriesAge;
    private Series<Void> seriesMisses;
-   private Series<Double> seriesURTperKB;
+   private Series<Double> seriesStretch;
 
    @Override
    public void initialize(Simulation simulation, SimulationInitializationContext context) {
@@ -41,7 +41,7 @@ public class PrefetchProfilingServiceImpl implements PrefetchProfilingService, P
       seriesOverdue = context.getSeries(OVERDUE, Long.class);
       seriesAge = context.getSeries(AGE, Long.class);
       seriesMisses = context.getSeries(MISS, Void.class);
-      seriesURTperKB = context.getSeries(URTperKB, Double.class);
+      seriesStretch = context.getSeries(STRETCH, Double.class);
    }
 
    @Override
@@ -70,7 +70,7 @@ public class PrefetchProfilingServiceImpl implements PrefetchProfilingService, P
       System.out.printf("%d - fetched %d (overdue %d) (%d B in %d t, %.2f B/t\n", tick, request.getData(), overdue, actualSize, duration, (double) actualSize / duration);
       overdue = Math.max(0, overdue);
       seriesURT.measure(overdue);
-      seriesURTperKB.measure((double) 1000 * overdue / request.getData());
+      seriesStretch.measure(1000.0 * overdue / request.getData());
    }
 
    @Override
@@ -113,7 +113,7 @@ public class PrefetchProfilingServiceImpl implements PrefetchProfilingService, P
    }
 
    @Override
-   public SeriesResult<Double> getURTperKB() {
-      return simulation.getSeries(URTperKB, Double.class);
+   public SeriesResult<Double> getStretch() {
+      return simulation.getSeries(STRETCH, Double.class);
    }
 }

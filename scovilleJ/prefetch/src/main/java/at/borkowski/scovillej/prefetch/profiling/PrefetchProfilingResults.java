@@ -37,10 +37,10 @@ public interface PrefetchProfilingResults {
    SeriesResult<Void> getCacheMisses();
 
    /**
-    * Returns the series of URT (user response time) per kilobyte of data.
+    * Returns the series of stretch results (user response time per KB).
     * 
-    * @return the URT/KB series
+    * @return the stretch series
     */
-   SeriesResult<Double> getURTperKB();
+   SeriesResult<Double> getStretch();
 
 }

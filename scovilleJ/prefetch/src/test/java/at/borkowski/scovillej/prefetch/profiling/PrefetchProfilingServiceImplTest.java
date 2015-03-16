@@ -89,7 +89,7 @@ public class PrefetchProfilingServiceImplTest {
    public void testFetched() throws Exception {
       sut.fetched(new Request(1, 2, 3), 4, 5, 6);
       assertEquals(1, sut.getURT().getCount());
-      assertEquals(1, sut.getURTperKB().getCount());
+      assertEquals(1, sut.getStretch().getCount());
    }
 
    @Test
