@@ -39,7 +39,7 @@ public class ObjectToJsonSerializer extends BaseSerializer<Object> {
    public byte[] serialize(Object object) {
       if (object == null)
          return new byte[0];
-      
+
       try {
          ByteArrayOutputStream baos = new ByteArrayOutputStream();
          Class<?> clazz = object.getClass();

@@ -57,7 +57,6 @@ public class VoidSeriesImplTest {
       assertEquals(null, sut.getStandardDeviation());
    }
 
-
    @Test
    public void testAll() {
       tick = 50;

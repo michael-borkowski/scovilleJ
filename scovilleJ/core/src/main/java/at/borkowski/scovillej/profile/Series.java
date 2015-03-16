@@ -14,7 +14,8 @@ public interface Series<T> {
     * Adds a measured value to the series. The value is added using the current
     * tick.
     * 
-    * @param value the value to add
+    * @param value
+    *           the value to add
     */
    void measure(T value);
 }

@@ -12,7 +12,7 @@ import at.borkowski.scovillej.services.comm.impl.serializers.StringSerializer;
 public class StringSerializerTest {
 
    public static final String CHARSET = "UTF-8";
-   
+
    StringSerializer sut;
 
    @Before

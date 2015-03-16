@@ -369,7 +369,7 @@ public class CommunicationServiceImplTest {
       socketA.close();
       socketB.close();
    }
-   
+
    @Test
    public void testParallelCommunication() throws IOException {
       sut.setRates("accepter", null, null);
@@ -381,7 +381,7 @@ public class CommunicationServiceImplTest {
       SimulationSocket<String> socket1A = sut.beginConnect("accepter", String.class);
       assertFalse(socket1A.established());
       assertEquals(1, serverSocket.available());
-      
+
       SimulationSocket<String> socket2A = sut.beginConnect("accepter", String.class);
       assertFalse(socket2A.established());
       assertEquals(2, serverSocket.available());

@@ -1,6 +1,5 @@
 package at.borkowski.scovillej.simulation;
 
-
 /**
  * Represents a provider for a simulation service.
  *

@@ -10,7 +10,7 @@ public class BuiltInSerializers {
    public static void addTo(Map<Class<?>, Serializer<?>> map) {
       map.put(byte[].class, new ByteArraySerializer());
       map.put(String.class, new StringSerializer());
-      
+
       map.put(Object.class, new ObjectToJsonSerializer());
    }
 }
