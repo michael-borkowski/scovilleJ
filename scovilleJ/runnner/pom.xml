@@ -51,13 +51,6 @@
       <artifactId>prefetch</artifactId>
       <version>0.0.4-SNAPSHOT</version>
     </dependency>
-
-    <!-- Command line parsing -->
-    <dependency>
-      <groupId>com.beust</groupId>
-      <artifactId>jcommander</artifactId>
-      <version>1.47</version>
-    </dependency>
   </dependencies>
 
 

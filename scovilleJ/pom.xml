@@ -16,6 +16,8 @@
     <module>services</module>
     <module>prefetch</module>
     <module>runnner</module>
+    <module>configuration-generator</module>
+    <module>generator</module>
   </modules>
 
   <properties>
