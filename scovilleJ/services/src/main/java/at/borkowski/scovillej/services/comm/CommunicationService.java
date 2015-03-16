@@ -14,7 +14,9 @@ public interface CommunicationService {
     * @param name
     *           the socket name
     * @param clazz
-    *           the class transferred over the socket
+    *           the (runtime) class transferred over the socket
+    * @param <T>
+    *           the (static) class transferred over the socket
     * @return the server socket
     * @throws IOException
     *            if the name is already in use
@@ -28,7 +30,9 @@ public interface CommunicationService {
     * @param name
     *           the socket name to connect to
     * @param clazz
-    *           the class transferred over the socket
+    *           the (runtime) class transferred over the socket
+    * @param <T>
+    *           the (static) class transferred over the socket
     * @return the client socket
     * @throws IOException
     *            if the name is not in use or the server socket uses an
@@ -54,9 +58,11 @@ public interface CommunicationService {
     * Adds a data type serializer used for socket connections.
     * 
     * @param clazz
-    *           the class to serialize
+    *           the (runtime) class to serialize
     * @param serializer
     *           the serializer to use
+    * @param <T>
+    *           the (static) to serialize
     */
    <T> void addSerializer(Class<T> clazz, Serializer<T> serializer);
 

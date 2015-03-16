@@ -86,7 +86,7 @@ public class CommunicationServiceBuilder {
     *           the uplink (client to server) delay in ticks
     * @param downdelay
     *           the downlink (server to client) delay in ticks
-    * @return
+    * @return this object
     */
    public CommunicationServiceBuilder delay(String socketName, Long updelay, Long downdelay) {
       checkUncreated();

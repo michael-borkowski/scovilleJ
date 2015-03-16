@@ -16,7 +16,7 @@ public interface SimulationSocket<T> extends Closeable {
     * Returns true if a connection is established with the other socket (ie. if
     * the server socket has accepted the connection).
     * 
-    * @return
+    * @return whether the socket connection is established
     */
    boolean established();
 

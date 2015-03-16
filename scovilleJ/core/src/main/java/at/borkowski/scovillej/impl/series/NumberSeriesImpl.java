@@ -219,7 +219,9 @@ public abstract class NumberSeriesImpl<T extends Number> extends SeriesImpl<T> {
     * <code>null</code> if the provided type is not built-in.
     * 
     * @param clazz
-    *           the type of series to create
+    *           the (runtime) type of series to create
+    * @param <T>
+    *           the (static) type of series to create
     * @return the series provider
     */
    @SuppressWarnings("unchecked")
