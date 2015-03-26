@@ -33,6 +33,5 @@ public interface SimulationServerSocket<T> extends Closeable {
    /**
     * Closes the server socket and frees up resources.
     */
-   // TODO test this
    void close();
 }

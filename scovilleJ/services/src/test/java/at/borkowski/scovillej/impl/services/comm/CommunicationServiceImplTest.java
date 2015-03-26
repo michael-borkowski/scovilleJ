@@ -115,6 +115,9 @@ public class CommunicationServiceImplTest {
    @Test
    public void testUplinkRatedConversation() throws IOException {
       sut.setRates("accepter", 2, null);
+      
+      assertEquals(2, sut.getUplinkRate("accepter").intValue());
+      assertEquals(null, sut.getDownlinkRate("accepter"));
 
       SimulationServerSocket<String> serverSocket = sut.createServerSocket("accepter", String.class);
       assertEquals(0, serverSocket.available());
@@ -198,6 +201,9 @@ public class CommunicationServiceImplTest {
    public void testDownlinkRatedConversation() throws IOException {
       sut.setRates("accepter", null, 3);
 
+      assertEquals(null, sut.getUplinkRate("accepter"));
+      assertEquals(3, sut.getDownlinkRate("accepter").intValue());
+
       SimulationServerSocket<String> serverSocket = sut.createServerSocket("accepter", String.class);
       assertEquals(0, serverSocket.available());
       assertNull(serverSocket.accept());
@@ -279,6 +285,9 @@ public class CommunicationServiceImplTest {
    @Test
    public void testBothRatedConversation() throws IOException {
       sut.setRates("accepter", 1, 3);
+
+      assertEquals(1, sut.getUplinkRate("accepter").intValue());
+      assertEquals(3, sut.getDownlinkRate("accepter").intValue());
 
       SimulationServerSocket<String> serverSocket = sut.createServerSocket("accepter", String.class);
       assertEquals(0, serverSocket.available());

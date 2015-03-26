@@ -5,7 +5,6 @@ import java.io.IOException;
 /**
  * Provides socket-(name-)base communication to simulation members.
  */
-// TODO check coverage of all service tests
 public interface CommunicationService {
    /**
     * Creates a server socket listening under the given name for connections,
@@ -51,7 +50,6 @@ public interface CommunicationService {
     * @param downlink
     *           the downlink rate in bytes per tick
     */
-   // TODO: test this
    void setRates(String name, Integer uplink, Integer downlink);
 
    /**
