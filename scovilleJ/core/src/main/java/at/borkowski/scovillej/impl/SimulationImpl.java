@@ -95,7 +95,6 @@ public class SimulationImpl implements Simulation {
                   phaseToHandlers.get(Simulation.TICK_PHASE).add(handler);
    }
 
-   // TODO: one context is enough, then it can be final as well
    private SimulationContext initializeContext() {
       return new SimulationContext() {
          @SuppressWarnings("unchecked")
