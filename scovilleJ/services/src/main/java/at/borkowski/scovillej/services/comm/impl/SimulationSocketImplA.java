@@ -21,7 +21,10 @@ public class SimulationSocketImplA<T> extends SimulationSocketImpl<T> {
 
       PipedInputStream downlink_in = new PipedInputStream(bufferSize);
       PipedOutputStream downlink_out = new PipedOutputStream(downlink_in);
-
+      
+      uplink_in.setExceptionOnDeadlock(true);
+      downlink_in.setExceptionOnDeadlock(true);
+      
       setIO(t, a_delay = delay(t, updelay, a_rate = rate(t, uplink, uplink_in), bufferSize), downlink_out, clientSide, serializer);
 
       clientSide.setIO(t, b_delay = delay(t, downdelay, b_rate = rate(t, downlink, downlink_in), bufferSize), uplink_out, this, serializer);
